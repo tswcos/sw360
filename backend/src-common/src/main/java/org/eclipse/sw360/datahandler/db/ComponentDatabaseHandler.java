@@ -402,24 +402,38 @@ public class ComponentDatabaseHandler extends AttachmentAwareDatabaseHandler {
         // Get actual document for members that should not change
         Component actual = componentRepository.get(component.getId());
         assertNotNull(actual, "Could not find component to update!");
-
         if (changeWouldResultInDuplicate(actual, component)) {
             return RequestStatus.DUPLICATE;
+        } else if (duplicateAttachmentExist(component)) {
+            return RequestStatus.DUPLICATE_ATTACHMENT;
         } else if (makePermission(actual, user).isActionAllowed(RequestedAction.WRITE)) {
             // Nested releases and attachments should not be updated by this method
+            boolean isComponentNameChanged = false;
             if (actual.isSetReleaseIds()) {
                 component.setReleaseIds(actual.getReleaseIds());
+                isComponentNameChanged = !component.getName().equals(actual.getName());
             }
 
             copyFields(actual, component, ThriftUtils.IMMUTABLE_OF_COMPONENT);
             component.setAttachments(getAllAttachmentsToKeep(toSource(actual), actual.getAttachments(), component.getAttachments()));
             updateComponentInternal(component, actual, user);
 
+            if (isComponentNameChanged) {
+                updateComponentDependentFieldsForRelease(component);
+            }
         } else {
             return moderator.updateComponent(component, user);
         }
         return RequestStatus.SUCCESS;
 
+    }
+
+    private void updateComponentDependentFieldsForRelease(Component component) {
+        String name = component.getName();
+        for (Release release : releaseRepository.getReleasesFromComponentId(component.getId())) {
+            release.setName(name);
+            releaseRepository.update(release);
+        }
     }
 
     private boolean changeWouldResultInDuplicate(Component before, Component after) {
@@ -430,6 +444,14 @@ public class ComponentDatabaseHandler extends AttachmentAwareDatabaseHandler {
 
         return isDuplicate(after);
     }
+
+    private boolean duplicateAttachmentExist(Component component) {
+    	if(component.attachments != null && !component.attachments.isEmpty()) {
+            return AttachmentConnector.isDuplicateAttachment(component.attachments);
+        }
+        return false;
+    }
+
 
     private void updateComponentInternal(Component updated, Component current, User user) {
         // Update the database with the component
@@ -624,6 +646,8 @@ public class ComponentDatabaseHandler extends AttachmentAwareDatabaseHandler {
 
         if (actual.equals(release)) {
             return RequestStatus.SUCCESS;
+        } else if (duplicateAttachmentExist(release)) {
+            return RequestStatus.DUPLICATE_ATTACHMENT;
         } else if (changeWouldResultInDuplicate(actual, release)) {
             return RequestStatus.DUPLICATE;
         } else {
@@ -672,6 +696,13 @@ public class ComponentDatabaseHandler extends AttachmentAwareDatabaseHandler {
         }
 
         return isDuplicate(after);
+       }
+
+    private boolean duplicateAttachmentExist(Release release) {
+        if (release.attachments != null && !release.attachments.isEmpty()) {
+            return AttachmentConnector.isDuplicateAttachment(release.attachments);
+        }
+        return false;
     }
 
     private void deleteAttachmentUsagesOfUnlinkedReleases(Release updated, Release actual) throws SW360Exception {

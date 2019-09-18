@@ -1,5 +1,5 @@
 /*
- * Copyright Siemens AG, 2014-2016. Part of the SW360 Portal Project.
+ * Copyright Siemens AG, 2014-2016, 2019. Part of the SW360 Portal Project.
  * With modifications by Bosch Software Innovations GmbH, 2016.
  * With modifications by Verifa Oy, 2018.
  *
@@ -12,8 +12,13 @@
  */
 package org.eclipse.sw360.datahandler.thrift;
 
+import org.apache.http.HttpHost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.eclipse.sw360.datahandler.common.CommonUtils;
 import org.eclipse.sw360.datahandler.thrift.attachments.AttachmentService;
+import org.eclipse.sw360.datahandler.thrift.codescoop.CodescoopService;
 import org.eclipse.sw360.datahandler.thrift.components.ComponentService;
 import org.eclipse.sw360.datahandler.thrift.cvesearch.CveSearchService;
 import org.eclipse.sw360.datahandler.thrift.fossology.FossologyService;
@@ -33,6 +38,8 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransportException;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 import static org.apache.log4j.Logger.getLogger;
@@ -50,6 +57,9 @@ public class ThriftClients {
     public static final String PROPERTIES_FILE_PATH = "/sw360.properties";
 
     public static final String BACKEND_URL;
+    public static final String BACKEND_PROXY_URL;
+    public static final int THRIFT_CONNECTION_TIMEOUT;
+    public static final int THRIFT_READ_TIMEOUT;
 
     //! Service addresses
     private static final String ATTACHMENT_SERVICE_URL = "/attachments/thrift";
@@ -67,6 +77,7 @@ public class ThriftClients {
     private static final String VULNERABILITY_SERVICE_URL = "/vulnerabilities/thrift";
     private static final String SCHEDULE_SERVICE_URL = "/schedule/thrift";
     private static final String WSIMPORT_SERVICE_URL = "/wsimport/thrift";
+    private static final String CODESCOOP_SERVICE_URL = "/codescoop/thrift";
 
     // A service which has to be scheduled by the scheduler should be registered here!
     // names of services that can be scheduled by the schedule service, i.e. that have an "update" method
@@ -76,8 +87,18 @@ public class ThriftClients {
         Properties props = CommonUtils.loadProperties(ThriftClients.class, PROPERTIES_FILE_PATH);
 
         BACKEND_URL = props.getProperty("backend.url", "http://127.0.0.1:8080");
-    }
+        //Proxy can be set e.g. with "http://localhost:3128". if set all request to the thrift backend are routed through the proxy
+        BACKEND_PROXY_URL = props.getProperty("backend.proxy.url", null);
+        // maximum timeout for connecting and reading
+        THRIFT_CONNECTION_TIMEOUT = Integer.valueOf(props.getProperty("backend.timeout.connection", "5000"));
+        THRIFT_READ_TIMEOUT = Integer.valueOf(props.getProperty("backend.timeout.read", "600000"));
 
+        log.info("The following configuration will be used for connections to the backend:\n" +
+            "\tURL                      : " + BACKEND_URL + "\n" +
+            "\tProxy                    : " + BACKEND_PROXY_URL + "\n" +
+            "\tTimeout Connecting (ms)  : " + THRIFT_CONNECTION_TIMEOUT + "\n" +
+            "\tTimeout Read (ms)        : " + THRIFT_READ_TIMEOUT + "\n");
+    }
     public ThriftClients() {
     }
 
@@ -88,9 +109,21 @@ public class ThriftClients {
         THttpClient thriftClient = null;
         final String destinationAddress = url + service;
         try {
-            thriftClient = new THttpClient(destinationAddress);
+            if (BACKEND_PROXY_URL != null) {
+                URL proxyUrl = new URL(BACKEND_PROXY_URL);
+                HttpHost proxy = new HttpHost(proxyUrl.getHost(), proxyUrl.getPort(), proxyUrl.getProtocol());
+                DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+                CloseableHttpClient httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
+                thriftClient = new THttpClient(destinationAddress, httpClient);
+            } else {
+                thriftClient = new THttpClient(destinationAddress);
+            }
+            thriftClient.setConnectTimeout(THRIFT_CONNECTION_TIMEOUT);
+            thriftClient.setReadTimeout(THRIFT_READ_TIMEOUT);
         } catch (TTransportException e) {
             log.error("cannot connect to backend on " + destinationAddress, e);
+        } catch (MalformedURLException e) {
+            log.error("cannot connect via http proxy (REASON:MalformedURLException) to thrift backend", e);
         }
         return new TCompactProtocol(thriftClient);
     }
@@ -153,5 +186,9 @@ public class ThriftClients {
 
     public ProjectImportService.Iface makeWsImportClient() {
         return new ProjectImportService.Client(makeProtocol(BACKEND_URL, WSIMPORT_SERVICE_URL));
+    }
+
+    public CodescoopService.Iface makeCodescoopClient() {
+        return new CodescoopService.Client(makeProtocol(BACKEND_URL, CODESCOOP_SERVICE_URL));
     }
 }

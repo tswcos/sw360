@@ -23,6 +23,7 @@ import org.eclipse.sw360.rest.resourceserver.attachment.AttachmentController;
 import org.eclipse.sw360.rest.resourceserver.component.ComponentController;
 import org.eclipse.sw360.rest.resourceserver.license.LicenseController;
 import org.eclipse.sw360.rest.resourceserver.license.Sw360LicenseService;
+import org.eclipse.sw360.rest.resourceserver.project.EmbeddedProject;
 import org.eclipse.sw360.rest.resourceserver.project.ProjectController;
 import org.eclipse.sw360.rest.resourceserver.project.Sw360ProjectService;
 import org.eclipse.sw360.rest.resourceserver.release.ReleaseController;
@@ -330,6 +331,16 @@ public class RestControllerHelper<T> {
         halResource.addEmbeddedResource("sw360:projects", halProject);
     }
 
+    public Project updateProject(Project projectToUpdate, Project requestBodyProject) {
+        for(Project._Fields field:Project._Fields.values()) {
+            Object fieldValue = requestBodyProject.getFieldValue(field);
+            if(fieldValue != null) {
+                projectToUpdate.setFieldValue(field, fieldValue);
+            }
+        }
+        return projectToUpdate;
+    }
+
     public Component updateComponent(Component componentToUpdate, Component requestBodyComponent) {
         for(Component._Fields field:Component._Fields.values()) {
             Object fieldValue = requestBodyComponent.getFieldValue(field);
@@ -351,7 +362,8 @@ public class RestControllerHelper<T> {
     }
 
     public Project convertToEmbeddedProject(Project project) {
-        Project embeddedProject = new Project(project.getName());
+        Project embeddedProject = new EmbeddedProject();
+        embeddedProject.setName(project.getName());
         embeddedProject.setId(project.getId());
         embeddedProject.setProjectType(project.getProjectType());
         embeddedProject.setVersion(project.getVersion());

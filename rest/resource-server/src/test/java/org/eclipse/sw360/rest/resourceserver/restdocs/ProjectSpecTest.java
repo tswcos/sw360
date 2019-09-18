@@ -17,12 +17,17 @@ import org.eclipse.sw360.datahandler.thrift.components.ClearingState;
 import org.eclipse.sw360.datahandler.thrift.components.ECCStatus;
 import org.eclipse.sw360.datahandler.thrift.components.EccInformation;
 import org.eclipse.sw360.datahandler.thrift.components.Release;
+import org.eclipse.sw360.datahandler.thrift.licenseinfo.LicenseInfoFile;
+import org.eclipse.sw360.datahandler.thrift.licenseinfo.OutputFormatInfo;
+import org.eclipse.sw360.datahandler.thrift.licenseinfo.OutputFormatVariant;
 import org.eclipse.sw360.datahandler.thrift.projects.Project;
 import org.eclipse.sw360.datahandler.thrift.projects.ProjectRelationship;
 import org.eclipse.sw360.datahandler.thrift.projects.ProjectType;
 import org.eclipse.sw360.datahandler.thrift.users.User;
+import org.eclipse.sw360.rest.resourceserver.Sw360ResourceServer;
 import org.eclipse.sw360.rest.resourceserver.TestHelper;
 import org.eclipse.sw360.rest.resourceserver.attachment.Sw360AttachmentService;
+import org.eclipse.sw360.rest.resourceserver.licenseinfo.Sw360LicenseInfoService;
 import org.eclipse.sw360.rest.resourceserver.project.Sw360ProjectService;
 import org.eclipse.sw360.rest.resourceserver.release.Sw360ReleaseService;
 import org.eclipse.sw360.rest.resourceserver.user.Sw360UserService;
@@ -36,10 +41,12 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.eclipse.sw360.datahandler.thrift.MainlineState.MAINLINE;
+import static org.eclipse.sw360.datahandler.thrift.MainlineState.OPEN;
 import static org.eclipse.sw360.datahandler.thrift.ReleaseRelationship.CONTAINED;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyObject;
@@ -49,7 +56,10 @@ import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.li
 import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.links;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -73,12 +83,16 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
     @MockBean
     private Sw360AttachmentService attachmentServiceMock;
 
+    @MockBean
+    private Sw360LicenseInfoService licenseInfoMockService;
+
     private Project project;
+    private List<Project> projectList = new ArrayList<>();
     private Attachment attachment;
 
 
     @Before
-    public void before() throws TException {
+    public void before() throws TException, IOException {
         Set<Attachment> attachmentList = new HashSet<>();
         List<Resource<Attachment>> attachmentResources = new ArrayList<>();
         attachment = new Attachment("1231231254", "spring-core-4.3.4.RELEASE.jar");
@@ -88,16 +102,19 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
 
         given(this.attachmentServiceMock.getAttachmentContent(anyObject())).willReturn(new AttachmentContent().setId("1231231254").setFilename("spring-core-4.3.4.RELEASE.jar").setContentType("binary"));
         given(this.attachmentServiceMock.getResourcesFromList(anyObject())).willReturn(new Resources<>(attachmentResources));
+        given(this.attachmentServiceMock.uploadAttachment(anyObject(), anyObject(), anyObject())).willReturn(attachment);
 
         Map<String, ProjectReleaseRelationship> linkedReleases = new HashMap<>();
         Map<String, ProjectRelationship> linkedProjects = new HashMap<>();
         ProjectReleaseRelationship projectReleaseRelationship = new ProjectReleaseRelationship(CONTAINED, MAINLINE);
 
-        Map<String, Set<String>> externalIds = new HashMap<>();
-        externalIds.put("portal-id", new HashSet<>(Arrays.asList("13319-XX3")));
-        externalIds.put("project-ext", new HashSet<>(Arrays.asList("515432", "7657")));
+        Map<String, String> externalIds = new HashMap<>();
+        externalIds.put("portal-id", "13319-XX3");
+        externalIds.put("project-ext", "515432");
 
-        List<Project> projectList = new ArrayList<>();
+        Map<String, String> additionalData = new HashMap<>();
+        additionalData.put("OSPO-Comment", "Some Comment");
+
         List<Project> projectListByName = new ArrayList<>();
         project = new Project();
         project.setId("376576");
@@ -105,6 +122,7 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
         project.setProjectType(ProjectType.PRODUCT);
         project.setVersion("1.0.2");
         project.setDescription("Emerald Web provides a suite of components for Critical Infrastructures.");
+        project.setDomain("Hardware");
         project.setCreatedOn("2016-12-15");
         project.setCreatedBy("admin@sw360.org");
         project.setModerators(new HashSet<>(Arrays.asList("admin@sw360.org", "jane@sw360.org")));
@@ -129,10 +147,18 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
         project.setReleaseIdToUsage(linkedReleases);
         linkedProjects.put("376576", ProjectRelationship.CONTAINED);
         project.setLinkedProjects(linkedProjects);
-        projectList.add(project);
-        projectListByName.add(project);
         project.setAttachments(attachmentList);
+        project.setSecurityResponsibles(new HashSet<>(Arrays.asList("securityresponsible1@sw360.org", "securityresponsible2@sw360.org")));
+        project.setProjectResponsible("projectresponsible@sw360.org");
+        project.setExternalIds(externalIds);
+        project.setAdditionalData(additionalData);
 
+        projectListByName.add(project);
+        projectList.add(project);
+
+
+        Map<String, String> externalIds2 = new HashMap<>();
+        externalIds2.put("project-ext", "7657");
 
         Project project2 = new Project();
         project2.setId("376570");
@@ -140,6 +166,7 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
         project2.setVersion("2.0.1");
         project2.setProjectType(ProjectType.PRODUCT);
         project2.setDescription("Orange Web provides a suite of components for documentation.");
+        project.setDomain("Hardware");
         project2.setCreatedOn("2016-12-17");
         project2.setCreatedBy("john@sw360.org");
         project2.setBusinessUnit("sw360 EX DF");
@@ -158,6 +185,8 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
         project2.setSpecialRisks3rdParty("Lorem Ipsum");
         project2.setDeliveryChannels("Lorem Ipsum");
         project2.setRemarksAdditionalRequirements("Lorem Ipsum");
+        project2.setSecurityResponsibles(new HashSet<>(Arrays.asList("securityresponsible1@sw360.org", "securityresponsible2@sw360.org")));
+        project2.setProjectResponsible("projectresponsible@sw360.org");
         Map<String, String> projExtKeys = new HashMap();
         projExtKeys.put("mainline-id-project", "7657");
         projExtKeys.put("portal-id", "13319-XX3");
@@ -165,13 +194,14 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
         linkedReleases = new HashMap<>();
         linkedReleases.put("5578999", projectReleaseRelationship);
         project2.setReleaseIdToUsage(linkedReleases);
+        project2.setExternalIds(externalIds2);
+
         projectList.add(project2);
 
         Set<String> releaseIds = new HashSet<>(Arrays.asList("3765276512"));
         Set<String> releaseIdsTransitive = new HashSet<>(Arrays.asList("3765276512", "5578999"));
 
         given(this.projectServiceMock.getProjectsForUser(anyObject())).willReturn(projectList);
-        given(this.projectServiceMock.searchByExternalIds(eq(externalIds), anyObject())).willReturn((new HashSet<>(projectList)));
         given(this.projectServiceMock.getProjectForUserById(eq(project.getId()), anyObject())).willReturn(project);
         given(this.projectServiceMock.searchProjectByName(eq(project.getName()), anyObject())).willReturn(projectListByName);
         given(this.projectServiceMock.getReleaseIds(eq(project.getId()), anyObject(), eq("false"))).willReturn(releaseIds);
@@ -238,6 +268,14 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
                 new User("admin@sw360.org", "sw360").setId("123456789"));
         given(this.userServiceMock.getUserByEmail("jane@sw360.org")).willReturn(
                 new User("jane@sw360.org", "sw360").setId("209582812"));
+        OutputFormatInfo outputFormatInfo = new OutputFormatInfo();
+        outputFormatInfo.setFileExtension("html");
+        given(this.licenseInfoMockService.getOutputFormatInfoForGeneratorClass(anyObject()))
+                .willReturn(outputFormatInfo);
+        LicenseInfoFile licenseInfoFile = new LicenseInfoFile();
+        licenseInfoFile.setGeneratedOutput(new byte[0]);
+        given(this.licenseInfoMockService.getLicenseInfoFile(anyObject(), anyObject(), anyObject(), anyObject(),
+                anyObject(),anyObject())).willReturn(licenseInfoFile);
     }
 
     @Test
@@ -277,9 +315,11 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
                                 fieldWithPath("createdOn").description("The date the project was created"),
                                 fieldWithPath("description").description("The project description"),
                                 fieldWithPath("projectType").description("The project type, possible values are: " + Arrays.asList(ProjectType.values())),
+                                fieldWithPath("domain").description("The domain, possible values are:"  + Sw360ResourceServer.DOMAIN.toString()),
                                 fieldWithPath("visibility").description("The project visibility, possible values are: " + Arrays.asList(Visibility.values())),
                                 fieldWithPath("businessUnit").description("The business unit this project belongs to"),
                                 fieldWithPath("externalIds").description("When projects are imported from other tools, the external ids can be stored here"),
+                                fieldWithPath("additionalData").description("A place to store additional data used by external tools"),
                                 fieldWithPath("ownerAccountingUnit").description("The owner accounting unit of the project"),
                                 fieldWithPath("ownerGroup").description("The owner group of the project"),
                                 fieldWithPath("ownerCountry").description("The owner country of the project"),
@@ -297,6 +337,10 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
                                 fieldWithPath("systemTestEnd").description("Date of the project system end phase"),
                                 fieldWithPath("linkedProjects").description("The relationship between linked projects of the project"),
                                 fieldWithPath("linkedReleases").description("The relationship between linked releases of the project"),
+                                fieldWithPath("securityResponsibles").description("An array of users responsible for security of the project."),
+                                fieldWithPath("projectResponsible").description("A user who is responsible for the project."),
+                                fieldWithPath("enableSvm").description("Security vulnerability monitoring flag"),
+                                fieldWithPath("enableVulnerabilitiesDisplay").description("Displaying vulnerabilities flag."),
                                 fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources"),
                                 fieldWithPath("_embedded.createdBy").description("The user who created this project"),
                                 fieldWithPath("_embedded.sw360:projects").description("An array of <<resources-projects, Projects resources>>"),
@@ -348,6 +392,11 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
 
     @Test
     public void should_document_get_projects_by_externalIds() throws Exception {
+        Map<String, Set<String>> externalIdsQuery = new HashMap<>();
+        externalIdsQuery.put("portal-id", new HashSet<>(Arrays.asList("13319-XX3")));
+        externalIdsQuery.put("project-ext", new HashSet<>(Arrays.asList("515432", "7657")));
+        given(this.projectServiceMock.searchByExternalIds(eq(externalIdsQuery), anyObject())).willReturn((new HashSet<>(projectList)));
+
         String accessToken = TestHelper.getAccessToken(mockMvc, testUserId, testUserPassword);
         mockMvc.perform(get("/api/projects/searchByExternalIds?project-ext=515432&project-ext=7657&portal-id=13319-XX3")
                 .contentType(MediaTypes.HAL_JSON)
@@ -444,12 +493,18 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
 
     @Test
     public void should_document_create_project() throws Exception {
-        Map<String, String> project = new HashMap<>();
+        Map<String, Object> project = new HashMap<>();
         project.put("name", "Test Project");
         project.put("version", "1.0");
         project.put("visibility", "PRIVATE");
         project.put("description", "This is the description of my Test Project");
         project.put("projectType", ProjectType.PRODUCT.toString());
+        Map<String, ProjectReleaseRelationship> releaseIdToUsage = new HashMap<>();
+        releaseIdToUsage.put("3765276512", new ProjectReleaseRelationship(CONTAINED, OPEN));
+        project.put("linkedReleases", releaseIdToUsage);
+        Map<String, ProjectRelationship> linkedProjects = new HashMap<String, ProjectRelationship>();
+        linkedProjects.put("376576", ProjectRelationship.CONTAINED);
+        project.put("linkedProjects", linkedProjects);
 
         String accessToken = TestHelper.getAccessToken(mockMvc, testUserId, testUserPassword);
         this.mockMvc.perform(post("/api/projects")
@@ -463,7 +518,9 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
                                 fieldWithPath("description").description("The project description"),
                                 fieldWithPath("version").description("The version of the new project"),
                                 fieldWithPath("visibility").description("The project visibility, possible values are: " + Arrays.asList(Visibility.values())),
-                                fieldWithPath("projectType").description("The project type, possible values are: " + Arrays.asList(ProjectType.values()))
+                                fieldWithPath("projectType").description("The project type, possible values are: " + Arrays.asList(ProjectType.values())),
+                                fieldWithPath("linkedReleases").description("The relationship between linked releases of the project"),
+                                fieldWithPath("linkedProjects").description("The relationship between linked projects of the project")
                         ),
                         responseFields(
                                 fieldWithPath("name").description("The name of the project"),
@@ -472,8 +529,126 @@ public class ProjectSpecTest extends TestRestDocsSpecBase {
                                 fieldWithPath("createdOn").description("The date the project was created"),
                                 fieldWithPath("description").description("The project description"),
                                 fieldWithPath("projectType").description("The project type, possible values are: " + Arrays.asList(ProjectType.values())),
+                                fieldWithPath("securityResponsibles").description("An array of users responsible for security of the project."),
+                                fieldWithPath("enableSvm").description("Security vulnerability monitoring flag"),
+                                fieldWithPath("enableVulnerabilitiesDisplay").description("Displaying vulnerabilities flag."),
                                 fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources"),
                                 fieldWithPath("_embedded.createdBy").description("The user who created this project")
                         )));
+    }
+
+    @Test
+    public void should_document_update_project() throws Exception {
+        Project updateProject = new Project();
+        updateProject.setName("updated project");
+        updateProject.setDescription("Project description updated");
+        updateProject.setVersion("1.0");
+        String accessToken = TestHelper.getAccessToken(mockMvc, testUserId, testUserPassword);
+        this.mockMvc
+                .perform(patch("/api/projects/376576").contentType(MediaTypes.HAL_JSON)
+                        .content(this.objectMapper.writeValueAsString(updateProject))
+                        .header("Authorization", "Bearer " + accessToken).accept(MediaTypes.HAL_JSON))
+                .andExpect(status().isOk())
+                .andDo(this.documentationHandler.document(
+                links(linkWithRel("self").description("The <<resources-projects,Projects resource>>")),
+                requestFields(
+                        fieldWithPath("name").description("The name of the project"),
+                        fieldWithPath("type").description("project"),
+                        fieldWithPath("version").description("The version of the new project"),
+                        fieldWithPath("visibility").description("The project visibility, possible values are: "
+                                + Arrays.asList(Visibility.values())),
+                        fieldWithPath("description").description("The project description"),
+                        fieldWithPath("projectType").description("The project type, possible values are: "
+                                + Arrays.asList(ProjectType.values())),
+                        fieldWithPath("securityResponsibles").description("An array of users responsible for security of the project."),
+                        fieldWithPath("enableSvm").description("Security vulnerability monitoring flag"),
+                        fieldWithPath("enableVulnerabilitiesDisplay").description("Displaying vulnerabilities flag.")),
+                responseFields(fieldWithPath("name").description("The name of the project"),
+                        fieldWithPath("version").description("The project version"),
+                        fieldWithPath("createdOn").description("The date the project was created"),
+                        fieldWithPath("description").description("The project description"),
+                        fieldWithPath("domain").description("The domain, possible values are:"  + Sw360ResourceServer.DOMAIN.toString()),
+                        fieldWithPath("projectType").description("The project type, possible values are: "
+                                + Arrays.asList(ProjectType.values())),
+                        fieldWithPath("visibility").description("The project visibility, possible values are: "
+                                + Arrays.asList(Visibility.values())),
+                        fieldWithPath("businessUnit").description("The business unit this project belongs to"),
+                        fieldWithPath("externalIds").description(
+                                "When projects are imported from other tools, the external ids can be stored here"),
+                        fieldWithPath("additionalData").description("A place to store additional data used by external tools"),
+                        fieldWithPath("ownerAccountingUnit")
+                                .description("The owner accounting unit of the project"),
+                        fieldWithPath("ownerGroup").description("The owner group of the project"),
+                        fieldWithPath("ownerCountry").description("The owner country of the project"),
+                        fieldWithPath("obligationsText").description("The obligations text of the project"),
+                        fieldWithPath("clearingSummary")
+                                .description("The clearing summary text of the project"),
+                        fieldWithPath("specialRisksOSS")
+                                .description("The special risks OSS text of the project"),
+                        fieldWithPath("generalRisks3rdParty")
+                                .description("The general risks 3rd party text of the project"),
+                        fieldWithPath("specialRisks3rdParty")
+                                .description("The special risks 3rd party text of the project"),
+                        fieldWithPath("deliveryChannels")
+                                .description("The sales and delivery channels text of the project"),
+                        fieldWithPath("remarksAdditionalRequirements")
+                                .description("The remark additional requirements text of the project"),
+                        fieldWithPath("tag").description("The project tag"),
+                        fieldWithPath("deliveryStart").description("The project delivery start date"),
+                        fieldWithPath("preevaluationDeadline")
+                                .description("The project preevaluation deadline"),
+                        fieldWithPath("systemTestStart").description("Date of the project system begin phase"),
+                        fieldWithPath("systemTestEnd").description("Date of the project system end phase"),
+                        fieldWithPath("linkedProjects")
+                                .description("The relationship between linked projects of the project"),
+                        fieldWithPath("linkedReleases")
+                                .description("The relationship between linked releases of the project"),
+                        fieldWithPath("securityResponsibles")
+                                .description("An array of users responsible for security of the project."),
+                        fieldWithPath("projectResponsible")
+                                .description("A user who is responsible for the project."),
+                                  fieldWithPath("_links")
+                                  .description("<<resources-index-links,Links>> to other resources"),
+                        fieldWithPath("_embedded.createdBy").description("The user who created this project"),
+                        fieldWithPath("enableSvm").description("Security vulnerability monitoring flag"),
+                        fieldWithPath("enableVulnerabilitiesDisplay").description("Displaying vulnerabilities flag."),
+                        fieldWithPath("_embedded.sw360:projects")
+                                .description("An array of <<resources-projects, Projects resources>>"),
+                                  fieldWithPath("_embedded.sw360:releases")
+                                  .description("An array of <<resources-releases, Releases resources>>"),
+                        fieldWithPath("_embedded.sw360:attachments").description(
+                                "An array of all project attachments and link to their <<resources-attachment-get,Attachment resource>>"))));
+    }
+
+    @Test
+    public void should_document_upload_attachment_to_project() throws Exception {
+        testAttachmentUpload("/api/projects/", project.getId());
+    }
+
+    @Test
+    public void should_document_link_releases() throws Exception {
+        List<String> releaseIds = Arrays.asList("3765276512", "5578999", "3765276513");
+
+        String accessToken = TestHelper.getAccessToken(mockMvc, testUserId, testUserPassword);
+        this.mockMvc.perform(post("/api/projects/" + project.getId() + "/releases").contentType(MediaTypes.HAL_JSON)
+                .content(this.objectMapper.writeValueAsString(releaseIds))
+                .header("Authorization", "Bearer " + accessToken)).andExpect(status().isCreated());
+    }
+
+    @Test
+    public void should_document_get_download_license_info() throws Exception {
+        String accessToken = TestHelper.getAccessToken(mockMvc, testUserId, testUserPassword);
+        this.mockMvc.perform(get("/api/projects/" + project.getId()+ "/licenseinfo?generatorClassName=XhtmlGenerator&variant=DISCLOSURE&externalIds=portal-id,main-project-id")
+                .header("Authorization", "Bearer " + accessToken)
+                .accept("application/xhtml+xml"))
+                .andExpect(status().isOk())
+                .andDo(this.documentationHandler
+                        .document(requestParameters(
+                                parameterWithName("generatorClassName")
+                                        .description("All possible values for output generator class names are "
+                                                + Arrays.asList("DocxGenerator", "XhtmlGenerator", "TextGenerator")),
+                                parameterWithName("variant").description("All the possible values for variants are "
+                                        + Arrays.asList(OutputFormatVariant.values())),
+                                parameterWithName("externalIds").description("The external Ids of the project"))));
     }
 }

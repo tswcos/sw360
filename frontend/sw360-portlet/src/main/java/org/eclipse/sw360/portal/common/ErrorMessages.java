@@ -19,13 +19,15 @@ public class ErrorMessages {
 
     public static final String PROJECT_NOT_ADDED = "Project could not be added.";
     public static final String PROJECT_DUPLICATE = "A project with the same name and version already exists.";
+    public static final String CLOSED_UPDATE_NOT_ALLOWED = "User cannot edit a closed project";
     public static final String COMPONENT_NOT_ADDED = "Component could not be added.";
     public static final String COMPONENT_DUPLICATE = "A component with the same name already exists.";
     public static final String RELEASE_NOT_ADDED = "Release could not be added.";
     public static final String RELEASE_DUPLICATE = "A release with the same name and version already exists.";
+    public static final String DUPLICATE_ATTACHMENT = "Multiple attachments with same name or content cannot be present in attachment list.";
     public static final String ERROR_GETTING_PROJECT = "Error fetching project from backend.";
     public static final String ERROR_GETTING_COMPONENT = "Error fetching component from backend.";
-    public static final String ERROR_GETTING_LICENSE = "Error fetching license from backend.";
+    public static final String ERROR_GETTING_LICENSE = "No license details found in the database for given license id.";
     public static final String ERROR_GETTING_RELEASE = "Error fetching release from backend.";
     public static final String LICENSE_USED_BY_RELEASE =  "Request could not be processed, as license is used by at least one release!";
     public static final String DOCUMENT_USED_BY_PROJECT_OR_RELEASE = "Document could not be processed, as it is used by other Projects or Releases!";
@@ -39,7 +41,6 @@ public class ErrorMessages {
     public static final String PASSWORDS_DONT_MATCH = "Password do not match.";
     public static final String COULD_NOT_CREATE_USER_MODERATION_REQUEST = "Could not create user moderation request.";
     public static final String EMAIL_ALREADY_EXISTS = "Email already exists.";
-    public static final String FULL_NAME_ALREADY_EXISTS = "Full name already exists.";
     public static final String EXTERNAL_ID_ALREADY_EXISTS = "External id already exists.";
     public static final String DEFAULT_ERROR_MESSAGE = "Request could not be processed.";
     public static final String DOCUMENT_NOT_AVAILABLE = "The requested document is not available.";
@@ -53,10 +54,12 @@ public class ErrorMessages {
     public static final ImmutableList<String> allErrorMessages = ImmutableList.<String>builder()
             .add(PROJECT_NOT_ADDED)
             .add(PROJECT_DUPLICATE)
+            .add(CLOSED_UPDATE_NOT_ALLOWED)
             .add(COMPONENT_NOT_ADDED)
             .add(COMPONENT_DUPLICATE)
             .add(RELEASE_NOT_ADDED)
             .add(RELEASE_DUPLICATE)
+            .add(DUPLICATE_ATTACHMENT)
             .add(LICENSE_USED_BY_RELEASE)
             .add(DOCUMENT_USED_BY_PROJECT_OR_RELEASE)
             .add(DOCUMENT_NOT_PROCESSED_SUCCESSFULLY)
@@ -70,7 +73,6 @@ public class ErrorMessages {
             .add(PASSWORDS_DONT_MATCH)
             .add(COULD_NOT_CREATE_USER_MODERATION_REQUEST)
             .add(EMAIL_ALREADY_EXISTS)
-            .add(FULL_NAME_ALREADY_EXISTS)
             .add(EXTERNAL_ID_ALREADY_EXISTS)
             .add(DOCUMENT_NOT_AVAILABLE)
             .add(ERROR_GETTING_PROJECT)

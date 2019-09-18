@@ -33,6 +33,7 @@ import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -72,7 +73,7 @@ public class ComponentSpecTest extends TestRestDocsSpecBase {
     private Attachment attachment;
 
     @Before
-    public void before() throws TException {
+    public void before() throws TException, IOException {
         Set<Attachment> attachmentList = new HashSet<>();
         List<Resource<Attachment>> attachmentResources = new ArrayList<>();
         attachment = new Attachment("1231231254", "spring-core-4.3.4.RELEASE.jar");
@@ -82,7 +83,7 @@ public class ComponentSpecTest extends TestRestDocsSpecBase {
 
         given(this.attachmentServiceMock.getAttachmentContent(anyObject())).willReturn(new AttachmentContent().setId("1231231254").setFilename("spring-core-4.3.4.RELEASE.jar").setContentType("binary"));
         given(this.attachmentServiceMock.getResourcesFromList(anyObject())).willReturn(new Resources<>(attachmentResources));
-
+        given(this.attachmentServiceMock.uploadAttachment(anyObject(), anyObject(), anyObject())).willReturn(attachment);
         Map<String, Set<String>> externalIds = new HashMap<>();
         externalIds.put("component-id-key", Collections.singleton(""));
 
@@ -106,6 +107,9 @@ public class ComponentSpecTest extends TestRestDocsSpecBase {
         angularComponent.setOperatingSystems(ImmutableSet.of("Windows", "Linux"));
         angularComponent.setAttachments(attachmentList);
         angularComponent.setExternalIds(Collections.singletonMap("component-id-key", "1831A3"));
+        angularComponent.setMailinglist("test@liferay.com");
+        angularComponent.setAdditionalData(Collections.singletonMap("Key", "Value"));
+        angularComponent.setHomepage("https://angular.io");
         componentList.add(angularComponent);
         componentListByName.add(angularComponent);
 
@@ -126,6 +130,7 @@ public class ComponentSpecTest extends TestRestDocsSpecBase {
         springComponent.setLanguages(ImmutableSet.of("EN", "DE"));
         springComponent.setOperatingSystems(ImmutableSet.of("Windows", "Linux"));
         springComponent.setExternalIds(Collections.singletonMap("component-id-key", "c77321"));
+        springComponent.setMailinglist("test@liferay.com");
         componentList.add(springComponent);
 
         when(this.componentServiceMock.createComponent(anyObject(), anyObject())).then(invocation ->
@@ -302,7 +307,10 @@ public class ComponentSpecTest extends TestRestDocsSpecBase {
                                 fieldWithPath("categories").description("The component categories"),
                                 fieldWithPath("languages").description("The language of the component"),
                                 fieldWithPath("externalIds").description("When projects are imported from other tools, the external ids can be stored here"),
+                                fieldWithPath("additionalData").description("A place to store additional data used by external tools"),
                                 fieldWithPath("operatingSystems").description("The OS on which the component operates"),
+                                fieldWithPath("mailinglist").description("Component mailing lists"),
+                                fieldWithPath("homepage").description("The homepage url of the component"),
                                 fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources"),
                                 fieldWithPath("_embedded.createdBy").description("The user who created this component"),
                                 fieldWithPath("_embedded.sw360:releases").description("An array of all component releases with version and link to their <<resources-releases,Releases resource>>"),
@@ -318,6 +326,7 @@ public class ComponentSpecTest extends TestRestDocsSpecBase {
         component.put("name", "Spring Framework");
         component.put("description", "The Spring Framework provides a comprehensive programming and configuration model for modern Java-based enterprise applications.");
         component.put("componentType", ComponentType.OSS.toString());
+        component.put("homepage", "https://angular.io");
 
         String accessToken = TestHelper.getAccessToken(mockMvc, testUserId, testUserPassword);
         this.mockMvc.perform(
@@ -330,7 +339,8 @@ public class ComponentSpecTest extends TestRestDocsSpecBase {
                         requestFields(
                                 fieldWithPath("name").description("The name of the component"),
                                 fieldWithPath("description").description("The component description"),
-                                fieldWithPath("componentType").description("The component type, possible values are: " + Arrays.asList(ComponentType.values()))
+                                fieldWithPath("componentType").description("The component type, possible values are: " + Arrays.asList(ComponentType.values())),
+                                fieldWithPath("homepage").description("The homepage url of the component")
                         ),
                         responseFields(
                                 fieldWithPath("name").description("The name of the component"),
@@ -438,9 +448,12 @@ public class ComponentSpecTest extends TestRestDocsSpecBase {
                                 fieldWithPath("ownerGroup").description("The owner group of the component"),
                                 fieldWithPath("ownerCountry").description("The owner country of the component"),
                                 fieldWithPath("externalIds").description("When projects are imported from other tools, the external ids can be stored here"),
+                                fieldWithPath("additionalData").description("A place to store additional data used by external tools"),
                                 fieldWithPath("categories").description("The component categories"),
                                 fieldWithPath("languages").description("The language of the component"),
+                                fieldWithPath("mailinglist").description("Component mailing lists"),
                                 fieldWithPath("operatingSystems").description("The OS on which the component operates"),
+                                fieldWithPath("homepage").description("The homepage url of the component"),
                                 fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources"),
                                 fieldWithPath("_embedded.createdBy").description("The user who created this component"),
                                 fieldWithPath("_embedded.sw360:releases").description("An array of all component releases with version and link to their <<resources-releases,Releases resource>>"),
@@ -505,5 +518,10 @@ public class ComponentSpecTest extends TestRestDocsSpecBase {
                                 fieldWithPath("_embedded.sw360:components[]externalIds").description("External Ids of the component"),
                                 fieldWithPath("_links").description("<<resources-index-links,Links>> to other resources")
                         )));
+    }
+
+    @Test
+    public void should_document_upload_attachment_to_component() throws Exception {
+        testAttachmentUpload("/api/components/", angularComponent.getId());
     }
 }

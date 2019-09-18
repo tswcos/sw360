@@ -1,5 +1,5 @@
 /*
- * Copyright Siemens AG, 2013-2018. Part of the SW360 Portal Project.
+ * Copyright Siemens AG, 2013-2019. Part of the SW360 Portal Project.
  * With contributions by Bosch Software Innovations GmbH, 2016.
  *
  * SPDX-License-Identifier: EPL-1.0
@@ -31,13 +31,20 @@ public class PortalConstants {
 
     public static final String PROPERTIES_FILE_PATH = "/sw360.properties";
     public static final String PROGRAMMING_LANGUAGES;
+    public static final Set<String> DOMAIN;
     public static final String SOFTWARE_PLATFORMS;
     public static final String OPERATING_SYSTEMS;
     public static final Set<String> SET_CLEARING_TEAMS_STRING;
     public static final String LICENSE_IDENTIFIERS;
     public static final String PREFERRED_COUNTRY_CODES;
 
+    // DO NOT CHANGE THIS UNLESS YOU KNOW WHAT YOU ARE DOING !!!
+    // - friendly url mapping files must be changed
+    // - configured portlets in liferay would not be found anymore
+    public static final String PORTLET_NAME_PREFIX = "sw360_portlet_";
+
     //! Role names
+    // Keep this in sync with configuration/portal-ext.properties#system.site.roles
     public static final String ROLENAME_ADMIN = "Administrator";
     public static final String ROLENAME_CLEARING_ADMIN = "Clearing Admin";
     public static final String ROLENAME_ECC_ADMIN = "ECC Admin";
@@ -58,6 +65,7 @@ public class PortalConstants {
     public static final String PAGENAME_DETAIL = "detail";
     public static final String PAGENAME_VIEW = "view";
     public static final String PAGENAME_IMPORT = "import";
+    public static final String PAGENAME_ADD = "add";
     public static final String PAGENAME_EDIT = "edit";
     public static final String PAGENAME_ACTION = "action";
     public static final String PAGENAME_DUPLICATE = "duplicate";
@@ -69,8 +77,10 @@ public class PortalConstants {
 
     public static final String IS_USER_AT_LEAST_CLEARING_ADMIN = "isUserAtLeastClearingAdmin";
     public static final String IS_USER_AT_LEAST_ECC_ADMIN = "isUserAtLeastECCAdmin";
+    public static final String IS_USER_ADMIN = "isUserAdmin";
 
     //! Specialized keys for licenses
+    public static final String LICENSES_PORTLET_NAME = PORTLET_NAME_PREFIX + "licenses";
     public static final String KEY_LICENSE_DETAIL = "licenseDetail";
     public static final String KEY_OBLIGATION_LIST = "obligationList";
     public static final String LICENSE_ID = "licenseid";
@@ -83,6 +93,7 @@ public class PortalConstants {
     public static final String LICENSE_TYPE_CHOICE = "licenseTypeChoice";
 
     //! Specialized keys for moderation
+    public static final String MODERATION_PORTLET_NAME = PORTLET_NAME_PREFIX + "moderations";
     public static final String MODERATION_ID = "moderationId";
     public static final String MODERATION_REQUEST = "moderationRequest";
     public static final String MODERATION_REQUESTS = "moderationRequests";
@@ -91,12 +102,13 @@ public class PortalConstants {
     public static final String MODERATION_ACTIONS_ALLOWED = "moderationAllowed";
 
     //! Specialized keys for components
+    public static final String COMPONENT_PORTLET_NAME = PORTLET_NAME_PREFIX + "components";
     public static final String COMPONENT_ID = "componentid";
     public static final String COMPONENT = "component";
+    public static final String COMPONENT_PURL = "componentpurl";
     public static final String COMPONENT_NAME = "componentname";
     public static final String ACTUAL_COMPONENT = "actual_component";
     public static final String COMPONENT_LIST = "componentList";
-    public static final String TYPE_MASK = "typeMask";
     public static final String COMPONENT_TYPE_LIST = "componentTypeList";
     public static final String COMPONENT_CATEGORIES;
     public static final String COMPONENT_ROLES;
@@ -121,22 +133,33 @@ public class PortalConstants {
     public static final String RELEASE_LINK_TO_PROJECT = "releaseLinkToProject";
 
     //! Specialized keys for vendors
+    public static final String VENDOR_PORTLET_NAME = PORTLET_NAME_PREFIX + "vendors";
     public static final String VENDOR = "vendor";
     public static final String VENDOR_ID = "vendorId";
     public static final String VENDOR_LIST = "vendorList";
 
+    //! Specialized keys for todos
+    public static final String TODO_LIST = "todoList";
+    public static final String TODO_ID = "todoId";
+
     //! Specialized keys for attachments
     public static final String ATTACHMENTS = "attachments";
+    public static final String SPDX_ATTACHMENTS = "spdxAttachments";
     public static final String ADDED_ATTACHMENTS = "added_attachments";
     public static final String REMOVED_ATTACHMENTS = "removed_attachments";
     public static final String ATTACHMENT_ID = "attachmentId";
+    public static final String ALL_ATTACHMENTS = "all_attachments";
     public static final String CONTEXT_TYPE = "context_type";
     public static final String CONTEXT_ID = "context_id";
     public static final String ATTACHMENT_USAGE_COUNT_MAP = "attachmenUsageCountMap";
     public static final String ATTACHMENT_USAGES = "attachmentUsages";
     public static final String ATTACHMENT_USAGES_RESTRICTED_COUNTS = "attachmentUsagesRestrictedCounts";
+    public static final String SPDX_LICENSE_INFO = "spdxLicenseInfo";
 
     //! Specialized keys for projects
+    public static final String PROJECT_PORTLET_NAME = PORTLET_NAME_PREFIX + "projects";
+    public static final String PROJECT_BDPIMPORT_PORTLET_NAME = PORTLET_NAME_PREFIX + "projectbdpimport";
+    public static final String PROJECT_WSIMPORT_PORTLET_NAME = PORTLET_NAME_PREFIX + "projectwsimport";
     public static final String PROJECT_ID = "projectid";
     public static final String LINKED_PROJECT_ID = "linkedProjectId";
     public static final String PROJECT = "project";
@@ -169,8 +192,12 @@ public class PortalConstants {
     public static final String LICENSE_INFO_ATTACHMENT_USAGES = "licInfoAttUsages";
     public static final String SOURCE_CODE_ATTACHMENT_USAGES = "sourceAttUsages";
     public static final String MANUAL_ATTACHMENT_USAGES = "manualAttUsages";
+    public static final String PROJECT_PATH = "projectPath";
+    public static final String PROJECT_PATHS = "projectPaths";
+    public static final String SOURCE_PROJECT_ID = "sourceProjectId";
 
 
+    public static final String FOSSOLOGY_PORTLET_NAME = PORTLET_NAME_PREFIX + "fossology";
     public static final String FOSSOLOGY_FINGER_PRINTS = "fingerPrints";
     public static final String USER_LIST = "userList";
     public static final String MISSING_USER_LIST = "missingUserList";
@@ -189,6 +216,7 @@ public class PortalConstants {
 
 
     //! Specialized keys for vulnerability management
+    public static final String VULNERABILITIES_PORTLET_NAME = PORTLET_NAME_PREFIX + "vulnerabilitites";
     public static final String VULNERABILITY = "vulnerability";
     public static final String VULNERABILITY_LIST = "vulnerabilityList";
     public static final String VULNERABILITY_RATINGS = "vulnerabilityRatings";
@@ -249,6 +277,40 @@ public class PortalConstants {
     public static final String WHERE_ARRAY = "where[]";
     public static final String HOW = "how";
 
+    //! Keys for ECC
+    public static final String ECC_PORTLET_NAME = PORTLET_NAME_PREFIX + "ecc";
+
+    //! Keys for Search
+    public static final String TYPE_MASK = "typeMask";
+    public static final String SEARCH_PORTLET_NAME = PORTLET_NAME_PREFIX + "search";
+
+    //! Keys for Preferences
+    public static final String PREFERENCES_PORTLET_NAME = PORTLET_NAME_PREFIX + "preferences";
+
+    //! Keys for Admin portlets
+    public static final String ADMIN_PORTLET_NAME = PORTLET_NAME_PREFIX + "admin";
+    public static final String ATTACHMENT_CLEANUP_PORTLET_NAME = PORTLET_NAME_PREFIX + "attachmentcleanup";
+    public static final String BULK_RELEASE_EDIT_PORTLET_NAME = PORTLET_NAME_PREFIX + "bulkreleaseedit";
+    public static final String IMPORT_EXPORT_PORTLET_NAME = PORTLET_NAME_PREFIX + "importexport";
+    public static final String DATABASE_SANITATION_PORTLET_NAME = PORTLET_NAME_PREFIX + "databasesanitation";
+    public static final String LICENSE_ADMIN_PORTLET_NAME = PORTLET_NAME_PREFIX + "licenseadmin";
+    public static final String SCHEDULE_ADMIN_PORTLET_NAME = PORTLET_NAME_PREFIX + "scheduleadmin";
+    public static final String USER_ADMIN_PORTLET_NAME = PORTLET_NAME_PREFIX + "useradmin";
+    public static final String TODOS_PORTLET_NAME = PORTLET_NAME_PREFIX + "todos";
+
+    //! Keys for Home portlets
+    public static final String MY_COMPONENTS_PORTLET_NAME = PORTLET_NAME_PREFIX + "mycomponents";
+    public static final String MY_PROJECTS_PORTLET_NAME = PORTLET_NAME_PREFIX + "myprojects";
+    public static final String MY_SUBSCRIPTIONS_PORTLET_NAME = PORTLET_NAME_PREFIX + "mysubscriptions";
+    public static final String MY_TASK_ASSIGNMENTS_PORTLET_NAME = PORTLET_NAME_PREFIX + "mytaskassignments";
+    public static final String MY_TASK_SUBMISSIONS_PORTLET_NAME = PORTLET_NAME_PREFIX + "mytasksubmissions";
+    public static final String RECENT_COMPONENTS_PORTLET_NAME = PORTLET_NAME_PREFIX + "recentcomponents";
+    public static final String RECENT_RELEASES_PORTLET_NAME = PORTLET_NAME_PREFIX + "recentprojects";
+
+    //! Keys for Welcome portlets
+    public static final String SIGNUP_PORTLET_NAME = PORTLET_NAME_PREFIX + "signup";
+    public static final String WELCOME_PORTLET_NAME = PORTLET_NAME_PREFIX + "welcome";
+
     //! Specialized keys for CSS-classes of project (clearing) state boxes
     public static final String PROJECT_STATE_ACTIVE__CSS      = "projectStateActive";
     public static final String PROJECT_STATE_INACTIVE__CSS    = "projectStateInactive";
@@ -283,6 +345,8 @@ public class PortalConstants {
     public static final String DOWNLOAD_SAMPLE_RELEASE_LINK_INFO = "DownloadSampleReleaseLinkInfo";
     public static final String DOWNLOAD_RELEASE_LINK_INFO = "DownloadReleaseLinkInfo";
     public static final String DOWNLOAD_LICENSE_BACKUP = "DownloadLicenseBackup";
+    public static final String LOAD_SPDX_LICENSE_INFO = "LoadSpdxLicenseInfo";
+    public static final String WRITE_SPDX_LICENSE_INFO_INTO_RELEASE = "WriteSpdxLicenseInfoIntoRelease";
 
     // linked projects and releases actions
     public static final String LINKED_OBJECTS_PREFIX = "load_linked_";
@@ -330,8 +394,15 @@ public class PortalConstants {
 
     public static final String RELEASES_AND_PROJECTS = "releasesAndProjects";
 
+    // Task actions
+    public static final String LOAD_TASK_ASSIGNMENT_LIST = "load_task_assignment_list";
+    public static final String LOAD_TASK_SUBMISSION_LIST = "load_task_submission_list";
+
     // vendor actions
     public static final String REMOVE_VENDOR = "remove_vendor";
+
+    // todo actions
+    public static final String REMOVE_TODO = "removeTodo";
 
     // user actions
     public static final String USER_PREFIX = "user";
@@ -367,6 +438,8 @@ public class PortalConstants {
     public static final String CUSTOM_MAP_VALUE = "customMapValue";
     public static final String EXTERNAL_ID_KEY = "externalIdKey";
     public static final String EXTERNAL_ID_VALUE = "externalIdValue";
+    public static final String ADDITIONAL_DATA_KEY = "additionalDataKey";
+    public static final String ADDITIONAL_DATA_VALUE = "additionalDataValue";
 
     //! request status
     public static final String REQUEST_STATUS = "request_status";
@@ -394,15 +467,23 @@ public class PortalConstants {
     public static final String API_TOKEN_ID = "tokenId";
 
     // CodeScoop integration
-    public static final String CODESCOOP_URL;
-    public static final String CODESCOOP_TOKEN;
+    public static final String CODESCOOP_ACTIVE = "codescoopActive";
+    public static final String CODESCOOP_ACTION = "codescoop_action_";
+    public static final String CODESCOOP_ACTION_COMPOSITE = CODESCOOP_ACTION + "composite";
+    public static final String CODESCOOP_ACTION_COMPONENT = CODESCOOP_ACTION + "component";
+    public static final String CODESCOOP_ACTION_RELEASES = CODESCOOP_ACTION + "releases";
+    public static final String CODESCOOP_ACTION_AUTOCOMPLETE = CODESCOOP_ACTION + "autocomplete";
+    public static final String CODESCOOP_ACTION_PURL = CODESCOOP_ACTION + "purl";
 
     public static final String WRITE_ACCESS_USER = "writeAccessUser";
+
+    public static final String EXTERNAL_ID_SELECTED_KEYS = "externalIds";
 
     static {
         Properties props = CommonUtils.loadProperties(PortalConstants.class, PROPERTIES_FILE_PATH);
 
         PROGRAMMING_LANGUAGES = props.getProperty("programming.languages", "[ \"ActionScript\", \"AppleScript\", \"Asp\",\"Bash\", \"BASIC\", \"C\", \"C++\", \"C#\", \"Cocoa\", \"Clojure\",\"COBOL\",\"ColdFusion\", \"D\", \"Delphi\", \"Erlang\", \"Fortran\", \"Go\", \"Groovy\",\"Haskell\", \"JSP\", \"Java\",\"JavaScript\", \"Objective-C\", \"Ocaml\",\"Lisp\", \"Perl\", \"PHP\", \"Python\", \"Ruby\", \"SQL\", \"SVG\",\"Scala\",\"SmallTalk\", \"Scheme\", \"Tcl\", \"XML\", \"Node.js\", \"JSON\" ]");
+        DOMAIN = CommonUtils.splitToSet(props.getProperty("domain", "Application Software, Documentation, Embedded Software, Hardware, Test and Diagnostics"));
         SOFTWARE_PLATFORMS = props.getProperty("software.platforms", "[ \"Adobe AIR\", \"Adobe Flash\", \"Adobe Shockwave\", \"Binary Runtime Environment for Wireless\", \"Cocoa (API)\", \"Cocoa Touch\", \"Java (software platform)|Java platform\", \"Java Platform, Micro Edition\", \"Java Platform, Standard Edition\", \"Java Platform, Enterprise Edition\", \"JavaFX\", \"JavaFX Mobile\", \"Microsoft XNA\", \"Mono (software)|Mono\", \"Mozilla Prism\", \".NET Framework\", \"Silverlight\", \"Open Web Platform\", \"Oracle Database\", \"Qt (framework)|Qt\", \"SAP NetWeaver\", \"Smartface\", \"Vexi\", \"Windows Runtime\" ]");
         OPERATING_SYSTEMS = props.getProperty("operating.systems", "[ \"Android\", \"BSD\", \"iOS\", \"Linux\", \"OS X\", \"QNX\", \"Microsoft Windows\", \"Windows Phone\", \"IBM z/OS\"]");
         SET_CLEARING_TEAMS_STRING = CommonUtils.splitToSet(props.getProperty("clearing.teams", "org1,org2,org3"));
@@ -426,10 +507,6 @@ public class PortalConstants {
         API_TOKEN_MAX_VALIDITY_WRITE_IN_DAYS = props.getProperty("rest.apitoken.write.validity.days", "30");
         API_TOKEN_HASH_SALT = props.getProperty("rest.apitoken.hash.salt", "$2a$04$Software360RestApiSalt");
         API_WRITE_ACCESS_USERGROUP = UserGroup.valueOf(props.getProperty("rest.write.access.usergroup", UserGroup.ADMIN.name()));
-
-        // CodesScoop Constants
-        CODESCOOP_URL = props.getProperty("codescoop.url", "");
-        CODESCOOP_TOKEN = props.getProperty("codescoop.token", "");
     }
 
     private PortalConstants() {

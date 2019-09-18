@@ -15,6 +15,7 @@ package org.eclipse.sw360.licenseinfo.outputGenerators;
 import org.apache.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.thrift.TException;
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.eclipse.sw360.datahandler.common.CommonUtils;
 import org.eclipse.sw360.datahandler.common.SW360Utils;
@@ -24,11 +25,17 @@ import org.eclipse.sw360.datahandler.thrift.components.Component;
 import org.eclipse.sw360.datahandler.thrift.components.ComponentService;
 import org.eclipse.sw360.datahandler.thrift.components.Release;
 import org.eclipse.sw360.datahandler.thrift.components.ReleaseLink;
+import org.eclipse.sw360.datahandler.common.SW360Utils;
+import org.eclipse.sw360.datahandler.thrift.SW360Exception;
+import org.eclipse.sw360.datahandler.thrift.ThriftClients;
+import org.eclipse.sw360.datahandler.thrift.components.Release;
 import org.eclipse.sw360.datahandler.thrift.licenseinfo.*;
 import org.eclipse.sw360.datahandler.thrift.licenses.License;
 import org.eclipse.sw360.datahandler.thrift.licenses.LicenseService;
 import org.eclipse.sw360.datahandler.thrift.licenses.Todo;
 import org.eclipse.sw360.datahandler.thrift.projects.Project;
+import org.eclipse.sw360.datahandler.thrift.projects.ProjectLink;
+import org.eclipse.sw360.datahandler.thrift.projects.ProjectService;
 import org.eclipse.sw360.datahandler.thrift.users.User;
 import org.eclipse.sw360.datahandler.thrift.users.UserService;
 
@@ -44,27 +51,39 @@ import static org.eclipse.sw360.datahandler.common.CommonUtils.nullToEmptyString
 import static org.eclipse.sw360.licenseinfo.outputGenerators.DocxUtils.*;
 
 public class DocxGenerator extends OutputGenerator<byte[]> {
+    private static final int TABLE_WIDTH = 8800;
+    private static final String CAPTION_EXTID_TABLE_VALUE = "External Identifiers for this Product:";
+    private static final String CAPTION_EXTID_TABLE = "$caption-extid-table";
+    private static final String EXTERNAL_ID_TABLE = "$external-id-table";
     private static final Logger LOGGER = Logger.getLogger(DocxGenerator.class);
     private static final String UNKNOWN_LICENSE_NAME = "Unknown license name";
     private static final String UNKNOWN_FILE_NAME = "Unknown file name";
+    private static final String UNKNOWN_LICENSE = "Unknown";
     private static final String TODO_DEFAULT_TEXT = "todo not determined so far.";
 
     private static final String DOCX_TEMPLATE_FILE = "/templateFrontpageContent.docx";
     private static final String DOCX_TEMPLATE_REPORT_FILE = "/templateReport.docx";
     private static final String DOCX_MIME_TYPE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     private static final String DOCX_OUTPUT_TYPE = "docx";
-    public static final String UNKNOWN_LICENSE = "Unknown";
+
     private static final long ADDITIONAL_REQ_THRESHOLD = 3;
-    public static final int ADDITIONAL_REQ_TABLE_INDEX = 5;
+
+    public static final int OVERVIEW_TABLE_INDEX = 0;
+    public static final int SPECIAL_OSS_RISKS_TABLE_INDEX = 1;
     public static final int DEV_DETAIL_TABLE_INDEX = 2;
+    public static final int THIRD_PARTY_COMPONENT_OVERVIEW_TABLE_INDEX = 3;
     private static final int COMMON_RULES_TABLE_INDEX = 4;
+    public static final int ADDITIONAL_REQ_TABLE_INDEX = 5;
+
+    private static final String EXT_ID_TABLE_HEADER_COL1 = "Identifier Name";
+    private static final String EXT_ID_TABLE_HEADER_COL2 = "Identifier Value";
 
     public DocxGenerator(OutputFormatVariant outputFormatVariant, String description) {
         super(DOCX_OUTPUT_TYPE, description, true, DOCX_MIME_TYPE, outputFormatVariant);
     }
 
     @Override
-    public byte[] generateOutputFile(Collection<LicenseInfoParsingResult> projectLicenseInfoResults, Project project, Collection<ObligationParsingResult> obligationResults, User user) throws SW360Exception {
+    public byte[] generateOutputFile(Collection<LicenseInfoParsingResult> projectLicenseInfoResults, Project project, Collection<ObligationParsingResult> obligationResults, User user, Map<String, String> externalIds) throws SW360Exception {
         String licenseInfoHeaderText = project.getLicenseInfoHeaderText();
 
         ByteArrayOutputStream docxOutputStream = new ByteArrayOutputStream();
@@ -81,7 +100,8 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
                             projectLicenseInfoResults,
                             project,
                             licenseInfoHeaderText,
-                            false
+                            false,
+                            externalIds
                             );
                     } else {
                         throw new SW360Exception("Could not load the template for xwpf document: " + DOCX_TEMPLATE_FILE);
@@ -124,7 +144,7 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
         Collection<LicenseInfoParsingResult> projectLicenseInfoResults,
         Project project,
         String licenseInfoHeaderText,
-        boolean includeObligations) throws XmlException, TException {
+        boolean includeObligations, Map<String, String> externalIds) throws XmlException, TException {
 
             String projectName = project.getName();
             String projectVersion = project.getVersion();
@@ -133,10 +153,54 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
             replaceText(document, "$project-name", projectName);
             replaceText(document, "$project-version", projectVersion);
 
+            fillExternalIds(document, externalIds);
             fillReleaseBulletList(document, projectLicenseInfoResults);
             fillReleaseDetailList(document, projectLicenseInfoResults, includeObligations);
             fillLicenseList(document, projectLicenseInfoResults);
+    }
+
+    private void fillExternalIds(XWPFDocument document, Map<String, String> externalIdMap) {
+        if(!externalIdMap.isEmpty()) {
+            replaceText(document, CAPTION_EXTID_TABLE, CAPTION_EXTID_TABLE_VALUE);
+            List<XWPFParagraph> list = document.getParagraphs().stream()
+                    .filter(x -> x.getParagraphText().equalsIgnoreCase(EXTERNAL_ID_TABLE)).collect(Collectors.toList());
+            if (!list.isEmpty()) {
+                XmlCursor cursor = list.get(0).getCTP().newCursor();
+                XWPFTable table = document.insertNewTbl(cursor);
+                XWPFTableRow tableHeader = table.getRow(0);
+                tableHeader.addNewTableCell();
+
+                addFormattedText(tableHeader.getCell(0).addParagraph().createRun(),
+                        EXT_ID_TABLE_HEADER_COL1, FONT_SIZE, true);
+                addFormattedText(tableHeader.getCell(1).addParagraph().createRun(),
+                        EXT_ID_TABLE_HEADER_COL2, FONT_SIZE, true);
+
+                externalIdMap.entrySet().forEach(x -> {
+                    XWPFTableRow row = table.createRow();
+                    row.getCell(0).setText(x.getKey());
+                    row.getCell(1).setText(x.getValue());
+                });
+
+                setTableRowSize(table);
+                removeParagraph(document, EXTERNAL_ID_TABLE);
+                addNewLines(document, 1);
+            }
+        }else {
+            removeParagraph(document,EXTERNAL_ID_TABLE);
+            removeParagraph(document, CAPTION_EXTID_TABLE);
         }
+    }
+
+    private void setTableRowSize(XWPFTable table) {
+        for(int x = 0;x < table.getNumberOfRows(); x++){
+            XWPFTableRow row = table.getRow(x);
+            int numberOfCell = row.getTableCells().size();
+            for(int y = 0; y < numberOfCell ; y++){
+                XWPFTableCell cell = row.getCell(y);
+                cell.getCTTc().addNewTcPr().addNewTcW().setW(BigInteger.valueOf(TABLE_WIDTH));
+            }
+          }
+    }
 
     private void fillReportDocument(
         XWPFDocument document,
@@ -147,6 +211,7 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
         Collection<ObligationParsingResult> obligationResults,
         User user) throws XmlException, TException {
 
+            String businessUnit = project.getBusinessUnit();
             String projectName = project.getName();
             String projectVersion = project.getVersion();
             String obligationsText = project.getObligationsText();
@@ -157,11 +222,13 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
             String deliveryChannelsText = project.getDeliveryChannels();
             String remarksAdditionalRequirementsText = project.getRemarksAdditionalRequirements();
             String projectDescription = project.getDescription();
-
+            // extract licenses that appear at least ADDITIONAL_REQ_THRESHOLD times
+            Set<String> mostLicenses = extractMostCommonLicenses(obligationResults, ADDITIONAL_REQ_THRESHOLD);
 
             fillOwnerGroup(document, project);
             fillAttendeesTable(document, project);
 
+            replaceText(document, "$bunit", businessUnit);
             replaceText(document, "$license-info-header", licenseInfoHeaderText);
             replaceText(document, "$project-name", projectName);
             replaceText(document, "$project-version", projectVersion);
@@ -175,10 +242,14 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
             replaceText(document, "$product-description", projectDescription);
 
             fillSpecialOSSRisksTable(document, project, obligationResults);
-            fillDevelopmentDetailsTable(document, project, user);
+            fillDevelopmentDetailsTable(document, project, user, projectLicenseInfoResults);
             fillOverview3rdPartyComponentTable(document, projectLicenseInfoResults);
+            
             fillCommonRulesTable(document, project);
-            fillAdditionalRequirementsTable(document, obligationResults);
+            replaceText(document, "$list_comma_sep_licenses_above_threshold", String.join(", ", mostLicenses));
+            fillAdditionalRequirementsTable(document, obligationResults, mostLicenses);
+
+            fillCommonRulesTable(document, project);
 
             // because of the impossible API component subsections must be the last thing in the docx file
             // the rest of the sections must be generated after this
@@ -194,9 +265,9 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
     }
 
     private void fillAttendeesTable(XWPFDocument document, Project project) throws XmlException, TException {
-        XWPFTable table = document.getTables().get(0);
+        XWPFTable table = document.getTables().get(OVERVIEW_TABLE_INDEX);
 
-        int currentRow = 6;
+        int currentRow = 7;
 
         UserService.Iface userClient = new ThriftClients().makeUserClient();
 
@@ -220,7 +291,12 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
                         continue;
                     }
 
-                    User user = userClient.getByEmail(email);
+                    User user = null;
+                    try {
+                         user = userClient.getByEmail(email);
+                    } catch (TException te) {
+                        // a resulting null user object is handled below by replacing with email
+                    }
 
                     XWPFTableRow row = table.insertNewTableRow(currentRow++);
                     String name = email;
@@ -229,7 +305,7 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
                     }
                     String department = "N.A.";
                     if(user != null) {
-                        name = user.getDepartment();
+                        department = user.getDepartment();
                     }
 
                     row.addNewTableCell().setText(name);
@@ -241,7 +317,7 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
     }
 
     private void fillSpecialOSSRisksTable(XWPFDocument document, Project project, Collection<ObligationParsingResult> obligationResults) throws XmlException, TException {
-        XWPFTable table = document.getTables().get(1);
+        XWPFTable table = document.getTables().get(SPECIAL_OSS_RISKS_TABLE_INDEX);
         final int[] currentRow = new int[]{0};
 
         obligationResults.stream()
@@ -260,7 +336,7 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
     }
 
     private void fillOverview3rdPartyComponentTable(XWPFDocument document, Collection<LicenseInfoParsingResult> projectLicenseInfoResults) throws XmlException {
-        XWPFTable table = document.getTables().get(3);
+        XWPFTable table = document.getTables().get(THIRD_PARTY_COMPONENT_OVERVIEW_TABLE_INDEX);
 
         int currentRow = 1;
         for(LicenseInfoParsingResult result : projectLicenseInfoResults) {
@@ -292,17 +368,31 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
         return obligationResults.stream().filter(opr -> opr.getRelease() == release).findFirst();
     }
 
-    private void writeComponentSubsections(XWPFDocument document, Collection<LicenseInfoParsingResult> projectLicenseInfoResults, Collection<ObligationParsingResult> obligationResults) throws XmlException {
+    private void writeComponentSubsections(XWPFDocument document, Collection<LicenseInfoParsingResult> projectLicenseInfoResults, Collection<ObligationParsingResult> obligationResults) throws SW360Exception, XmlException {
+        XmlCursor cursor = document.getTables().get(ADDITIONAL_REQ_TABLE_INDEX).getCTTbl().newCursor();
+        cursor.toEndToken();
 
         for (LicenseInfoParsingResult result : projectLicenseInfoResults) {
+            while (cursor.currentTokenType() != XmlCursor.TokenType.START && cursor.hasNextToken()) {
+                cursor.toNextToken();
+            }
 
-            XWPFParagraph title = document.createParagraph();
+            if (cursor.currentTokenType() != XmlCursor.TokenType.START) {
+                throw new SW360Exception("Corrupt template; unable find start token");
+            }
+
+            XWPFParagraph title = document.insertNewParagraph(cursor);
             title.setStyle(STYLE_HEADING_3);
             title.setNumID(new BigInteger("2"));
             XWPFRun titleRun = title.createRun();
             titleRun.setText(result.getVendor() + " " + result.getName());
 
-            XWPFParagraph description = document.createParagraph();
+            if (cursor.hasNextToken()) {
+                cursor.toNextToken();
+            } else {
+                throw new SW360Exception("Corrupt template; unable to proceed to next token");
+            }
+            XWPFParagraph description = document.insertNewParagraph(cursor);
             XWPFRun descriptionRun = description.createRun();
 
             LicenseInfo licenseInfo = result.getLicenseInfo();
@@ -331,7 +421,7 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
 
                 int currentRow = 0;
                 Collection<Obligation> obligations = obligationsResult.getObligations();
-                XWPFTable table = document.createTable();
+                XWPFTable table = document.insertNewTbl(cursor);
                 for (Obligation o : obligations) {
                     XWPFTableRow row = table.insertNewTableRow(currentRow++);
                     String licensesString = String.join(" ", o.getLicenseIDs());
@@ -343,29 +433,34 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
         }
     }
 
-    private void fillDevelopmentDetailsTable(XWPFDocument document, Project project, User user) throws TException {
+    private void fillDevelopmentDetailsTable(XWPFDocument document, Project project, User user, Collection<LicenseInfoParsingResult> projectLicenseInfoResults) throws TException {
         XWPFTable table = document.getTables().get(DEV_DETAIL_TABLE_INDEX);
 
         int currentRow = 1;
 
-        ComponentService.Iface compClient = new ThriftClients().makeComponentClient();
-        List<ReleaseLink> rll = compClient.getLinkedReleases(project.getReleaseIdToUsage());
+        for(LicenseInfoParsingResult result : projectLicenseInfoResults) {
+            if (result.getStatus() != LicenseInfoRequestStatus.SUCCESS) {
+                // this error handling is for extra safety since projectLicenseInfoResults is provided by the caller
+                // and we assume valid input so we silently ignoring it.
+                continue;
+            }
 
-        for (ReleaseLink rl : rll) {
-            Release r = compClient.getReleaseById(rl.getId(), user);
-            Component component = compClient.getComponentById(r.getComponentId(), user);
+            Release r = result.getRelease();
+            if (r == null) {
+                continue;
+            }
 
             XWPFTableRow row = table.insertNewTableRow(currentRow++);
 
-            row.addNewTableCell().setText(component.getName());
+            row.addNewTableCell().setText(r.getName());
 
-            String operatingSystems = component.getOperatingSystemsSize() == 0 ? "Unknown operating systems" : String.join(" ", component.getOperatingSystems());
+            String operatingSystems = r.getOperatingSystemsSize() == 0 ? "N/A" : String.join(" ", r.getOperatingSystems());
             row.addNewTableCell().setText(operatingSystems);
 
-            String langs = component.getLanguagesSize() == 0 ? "Unknown languages" : String.join(" ", component.getLanguages());
+            String langs = r.getLanguagesSize() == 0 ? "N/A" : String.join(" ", r.getLanguages());
             row.addNewTableCell().setText(langs);
 
-            String platforms = component.getSoftwarePlatformsSize() == 0 ? "Unknown platforms" : String.join(" ", component.getSoftwarePlatforms());
+            String platforms = r.getSoftwarePlatformsSize() == 0 ? "N/A" : String.join(" ", r.getSoftwarePlatforms());
             row.addNewTableCell().setText(platforms);
         }
     }
@@ -379,13 +474,11 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
                 .entrySet().stream()
                 .filter(entry -> entry.getValue().longValue() >= threshold)
                 .map(entry -> entry.getKey())
+                .map(license -> license.replace("\n", "").replace("\r", ""))
                 .collect(Collectors.toSet());
     }
 
-    private void fillAdditionalRequirementsTable(XWPFDocument document, Collection<ObligationParsingResult> obligationResults) throws XmlException {
-        // extract licenses that appear at least ADDITIONAL_REQ_THRESHOLD times
-        Set<String> mostLicenses = extractMostCommonLicenses(obligationResults, ADDITIONAL_REQ_THRESHOLD);
-
+    private void fillAdditionalRequirementsTable(XWPFDocument document, Collection<ObligationParsingResult> obligationResults, Set<String> mostLicenses) throws XmlException {
         XWPFTable table = document.getTables().get(ADDITIONAL_REQ_TABLE_INDEX);
         final int[] currentRow = new int[]{0};
 
@@ -393,7 +486,7 @@ public class DocxGenerator extends OutputGenerator<byte[]> {
                 .filter(opr -> opr.getStatus() == ObligationInfoRequestStatus.SUCCESS)
                 .flatMap(opr -> opr.getObligations().stream())
                 .filter(o -> o.getLicenseIDs().stream()
-                            .anyMatch(lid -> mostLicenses.parallelStream().anyMatch(mlid -> mlid.equals(lid))))
+                            .anyMatch(lid -> mostLicenses.parallelStream().anyMatch(mlid -> mlid.equals(lid.replace("\n", "").replace("\r", "")))))
                 .forEach(o -> {
                             currentRow[0] = currentRow[0] + 1;
                             XWPFTableRow row = table.insertNewTableRow(currentRow[0]);

@@ -14,38 +14,26 @@ package org.eclipse.sw360.portal.portlets.projects;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.*;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.*;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.portlet.PortletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionMessages;
-import com.liferay.portal.model.Organization;
-import com.liferay.portal.util.PortalUtil;
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.thrift.TException;
-import org.apache.thrift.TSerializer;
-import org.apache.thrift.protocol.TSimpleJSONProtocol;
-import org.eclipse.sw360.datahandler.common.CommonUtils;
-import org.eclipse.sw360.datahandler.common.SW360Constants;
-import org.eclipse.sw360.datahandler.common.SW360Utils;
-import org.eclipse.sw360.datahandler.common.ThriftEnumUtils;
+import com.liferay.portal.kernel.util.PortalUtil;
+
+import org.eclipse.sw360.datahandler.common.*;
 import org.eclipse.sw360.datahandler.common.WrappedException.WrappedTException;
 import org.eclipse.sw360.datahandler.couchdb.lucene.LuceneAwareDatabaseConnector;
 import org.eclipse.sw360.datahandler.permissions.PermissionUtils;
 import org.eclipse.sw360.datahandler.thrift.*;
 import org.eclipse.sw360.datahandler.thrift.attachments.*;
-import org.eclipse.sw360.datahandler.thrift.components.ComponentService;
-import org.eclipse.sw360.datahandler.thrift.components.Release;
-import org.eclipse.sw360.datahandler.thrift.components.ReleaseClearingStatusData;
-import org.eclipse.sw360.datahandler.thrift.components.ReleaseLink;
+import org.eclipse.sw360.datahandler.thrift.components.*;
 import org.eclipse.sw360.datahandler.thrift.cvesearch.CveSearchService;
 import org.eclipse.sw360.datahandler.thrift.cvesearch.VulnerabilityUpdateStatus;
 import org.eclipse.sw360.datahandler.thrift.licenseinfo.*;
 import org.eclipse.sw360.datahandler.thrift.projects.*;
 import org.eclipse.sw360.datahandler.thrift.users.RequestedAction;
 import org.eclipse.sw360.datahandler.thrift.users.User;
+import org.eclipse.sw360.datahandler.thrift.users.UserGroup;
 import org.eclipse.sw360.datahandler.thrift.vendors.Vendor;
 import org.eclipse.sw360.datahandler.thrift.vulnerabilities.*;
 import org.eclipse.sw360.exporter.ProjectExporter;
@@ -57,22 +45,27 @@ import org.eclipse.sw360.portal.portlets.FossologyAwarePortlet;
 import org.eclipse.sw360.portal.users.LifeRayUserSession;
 import org.eclipse.sw360.portal.users.UserCacheHolder;
 import org.eclipse.sw360.portal.users.UserUtils;
-import org.jetbrains.annotations.NotNull;
 
-import javax.portlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.thrift.TException;
+import org.apache.thrift.TSerializer;
+import org.apache.thrift.protocol.TSimpleJSONProtocol;
+import org.jetbrains.annotations.NotNull;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLConnection;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import javax.portlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.base.Strings.nullToEmpty;
@@ -86,14 +79,24 @@ import static org.eclipse.sw360.datahandler.common.WrappedException.wrapTExcepti
 import static org.eclipse.sw360.portal.common.PortalConstants.*;
 import static org.eclipse.sw360.portal.portlets.projects.ProjectPortletUtils.isUsageEquivalent;
 
+@org.osgi.service.component.annotations.Component(
+    immediate = true,
+    properties = {
+        "/org/eclipse/sw360/portal/portlets/base.properties",
+        "/org/eclipse/sw360/portal/portlets/default.properties",
+    },
+    property = {
+        "javax.portlet.name=" + PROJECT_PORTLET_NAME,
 
-/**
- * Project portlet implementation
- *
- * @author cedric.bodet@tngtech.com
- * @author Johannes.Najjar@tngtech.com
- * @author alex.borodin@evosoft.com
- */
+        "javax.portlet.display-name=Projects",
+        "javax.portlet.info.short-title=Projects",
+        "javax.portlet.info.title=Projects",
+
+        "javax.portlet.init-param.view-template=/html/projects/view.jsp",
+    },
+    service = Portlet.class,
+    configurationPolicy = ConfigurationPolicy.REQUIRE
+)
 public class ProjectPortlet extends FossologyAwarePortlet {
     private static final Logger log = Logger.getLogger(ProjectPortlet.class);
 
@@ -269,22 +272,52 @@ public class ProjectPortlet extends FossologyAwarePortlet {
 
     private void downloadLicenseInfo(ResourceRequest request, ResourceResponse response) throws IOException {
         final String projectId = request.getParameter(PROJECT_ID);
-        final String outputGenerator = request.getParameter(PortalConstants.LICENSE_INFO_SELECTED_OUTPUT_FORMAT);
-        final Map<String, Set<String>> selectedReleaseAndAttachmentIds = ProjectPortletUtils
-                .getSelectedReleaseAndAttachmentIdsFromRequest(request);
-        final Set<String> attachmentIds = selectedReleaseAndAttachmentIds.values().stream().flatMap(Collection::stream)
-                .collect(Collectors.toSet());
-        final Map<String, Set<LicenseNameWithText>> excludedLicensesPerAttachmentId = ProjectPortletUtils
-                .getExcludedLicensesPerAttachmentIdFromRequest(attachmentIds, request);
+        String outputGenerator = request.getParameter(PortalConstants.LICENSE_INFO_SELECTED_OUTPUT_FORMAT);
+        String extIdsFromRequest = request.getParameter(PortalConstants.EXTERNAL_ID_SELECTED_KEYS);
+
+        String externalIds = Optional.of(extIdsFromRequest).orElse(StringUtils.EMPTY);
+
+        Set<String> selectedAttachmentIdsWithPath = Sets
+                .newHashSet(request.getParameterValues(PortalConstants.LICENSE_INFO_RELEASE_TO_ATTACHMENT));
+        final Map<String, Set<LicenseNameWithText>> excludedLicensesPerAttachmentIdWithPath = ProjectPortletUtils
+                .getExcludedLicensesPerAttachmentIdFromRequest(selectedAttachmentIdsWithPath, request);
+
+        final Map<String, Set<String>> releaseIdsToSelectedAttachmentIds = new HashMap<>();
+        selectedAttachmentIdsWithPath.stream().forEach(selectedAttachmentIdWithPath -> {
+            String[] pathParts = selectedAttachmentIdWithPath.split(":");
+            String releaseId = pathParts[pathParts.length - 2];
+            String attachmentId = pathParts[pathParts.length - 1];
+            if (releaseIdsToSelectedAttachmentIds.containsKey(releaseId)) {
+                // since we have a set as value, we can just add without getting duplicates
+                releaseIdsToSelectedAttachmentIds.get(releaseId).add(attachmentId);
+            } else {
+                Set<String> attachmentIds = new HashSet<>();
+                attachmentIds.add(attachmentId);
+                releaseIdsToSelectedAttachmentIds.put(releaseId, attachmentIds);
+            }
+        });
+        final Map<String, Set<LicenseNameWithText>> excludedLicensesPerAttachmentId = new HashMap<>();
+        excludedLicensesPerAttachmentIdWithPath.entrySet().stream().forEach(entry -> {
+            String attachmentId = entry.getKey().substring(entry.getKey().lastIndexOf(":") + 1);
+            Set<LicenseNameWithText> excludedLicenses = entry.getValue();
+            if (excludedLicensesPerAttachmentId.containsKey(attachmentId)) {
+                // this is the important part: if a license is not excluded (read "included") in
+                // one attachment occurence, then include (read "not exclude") it in the final
+                // result
+                excludedLicenses = Sets.intersection(excludedLicensesPerAttachmentId.get(attachmentId),
+                        entry.getValue());
+            }
+            excludedLicensesPerAttachmentId.put(attachmentId, excludedLicenses);
+        });
 
         try {
             final LicenseInfoService.Iface licenseInfoClient = thriftClients.makeLicenseInfoClient();
-
             final User user = UserCacheHolder.getUserFromRequest(request);
             Project project = thriftClients.makeProjectClient().getProjectById(projectId, user);
             LicenseInfoFile licenseInfoFile = licenseInfoClient.getLicenseInfoFile(project, user, outputGenerator,
-                    selectedReleaseAndAttachmentIds, excludedLicensesPerAttachmentId);
-            saveLicenseInfoAttachmentUsages(project, user, selectedReleaseAndAttachmentIds, excludedLicensesPerAttachmentId);
+                    releaseIdsToSelectedAttachmentIds, excludedLicensesPerAttachmentId, externalIds);
+            saveLicenseInfoAttachmentUsages(project, user, selectedAttachmentIdsWithPath,
+                    excludedLicensesPerAttachmentIdWithPath);
             sendLicenseInfoResponse(request, response, project, licenseInfoFile);
         } catch (TException e) {
             log.error("Error getting LicenseInfo file for project with id " + projectId + " and generator " + outputGenerator, e);
@@ -293,8 +326,9 @@ public class ProjectPortlet extends FossologyAwarePortlet {
     }
 
     private void sendLicenseInfoResponse(ResourceRequest request, ResourceResponse response, Project project, LicenseInfoFile licenseInfoFile) throws IOException {
-    	OutputFormatInfo outputFormatInfo = licenseInfoFile.getOutputFormatInfo();
-	String filename = String.format("LicenseInfo-%s%s-%s.%s", project.getName(),
+        OutputFormatInfo outputFormatInfo = licenseInfoFile.getOutputFormatInfo();
+        String documentVariant = licenseInfoFile.getOutputFormatInfo().getVariant() == OutputFormatVariant.DISCLOSURE ? "LicenseInfo" : "ProjectClearingReport";
+        String filename = String.format("%s-%s%s-%s.%s", documentVariant, project.getName(),
 			StringUtils.isBlank(project.getVersion()) ? "" : "-" + project.getVersion(),
 			SW360Utils.getCreatedOnTime().replaceAll("\\s", "_").replace(":", "_"),
 			outputFormatInfo.getFileExtension());
@@ -306,18 +340,25 @@ public class ProjectPortlet extends FossologyAwarePortlet {
         PortletResponseUtil.sendFile(request, response, filename, licenseInfoFile.getGeneratedOutput(), mimetype);
     }
 
-    private void saveLicenseInfoAttachmentUsages(Project project, User user, Map<String, Set<String>> selectedReleaseAndAttachmentIds, Map<String, Set<LicenseNameWithText>> excludedLicensesPerAttachmentId) {
-        try {
+    private void saveLicenseInfoAttachmentUsages(Project project, User user, Set<String> selectedAttachmentIdsWithPath,
+            Map<String, Set<LicenseNameWithText>> excludedLicensesPerAttachmentIdWithPath) {
 
+        try {
             Function<String, UsageData> usageDataGenerator = attachmentContentId -> {
-                Set<String> licenseIds = CommonUtils.nullToEmptySet(excludedLicensesPerAttachmentId.get(attachmentContentId)).stream()
+                Set<String> licenseIds = CommonUtils
+                        .nullToEmptySet(excludedLicensesPerAttachmentIdWithPath.get(attachmentContentId)).stream()
                         .filter(LicenseNameWithText::isSetLicenseName)
                         .map(LicenseNameWithText::getLicenseName)
                         .collect(Collectors.toSet());
-                return UsageData.licenseInfo(new LicenseInfoUsage(licenseIds));
+                LicenseInfoUsage licenseInfoUsage = new LicenseInfoUsage(licenseIds);
+                // until second last occurence of ":" (strip releaseId and attachmentId)
+                String projectPath = attachmentContentId.substring(0,
+                        attachmentContentId.lastIndexOf(":", attachmentContentId.lastIndexOf(":") - 1));
+                licenseInfoUsage.setProjectPath(projectPath);
+                return UsageData.licenseInfo(licenseInfoUsage);
             };
-            List<AttachmentUsage> attachmentUsages = ProjectPortletUtils.makeAttachmentUsages(project, selectedReleaseAndAttachmentIds,
-                    usageDataGenerator);
+            List<AttachmentUsage> attachmentUsages = ProjectPortletUtils.makeLicenseInfoAttachmentUsages(project,
+                    selectedAttachmentIdsWithPath, usageDataGenerator);
             replaceAttachmentUsages(project, user, attachmentUsages, UsageData.licenseInfo(new LicenseInfoUsage(Collections.emptySet())));
         } catch (TException e) {
             // there's no need to abort the user's desired action just because the ancillary action of storing selection failed
@@ -358,7 +399,8 @@ public class ProjectPortlet extends FossologyAwarePortlet {
 
     private void downloadSourceCodeBundle(ResourceRequest request, ResourceResponse response) {
 
-        Map<String, Set<String>> selectedReleaseAndAttachmentIds = ProjectPortletUtils.getSelectedReleaseAndAttachmentIdsFromRequest(request);
+        Map<String, Set<String>> selectedReleaseAndAttachmentIds = ProjectPortletUtils
+                .getSelectedReleaseAndAttachmentIdsFromRequest(request, false);
         Set<String> selectedAttachmentIds = new HashSet<>();
         selectedReleaseAndAttachmentIds.forEach((key, value) -> selectedAttachmentIds.addAll(value));
 
@@ -668,7 +710,9 @@ public class ProjectPortlet extends FossologyAwarePortlet {
                     Strings.nullToEmpty(l1.get(LICENSE_NAME_WITH_TEXT_NAME))
                             .compareTo(l2.get(LICENSE_NAME_WITH_TEXT_NAME)));
 
-            request.getPortletSession().setAttribute(LICENSE_STORE_KEY_PREFIX + attachmentContentId, licenseStore);
+            request.getPortletSession()
+                    .setAttribute(LICENSE_STORE_KEY_PREFIX + request.getParameter(PortalConstants.PROJECT_PATH) + ":"
+                            + release.getId() + ":" + attachmentContentId, licenseStore);
             writeJSON(request, response, OBJECT_MAPPER.writeValueAsString(licenses));
         } catch (TException exception) {
             log.error("Cannot retrieve license information for attachment id " + attachmentContentId + ".", exception);
@@ -766,8 +810,10 @@ public class ProjectPortlet extends FossologyAwarePortlet {
     }
 
     private void prepareStandardView(RenderRequest request) throws IOException {
+        User user = UserCacheHolder.getUserFromRequest(request);
         List<Organization> organizations = UserUtils.getOrganizations(request);
         request.setAttribute(PortalConstants.ORGANIZATIONS, organizations);
+        request.setAttribute(IS_USER_ADMIN, PermissionUtils.isUserAtLeast(UserGroup.SW360_ADMIN, user) ? "Yes" : "No");
         for (Project._Fields filteredField : projectFilteredFields) {
             String parameter = request.getParameter(filteredField.toString());
             request.setAttribute(filteredField.getFieldName(), nullToEmpty(parameter));
@@ -871,6 +917,7 @@ public class ProjectPortlet extends FossologyAwarePortlet {
 
                 addProjectBreadcrumb(request, response, project);
                 request.setAttribute(PROJECT_OBLIGATIONS, SW360Utils.getProjectObligations(project));
+                request.setAttribute(IS_USER_ADMIN, PermissionUtils.isUserAtLeast(UserGroup.SW360_ADMIN, user) ? "Yes" : "No");
 
             } catch (TException e) {
                 log.error("Error fetching project from backend!", e);
@@ -894,6 +941,9 @@ public class ProjectPortlet extends FossologyAwarePortlet {
                 request.setAttribute(PROJECT, project);
                 request.setAttribute(DOCUMENT_ID, id);
 
+                Map<String,String> extIdMap = project.getExternalIds();
+                request.setAttribute("externalIds", extIdMap.keySet());
+
                 LicenseInfoService.Iface licenseInfoClient = thriftClients.makeLicenseInfoClient();
                 List<OutputFormatInfo> outputFormats = licenseInfoClient.getPossibleOutputFormats();
                 request.setAttribute(PortalConstants.LICENSE_INFO_OUTPUT_FORMATS, outputFormats);
@@ -904,12 +954,53 @@ public class ProjectPortlet extends FossologyAwarePortlet {
                 request.setAttribute(PROJECT_LIST, mappedProjectLinks);
                 addProjectBreadcrumb(request, response, project);
 
+                storePathsMapInRequest(request, mappedProjectLinks);
                 storeAttachmentUsageCountInRequest(request, mappedProjectLinks, UsageData.licenseInfo(new LicenseInfoUsage(Sets.newHashSet())));
             } catch (TException e) {
                 log.error("Error fetching project from backend!", e);
                 setSW360SessionError(request, ErrorMessages.ERROR_GETTING_PROJECT);
             }
         }
+    }
+
+    /**
+     * Method generates a map with nodeIds of given {@link ProjectLink}s as keys.
+     * The value is the corresponding project path as a {@link String}. A project
+     * path denotes the concatenations of projectids from the root project of the
+     * given link list to the current project, separated with ":". This map will be
+     * put in the given {@link RenderRequest} as attribute value of
+     *
+     * @param request            the request to store the paths map into
+     * @param mappedProjectLinks the list of projectlinks which describe the project
+     *                           tree whose paths map should be generated
+     */
+    private void storePathsMapInRequest(RenderRequest request, List<ProjectLink> mappedProjectLinks) {
+        Map<String, String> paths = new HashMap<>();
+
+        for (ProjectLink link : mappedProjectLinks) {
+            if (link.getTreeLevel() == 0) {
+                paths.put(link.getId(), "");
+                continue;
+            }
+
+            String path = "";
+            ProjectLink current = link;
+            while (current.getParentNodeId() != null) {
+                final String parentNodeId = current.getParentNodeId();
+                path = current.getId() + (path.length() > 0 ? ":" + path : "");
+                Optional<ProjectLink> parent = mappedProjectLinks.stream()
+                        .filter(l -> l.getNodeId().equals(parentNodeId)).findFirst();
+                if (parent.isPresent()) {
+                    current = parent.get();
+                } else {
+                    break;
+                }
+            }
+            path = current.getId() + (path.length() > 0 ? ":" + path : "");
+            paths.put(link.getNodeId(), path);
+        }
+
+        request.setAttribute(PortalConstants.PROJECT_PATHS, paths);
     }
 
     private void storeAttachmentUsageCountInRequest(RenderRequest request, List<ProjectLink> mappedProjectLinks, UsageData filter) throws TException {
@@ -1144,6 +1235,7 @@ public class ProjectPortlet extends FossologyAwarePortlet {
                 putDirectlyLinkedReleasesInRequest(request, newProject);
                 request.setAttribute(USING_PROJECTS, Collections.emptySet());
                 request.setAttribute(ALL_USING_PROJECTS_COUNT, 0);
+                request.setAttribute(SOURCE_PROJECT_ID, id);
             } else {
                 Project project = new Project();
                 project.setBusinessUnit(user.getDepartment());
@@ -1183,8 +1275,11 @@ public class ProjectPortlet extends FossologyAwarePortlet {
                 user.setCommentMadeDuringModerationRequest(ModerationRequestCommentMsg);
                 requestStatus = client.updateProject(project, user);
                 setSessionMessage(request, requestStatus, "Project", "update", printName(project));
-                if (RequestStatus.DUPLICATE.equals(requestStatus)) {
-                    setSW360SessionError(request, ErrorMessages.PROJECT_DUPLICATE);
+                if (RequestStatus.DUPLICATE.equals(requestStatus) || RequestStatus.DUPLICATE_ATTACHMENT.equals(requestStatus)) {
+                    if(RequestStatus.DUPLICATE.equals(requestStatus))
+                        setSW360SessionError(request, ErrorMessages.PROJECT_DUPLICATE);
+                    else
+                        setSW360SessionError(request, ErrorMessages.DUPLICATE_ATTACHMENT);
                     response.setRenderParameter(PAGENAME, PAGENAME_EDIT);
                     request.setAttribute(DOCUMENT_TYPE, SW360Constants.TYPE_PROJECT);
                     request.setAttribute(DOCUMENT_ID, id);
@@ -1199,6 +1294,12 @@ public class ProjectPortlet extends FossologyAwarePortlet {
                 Project project = new Project();
                 ProjectPortletUtils.updateProjectFromRequest(request, project);
                 AddDocumentRequestSummary summary = client.addProject(project, user);
+                String  newProjectId= summary.getId();
+                String sourceProjectId = request.getParameter(SOURCE_PROJECT_ID);
+
+                if (sourceProjectId != null) {
+                    copyAttachmentUsagesForClonedProject(request, sourceProjectId, newProjectId);
+                }
 
                 AddDocumentRequestStatus status = summary.getRequestStatus();
                 switch(status) {
@@ -1222,6 +1323,30 @@ public class ProjectPortlet extends FossologyAwarePortlet {
         } catch (TException e) {
             log.error("Error updating project in backend!", e);
             setSW360SessionError(request, ErrorMessages.DEFAULT_ERROR_MESSAGE);
+        }
+    }
+
+    private void copyAttachmentUsagesForClonedProject(ActionRequest request, String sourceProjectId, String newProjectId)
+            throws TException, PortletException {
+        try {
+            AttachmentService.Iface attachmentClient = thriftClients.makeAttachmentClient();
+
+            List<AttachmentUsage> attachmentUsages = wrapTException(
+                    () -> attachmentClient.getUsedAttachments(Source.projectId(sourceProjectId), null));
+            attachmentUsages.forEach(attachmentUsage -> {
+                attachmentUsage.unsetId();
+                attachmentUsage.setUsedBy(Source.projectId(newProjectId));
+                if (attachmentUsage.isSetUsageData()
+                        && attachmentUsage.getUsageData().getSetField().equals(UsageData._Fields.LICENSE_INFO)
+                        && attachmentUsage.getUsageData().getLicenseInfo().isSetProjectPath()) {
+                    LicenseInfoUsage licenseInfoUsage = attachmentUsage.getUsageData().getLicenseInfo();
+                    String projectPath = licenseInfoUsage.getProjectPath();
+                    licenseInfoUsage.setProjectPath(projectPath.replace(sourceProjectId, newProjectId));
+                }
+            });
+            attachmentClient.makeAttachmentUsages(attachmentUsages);
+        } catch (WrappedTException e) {
+            throw new PortletException("Cannot clone attachment usages", e);
         }
     }
 

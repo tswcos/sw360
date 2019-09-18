@@ -11,7 +11,6 @@
  */
 package org.eclipse.sw360.licenses.db;
 
-import org.apache.log4j.Logger;
 import org.eclipse.sw360.components.summary.SummaryType;
 import org.eclipse.sw360.datahandler.common.CommonUtils;
 import org.eclipse.sw360.datahandler.common.SW360Utils;
@@ -30,6 +29,8 @@ import org.eclipse.sw360.datahandler.thrift.users.RequestedAction;
 import org.eclipse.sw360.datahandler.thrift.users.User;
 import org.eclipse.sw360.datahandler.thrift.users.UserGroup;
 import org.eclipse.sw360.licenses.tools.SpdxConnector;
+
+import org.apache.log4j.Logger;
 import org.ektorp.DocumentOperationResult;
 import org.ektorp.http.HttpClient;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +44,6 @@ import static org.eclipse.sw360.datahandler.common.CommonUtils.*;
 import static org.eclipse.sw360.datahandler.common.SW360Assert.assertNotNull;
 import static org.eclipse.sw360.datahandler.permissions.PermissionUtils.makePermission;
 import static org.eclipse.sw360.datahandler.thrift.ThriftValidate.*;
-import static org.eclipse.sw360.datahandler.thrift.users.UserGroup.CLEARING_ADMIN;
 
 /**
  * Class for accessing the CouchDB database
@@ -140,7 +140,9 @@ public class LicenseDatabaseHandler {
     public License getLicenseForOrganisation(String id, String organisation) throws SW360Exception {
         License license = licenseRepository.get(id);
 
-        assertNotNull(license);
+        if (license == null) {
+            throw new SW360Exception("No license details found in the database for id " + id + ".");
+        }
 
         fillLicenseForOrganisation(organisation, license);
 
@@ -220,7 +222,7 @@ public class LicenseDatabaseHandler {
      * @return ID of the added todo.
      */
     public String addTodo(@NotNull Todo todo, User user) throws SW360Exception {
-        if (!PermissionUtils.isUserAtLeast(CLEARING_ADMIN, user)){
+        if (!PermissionUtils.isUserAtLeast(UserGroup.CLEARING_ADMIN, user)){
             return null;
         }
         prepareTodo(todo);
@@ -531,7 +533,7 @@ public class LicenseDatabaseHandler {
     }
 
     public List<RiskCategory> addRiskCategories(List<RiskCategory> riskCategories, User user) throws SW360Exception {
-        if (!PermissionUtils.isUserAtLeast(CLEARING_ADMIN, user)){
+        if (!PermissionUtils.isUserAtLeast(UserGroup.CLEARING_ADMIN, user)){
             return null;
         }
         for (RiskCategory riskCategory : riskCategories) {
@@ -545,7 +547,7 @@ public class LicenseDatabaseHandler {
     }
 
     public List<Risk> addRisks(List<Risk> risks, User user) throws SW360Exception {
-        if (!PermissionUtils.isUserAtLeast(CLEARING_ADMIN, user)){
+        if (!PermissionUtils.isUserAtLeast(UserGroup.CLEARING_ADMIN, user)){
             return null;
         }
         for (Risk risk : risks) {
@@ -559,7 +561,7 @@ public class LicenseDatabaseHandler {
     }
 
     public List<LicenseType> addLicenseTypes(List<LicenseType> licenseTypes, User user) {
-        if (!PermissionUtils.isUserAtLeast(CLEARING_ADMIN, user)){
+        if (!PermissionUtils.isUserAtLeast(UserGroup.CLEARING_ADMIN, user)){
             return null;
         }
         final List<DocumentOperationResult> documentOperationResults = licenseTypeRepository.executeBulk(licenseTypes);
@@ -603,7 +605,7 @@ public class LicenseDatabaseHandler {
     }
 
     public List<Obligation> addObligations(List<Obligation> obligations, User user) throws SW360Exception {
-        if (!PermissionUtils.isUserAtLeast(CLEARING_ADMIN, user)){
+        if (!PermissionUtils.isUserAtLeast(UserGroup.CLEARING_ADMIN, user)){
             return null;
         }
         for (Obligation obligation : obligations) {
@@ -617,7 +619,7 @@ public class LicenseDatabaseHandler {
     }
 
     public List<Todo> addTodos(List<Todo> todos, User user) throws SW360Exception {
-        if (!PermissionUtils.isUserAtLeast(CLEARING_ADMIN, user)){
+        if (!PermissionUtils.isUserAtLeast(UserGroup.CLEARING_ADMIN, user)){
             return null;
         }
         for (Todo todo : todos) {
@@ -894,5 +896,19 @@ public class LicenseDatabaseHandler {
         return requestSummary
                 .setTotalElements(spdxIds.size())
                 .setRequestStatus(RequestStatus.SUCCESS);
+    }
+
+    public RequestStatus deleteTodo(String id, User user) throws SW360Exception {
+        Todo todo = todoRepository.get(id);
+        assertNotNull(todo);
+
+        // Remove the license if the user is allowed to do it by himself
+        if (PermissionUtils.isUserAtLeast(UserGroup.SW360_ADMIN, user)) {
+            todoRepository.remove(todo);
+            return RequestStatus.SUCCESS;
+        } else {
+            log.error(user + " does not have the permission to delete todo.");
+            return RequestStatus.ACCESS_DENIED;
+        }
     }
 }
