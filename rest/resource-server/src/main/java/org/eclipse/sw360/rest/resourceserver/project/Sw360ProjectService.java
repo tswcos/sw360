@@ -60,11 +60,29 @@ public class Sw360ProjectService implements AwareOfRestServices<Project> {
         return sw360ProjectClient.getProjectById(projectId, sw360User);
     }
 
+    public Set<Project> searchLinkingProjects(String projectId, User sw360User) throws TException {
+        ProjectService.Iface sw360ProjectClient = getThriftProjectClient();
+        return sw360ProjectClient.searchLinkingProjects(projectId, sw360User);
+    }
+
+    public Set<Project> getProjectsByReleaseIds(Set<String> releaseids, User sw360User)
+            throws TException {
+        ProjectService.Iface sw360ProjectClient = getThriftProjectClient();
+        return sw360ProjectClient.searchByReleaseIds(releaseids, sw360User);
+    }
+
+    public Set<Project> getProjectsByRelease(String releaseid, User sw360User)
+            throws TException {
+        ProjectService.Iface sw360ProjectClient = getThriftProjectClient();
+        return sw360ProjectClient.searchByReleaseId(releaseid, sw360User);
+    }
+
     public Project createProject(Project project, User sw360User) throws TException {
         ProjectService.Iface sw360ProjectClient = getThriftProjectClient();
         AddDocumentRequestSummary documentRequestSummary = sw360ProjectClient.addProject(project, sw360User);
         if (documentRequestSummary.getRequestStatus() == AddDocumentRequestStatus.SUCCESS) {
             project.setId(documentRequestSummary.getId());
+            project.setCreatedBy(sw360User.getEmail());
             return project;
         } else if (documentRequestSummary.getRequestStatus() == AddDocumentRequestStatus.DUPLICATE) {
             throw new DataIntegrityViolationException("sw360 project with name '" + project.getName() + "' already exists.");

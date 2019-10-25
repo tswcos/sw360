@@ -40,6 +40,7 @@ import org.eclipse.sw360.rest.resourceserver.core.RestControllerHelper;
 import org.eclipse.sw360.rest.resourceserver.license.Sw360LicenseService;
 import org.eclipse.sw360.rest.resourceserver.licenseinfo.Sw360LicenseInfoService;
 import org.eclipse.sw360.rest.resourceserver.release.Sw360ReleaseService;
+import org.eclipse.sw360.rest.resourceserver.user.Sw360UserService;
 import org.eclipse.sw360.rest.resourceserver.vulnerability.Sw360VulnerabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
@@ -77,6 +78,9 @@ public class ProjectController implements ResourceProcessor<RepositoryLinksResou
 
     @NonNull
     private final Sw360ProjectService projectService;
+
+    @NonNull
+    private final Sw360UserService userService;
 
     @NonNull
     private final Sw360ReleaseService releaseService;
@@ -388,6 +392,23 @@ public class ProjectController implements ResourceProcessor<RepositoryLinksResou
         return restControllerHelper.searchByExternalIds(externalIdsMultiMap, projectService, sw360User);
     }
 
+    @RequestMapping(value = PROJECTS_URL + "/usedBy" + "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Resources<Resource<Project>>> getUsedByProjectDetails(@PathVariable("id") String id) throws TException{
+        User user = restControllerHelper.getSw360UserFromAuthentication();
+        //Project sw360Project = projectService.getProjectForUserById(id, user);
+        Set<Project> sw360Projects = projectService.searchLinkingProjects(id, user);
+
+        List<Resource<Project>> projectResources = new ArrayList<>();
+        sw360Projects.stream()
+                .forEach(p -> {
+                    Project embeddedProject = restControllerHelper.convertToEmbeddedProject(p);
+                    projectResources.add(new Resource<>(embeddedProject));
+                });
+
+        Resources<Resource<Project>> resources = new Resources<>(projectResources);
+        return new ResponseEntity<>(resources, HttpStatus.OK);
+    }
+
     @Override
     public RepositoryLinksResource process(RepositoryLinksResource resource) {
         resource.add(linkTo(ProjectController.class).slash("api" + PROJECTS_URL).withRel("projects"));
@@ -396,7 +417,7 @@ public class ProjectController implements ResourceProcessor<RepositoryLinksResou
 
     private HalResource<Project> createHalProject(Project sw360Project, User sw360User) throws TException {
         HalResource<Project> halProject = new HalResource<>(sw360Project);
-        restControllerHelper.addEmbeddedUser(halProject, sw360User, "createdBy");
+        restControllerHelper.addEmbeddedUser(halProject, userService.getUserByEmail(sw360Project.getCreatedBy()), "createdBy");
 
         Map<String, ProjectReleaseRelationship> releaseIdToUsage = sw360Project.getReleaseIdToUsage();
         if (releaseIdToUsage != null) {
@@ -415,6 +436,15 @@ public class ProjectController implements ResourceProcessor<RepositoryLinksResou
 
         if (sw360Project.getAttachments() != null) {
             restControllerHelper.addEmbeddedAttachments(halProject, sw360Project.getAttachments());
+        }
+
+        if(sw360Project.getLeadArchitect() != null) {
+            restControllerHelper.addEmbeddedLeadArchitect(halProject, sw360Project.getLeadArchitect());
+        }
+
+        if (sw360Project.getContributors() != null) {
+            Set<String> contributors = sw360Project.getContributors();
+            restControllerHelper.addEmbeddedContributors(halProject, contributors);
         }
 
         return halProject;
