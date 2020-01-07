@@ -192,9 +192,13 @@
         <td>
             <div class="form-group">
                 <label class="mandatory" for="group">Group</label>
-                <input id="group" class="form-control" name="<portlet:namespace/><%=Project._Fields.BUSINESS_UNIT%>" type="text"
-                    placeholder="Enter Group" required
-                    value="<sw360:out value="${project.businessUnit}"/>"/>
+                <select class="form-control" id="group" name="<portlet:namespace/><%=Project._Fields.BUSINESS_UNIT%>" >
+					<core_rt:forEach items="${organizations}" var="org">
+						<option value="${org.name}" class="textlabel stackedLabel"
+						<core_rt:if test="${org.name == project.businessUnit}"> selected="selected"</core_rt:if>
+						>${org.name}</option>
+					</core_rt:forEach>
+				</select>
                 <div class="invalid-feedback">
                         Please enter a group!
                 </div>
@@ -223,9 +227,14 @@
         <td>
             <div class="form-group">
                 <label for="proj_billing_group">Owner billing group</label>
-                <input class="form-control" id="proj_billing_group" name="<portlet:namespace/><%=Project._Fields.OWNER_GROUP%>"
-                    type="text"
-                    value="<sw360:out value="${project.ownerGroup}"/>" placeholder="Enter owner's billing group"/>
+				<select class="form-control" id="proj_billing_group" name="<portlet:namespace/><%=Project._Fields.OWNER_GROUP%>" >
+		        	<option value="">Choose owner billing group</option>
+					<core_rt:forEach items="${organizations}" var="org">
+						<option value="${org.name}" class="textlabel stackedLabel"
+						<core_rt:if test="${org.name == project.ownerGroup}"> selected="selected"</core_rt:if>
+						>${org.name}</option>
+					</core_rt:forEach>
+				</select>
             </div>
         </td>
         <td>

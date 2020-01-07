@@ -872,6 +872,15 @@ public class ProjectPortlet extends FossologyAwarePortlet {
     @Override
     public void doView(RenderRequest request, RenderResponse response) throws IOException, PortletException {
         String pageName = request.getParameter(PAGENAME);
+
+        try {
+            com.liferay.portal.kernel.model.User user = PortalUtil.getUser(request);
+            List<Organization> organizations = user.getOrganizations();
+            request.setAttribute(PortalConstants.ORGANIZATIONS, organizations);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
         if (PAGENAME_DETAIL.equals(pageName)) {
             prepareDetailView(request, response);
             include("/html/projects/detail.jsp", request, response);
