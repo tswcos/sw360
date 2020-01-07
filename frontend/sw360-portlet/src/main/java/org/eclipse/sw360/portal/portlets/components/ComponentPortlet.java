@@ -21,6 +21,7 @@ import com.google.common.collect.Sets;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.PortletResponseUtil;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
@@ -617,6 +618,14 @@ public class ComponentPortlet extends FossologyAwarePortlet {
     @Override
     public void doView(RenderRequest request, RenderResponse response) throws IOException, PortletException {
         String pageName = request.getParameter(PAGENAME);
+
+        try {
+            com.liferay.portal.kernel.model.User user = PortalUtil.getUser(request);
+            List<Organization> organizations = user.getOrganizations();
+            request.setAttribute(PortalConstants.ORGANIZATIONS, organizations);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
         try {
             CodescoopService.Iface codescoopClient = thriftClients.makeCodescoopClient();

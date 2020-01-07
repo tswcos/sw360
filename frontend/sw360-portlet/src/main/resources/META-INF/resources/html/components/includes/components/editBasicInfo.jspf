@@ -131,8 +131,14 @@
         <td>
             <div class="form-group">
                 <label for="ownerGroup">Owner Billing Group</label>
-                <input class="form-control" id="ownerGroup" name="<portlet:namespace/><%=Component._Fields.OWNER_GROUP%>" type="text"
-                    placeholder="Enter Owner Billing Group" value="<sw360:out value="${component.ownerGroup}"/>"/>
+		        <select class="form-control" id="ownerGroup" name="<portlet:namespace/><%=Component._Fields.OWNER_GROUP%>">
+		            <option value="">Choose owner billing group</option>
+					<core_rt:forEach items="${organizations}" var="org">
+						<option value="${org.name}" class="textlabel stackedLabel"
+						<core_rt:if test="${org.name == component.ownerGroup}"> selected="selected"</core_rt:if>
+						>${org.name}</option>
+					</core_rt:forEach>
+				</select>
             </div>
         </td>
     </tr>
