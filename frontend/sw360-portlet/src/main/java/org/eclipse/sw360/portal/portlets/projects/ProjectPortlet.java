@@ -94,7 +94,7 @@ import static org.eclipse.sw360.portal.portlets.projects.ProjectPortletUtils.isU
         "javax.portlet.display-name=Projects",
         "javax.portlet.info.short-title=Projects",
         "javax.portlet.info.title=Projects",
-
+	    "javax.portlet.resource-bundle=content.Language",
         "javax.portlet.init-param.view-template=/html/projects/view.jsp",
     },
     service = Portlet.class,

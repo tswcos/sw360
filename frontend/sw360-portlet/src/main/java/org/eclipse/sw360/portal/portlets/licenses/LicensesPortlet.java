@@ -61,7 +61,7 @@ import static org.eclipse.sw360.portal.common.PortalConstants.*;
         "javax.portlet.display-name=Licenses",
         "javax.portlet.info.short-title=Licenses",
         "javax.portlet.info.title=Licenses",
-
+        "javax.portlet.resource-bundle=content.Language",
         "javax.portlet.init-param.view-template=/html/licenses/view.jsp",
     },
     service = Portlet.class,

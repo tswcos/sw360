@@ -33,8 +33,18 @@ import javax.portlet.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import javax.portlet.PortletConfig; 
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import javax.portlet.PortletRequest;
+import com.liferay.portal.kernel.util.EscapableLocalizableFunction;
 import static org.eclipse.sw360.portal.common.PortalConstants.MY_PROJECTS_PORTLET_NAME;
+
 
 @org.osgi.service.component.annotations.Component(
     immediate = true,
@@ -48,7 +58,7 @@ import static org.eclipse.sw360.portal.common.PortalConstants.MY_PROJECTS_PORTLE
         "javax.portlet.display-name=My Projects",
         "javax.portlet.info.short-title=My Projects",
         "javax.portlet.info.title=My Projects",
-
+	    "javax.portlet.resource-bundle=content.Language",
         "javax.portlet.init-param.view-template=/html/homepage/myprojects/view.jsp",
     },
     service = Portlet.class,
@@ -74,7 +84,7 @@ public class MyProjectsPortlet extends Sw360Portlet {
         }
         myProjects = getWithFilledClearingStateSummary(myProjects, user);
 
-        JSONArray jsonProjects = getProjectData(myProjects);
+        JSONArray jsonProjects = getProjectData(myProjects,request);
         JSONObject jsonResult = JSONFactoryUtil.createJSONObject();
         jsonResult.put("aaData", jsonProjects);
 
@@ -95,7 +105,7 @@ public class MyProjectsPortlet extends Sw360Portlet {
         }
     }
 
-    public JSONArray getProjectData(List<Project> projectList) {
+    public JSONArray getProjectData(List<Project> projectList,ResourceRequest request) {
         JSONArray projectData = JSONFactoryUtil.createJSONArray();
         for(Project project : projectList) {
             JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
@@ -104,7 +114,7 @@ public class MyProjectsPortlet extends Sw360Portlet {
             jsonObject.put("id", project.getId());
             jsonObject.put("name", SW360Utils.printName(project));
             jsonObject.put("description", Strings.nullToEmpty(project.getDescription()));
-            jsonObject.put("releaseClearingState", acceptedReleases(project.getReleaseClearingStateSummary()));
+            jsonObject.put("releaseClearingState", acceptedReleases(project.getReleaseClearingStateSummary(),request));
 
             projectData.put(jsonObject);
         }
@@ -112,11 +122,12 @@ public class MyProjectsPortlet extends Sw360Portlet {
         return projectData;
     }
 
-    private String acceptedReleases(ReleaseClearingStateSummary releaseClearingStateSummary) {
+    private String acceptedReleases(ReleaseClearingStateSummary releaseClearingStateSummary,ResourceRequest  request) {
         String releaseCounts;
 
         if (releaseClearingStateSummary == null) {
-            releaseCounts = "not available";
+            //releaseCounts = "not available";
+        	releaseCounts = LanguageUtil.get(getResourceBundle(request.getLocale()), "not-available");
         } else {
             int total = releaseClearingStateSummary.newRelease + releaseClearingStateSummary.sentToClearingTool
                     + releaseClearingStateSummary.underClearing + releaseClearingStateSummary.reportAvailable

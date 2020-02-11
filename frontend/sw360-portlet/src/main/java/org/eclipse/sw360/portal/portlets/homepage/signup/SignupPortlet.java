@@ -51,7 +51,7 @@ import static org.eclipse.sw360.portal.common.PortalConstants.SIGNUP_PORTLET_NAM
         "javax.portlet.display-name=Signup",
         "javax.portlet.info.short-title=Signup",
         "javax.portlet.info.title=Signup",
-
+        "javax.portlet.resource-bundle=content.Language",
         "javax.portlet.init-param.view-template=/html/homepage/signup/view.jsp",
     },
     service = Portlet.class,

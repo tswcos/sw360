@@ -61,7 +61,6 @@ import org.eclipse.sw360.portal.common.datatables.data.PaginationParameters;
 import org.eclipse.sw360.portal.portlets.FossologyAwarePortlet;
 import org.eclipse.sw360.portal.users.LifeRayUserSession;
 import org.eclipse.sw360.portal.users.UserCacheHolder;
-
 import org.apache.log4j.Logger;
 import org.apache.thrift.TEnum;
 import org.apache.thrift.TException;
@@ -103,7 +102,7 @@ import static org.eclipse.sw360.portal.common.PortletUtils.getVerificationState;
         "javax.portlet.display-name=Components",
         "javax.portlet.info.short-title=Components",
         "javax.portlet.info.title=Components",
-
+        "javax.portlet.resource-bundle=content.Language",
         "javax.portlet.init-param.view-template=/html/components/view.jsp",
     },
     service = Portlet.class,

@@ -55,7 +55,7 @@ import static com.google.common.base.Strings.nullToEmpty;
         "javax.portlet.display-name=BDP Import",
         "javax.portlet.info.short-title=BDP Import",
         "javax.portlet.info.title=BDP Import",
-
+        "javax.portlet.resource-bundle=content.Language",
         "javax.portlet.init-param.view-template=/html/projects/import.jsp",
     },
     service = Portlet.class,
