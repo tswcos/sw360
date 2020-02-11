@@ -31,9 +31,9 @@
         <div class="col">
             <div class="wizardHeader">
                 <ul>
-                    <li class="active">1. Choose source<br /><small>Choose a component that should be merged into the current one</small></li>
-                    <li>2. Merge data<br /><small>Merge data from source into target component</small></li>
-                    <li>3. Confirm<br /><small>Check the merged version and confirm</small></li>
+                    <li class="active"><liferay-ui:message key="choose.source" /><br /><small><liferay-ui:message key="choose.a.component.that.should.be.merged.into.the.current.one" /></small></li>
+                    <li><liferay-ui:message key="merge.data" /><br /><small><liferay-ui:message key="merge.data.from.source.into.target.component" /></small></li>
+                    <li><liferay-ui:message key="confirm" /><br /><small><liferay-ui:message key="check.the.merged.version.and.confirm" /></small></li>
                 </ul>
             </div>
         </div>
@@ -44,25 +44,25 @@
                 <div class="step active" data-step-id="1">
                     <div class="spinner spinner-with-text">
                         <div class="spinner-border" role="status">
-                            <span class="sr-only">Loading data for step 1, please wait...</span>
+                            <span class="sr-only"><liferay-ui:message key="loading.data.for.step.1.please.wait" /></span>
                         </div>
-                        Loading data for step 1, please wait...
+                        <liferay-ui:message key="loading.data.for.step.1.please.wait" />
                     </div>
                 </div>
                 <div class="step" data-step-id="2">
                     <div class="spinner spinner-with-text">
                         <div class="spinner-border" role="status">
-                            <span class="sr-only">Loading data for step 2, please wait...</span>
+                            <span class="sr-only"><liferay-ui:message key="loading.data.for.step.2.please.wait" /></span>
                         </div>
-                        Loading data for step 2, please wait...
+                        <liferay-ui:message key="loading.data.for.step.2.please.wait" />
                     </div>
                 </div>
                 <div class="step" data-step-id="3">
                     <div class="spinner spinner-with-text">
                         <div class="spinner-border" role="status">
-                            <span class="sr-only">Loading data for step 3, please wait...</span>
+                            <span class="sr-only"><liferay-ui:message key="loading.data.for.step.3.please.wait" /></span>
                         </div>
-                        Loading data for step 3, please wait...
+                        <liferay-ui:message key="loading.data.for.step.3.please.wait" />
                     </div>
                 </div>
             </div>
@@ -108,16 +108,16 @@
                     });
                     let $idList = $('<ul>');
 
-                    $error.append($('<p/>').append($('<b/>').text('Could not merge components: ' + data.error)));
-                    $error.append($('<p/>').text('This error can lead to inconsistencies in the database. Please inform the administrator with the following information:'));
+                    $error.append($('<p/>').append($('<b/>').text('<liferay-ui:message key="could.not.merge.components" /> ' + data.error)));
+                    $error.append($('<p/>').text('<liferay-ui:message key="this.error.can.lead.to.inconsistencies.in.the.database.please.inform.the.administrator.with.the.following.information" />'));
                     $error.append($('<p>').append($idList));
                     
                     let componentSourceId = $stepElement.data('componentSourceId');
-                    $idList.append($('<li>').text('Source component: ' + componentSourceId));
-                    $idList.append($('<li>').text('Target component: ' + $wizardRoot.data('componentTargetId')));
+                    $idList.append($('<li>').text('<liferay-ui:message key="source.component" />: ' + componentSourceId));
+                    $idList.append($('<li>').text('<liferay-ui:message key="target.component" />: ' + $wizardRoot.data('componentTargetId')));
                     $stepElement.data('componentSelection').releases.forEach( function(release) {
                         if(release.componentId == componentSourceId) {
-                            $idList.append($('<li>').text('Release: ' + release.id));
+                            $idList.append($('<li>').text('<liferay-ui:message key="release" />: ' + release.id));
                         }
                     });
 
@@ -137,7 +137,7 @@
             $stepElement.html('' +
                     '<div class="stepFeedback"></div>' +
                     '<form>' +
-                    '    <table id="componentSourcesTable" class="table table-bordered" title="Source component">' +
+                    '    <table id="componentSourcesTable" class="table table-bordered" title="<liferay-ui:message key="source.component" />">' +
                     '        <colgroup>' +
                     '            <col style="width: 1.7rem;" />' +
                     '            <col style="width: 50%;" />' +
@@ -147,9 +147,9 @@
                     '        <thead>' +
                     '            <tr>' +
                     '                <th></th>' +
-                    '                <th>Component name</th>' +
-                    '                <th>Created by</th>' +
-                    '                <th>Releases</th>' +
+                    '                <th><liferay-ui:message key="component.name" /></th>' +
+                    '                <th><liferay-ui:message key="created.by" /></th>' +
+                    '                <th><liferay-ui:message key="releases" /></th>' +
                     '            </tr>' +
                     '        </thead>' +
                     '        <tbody>' +
@@ -166,6 +166,16 @@
                     { data: "createdBy" },
                     { data: "releases" }
                 ],
+				language: {					
+					paginate: {
+						previous: "<liferay-ui:message key="previous" />",
+						next: "<liferay-ui:message key="next" />"
+					},
+					emptyTable: "<liferay-ui:message key="no.data.available.in.table" />",
+					info: "<liferay-ui:message key="showing" />",
+					infoEmpty: "<liferay-ui:message key="infoempty" />",
+					lengthMenu: "<liferay-ui:message key="show.x.entries" />"
+					},
                 order: [ [ 1, 'asc' ] ],
                 select: 'single'
             }, undefined, [0], true);
@@ -175,7 +185,7 @@
         function submitChosenComponent($stepElement) {
             var checkedList = $stepElement.find('input:checked');
             if (checkedList.length !== 1 || $(checkedList.get(0)).val() ===  $wizardRoot.data('componentTargetId')) {
-                $stepElement.find('.stepFeedback').html('<div class="alert alert-danger">Please choose exactly one component, which is not the component itself!</div>');
+                $stepElement.find('.stepFeedback').html('<div class="alert alert-danger"><liferay-ui:message key="please.choose.exactly.one.component.which.is.not.the.component.itself" /></div>');
                 $('html, body').stop().animate({ scrollTop: 0 }, 300, 'swing');
                 setTimeout(function() {
                     $stepElement.find('.stepFeedback').html('');
@@ -302,7 +312,7 @@
             });
 
             if ((componentSelection.releases.length || 0) < $stepElement.data('releaseCount')) {
-                $stepElement.find('.stepFeedback').html('<div class="alert alert-danger">Please migrate all releases and keep the existing ones!</div>');
+                $stepElement.find('.stepFeedback').html('<div class="alert alert-danger"><liferay-ui:message key="please.migrate.all.releases.and.keep.the.existing.ones" /></div>');
                 $('html, body').stop().animate({ scrollTop: 0 }, 300, 'swing');
                 setTimeout(function() {
                     $stepElement.find('.stepFeedback').html('');
@@ -402,7 +412,7 @@
                 $stepElement.html('<div class="stepFeedback"></div>');
             }
 
-            $stepElement.find('.stepFeedback').html('<div class="alert alert-danger">An error happened while communicating with the server: ' + textStatus + error + '</div>');
+            $stepElement.find('.stepFeedback').html('<div class="alert alert-danger"><liferay-ui:message key="an.error.happened.while.communicating.with.the.server" />' + textStatus + error + '</div>');
             $('html, body').stop().animate({ scrollTop: 0 }, 300, 'swing');
             setTimeout(function() {
                 $stepElement.find('.stepFeedback').html('');

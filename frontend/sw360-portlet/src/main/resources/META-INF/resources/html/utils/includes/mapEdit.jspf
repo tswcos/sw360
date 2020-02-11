@@ -35,7 +35,7 @@
                     </td>
 
                     <td class="content-middle">
-                        <svg class="action lexicon-icon" title="Delete" data-row-id="mapEditTableRow${loop1.count}_${loop2.count}">
+                        <svg class="action lexicon-icon" title="<liferay-ui:message key="delete" />" data-row-id="mapEditTableRow${loop1.count}_${loop2.count}">
                             <use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#trash"/>
                         </svg>
                     </td>
@@ -55,7 +55,7 @@
 			<div class="modal-header">
 				<h5 class="modal-title">
 					<clay:icon symbol="question-circle" />
-					Delete Item?
+					<liferay-ui:message key="delete.item" />?
 				</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
@@ -65,8 +65,8 @@
 			        <p data-name="text"></p>
 				</div>
 			    <div class="modal-footer">
-			        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-			        <button type="button" class="btn btn-danger">Delete Item</button>
+			        <button type="button" class="btn btn-light" data-dismiss="modal"><liferay-ui:message key="cancel" /></button>
+			        <button type="button" class="btn btn-danger"><liferay-ui:message key="delete.item" /></button>
 			    </div>
 			</div>
 		</div>
@@ -92,7 +92,7 @@
                 '<input id="<%=PortalConstants.CUSTOM_MAP_VALUE%>'+randomRowId+'" name="<portlet:namespace/><%=PortalConstants.CUSTOM_MAP_VALUE%>'+randomRowId+'" type="email" class="form-control" placeholder="${inputSubtitle}" title="${inputSubtitle}" />'+
                 '</td>'+
                 '<td class="content-middle">'+
-                '<svg title="Delete" class="action lexicon-icon" data-row-id="' + randomRowId + '">' +
+                '<svg title="<liferay-ui:message key="delete" />" class="action lexicon-icon" data-row-id="' + randomRowId + '">' +
                 '<use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#trash"/>' +
                 '</svg>' +
                 '</td>'+
@@ -104,7 +104,7 @@
             var rowId = $(event.currentTarget).data().rowId;
 
             dialog.open('#deleteMapEditDialog', {
-                text: "Do you really want to remove this item?",
+                text: "<liferay-ui:message key="do.you.really.want.to.remove.this.item" />",
             }, function(submit, callback) {
                 $('#' + rowId).remove();
                 callback(true);

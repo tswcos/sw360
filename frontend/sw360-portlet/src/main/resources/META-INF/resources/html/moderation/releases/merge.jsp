@@ -47,7 +47,7 @@
                     <div id="moderation-header-heading" class="card-header">
                         <h2 class="mb-0">
                             <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#moderation-header" aria-expanded="true" aria-controls="moderation-header">
-                                Moderation Request Information
+                                <liferay-ui:message key="moderation.request.information" />
                             </button>
                         </h2>
                     </div>
@@ -62,13 +62,13 @@
                         <div id="moderation-changes-heading" class="card-header">
                             <h2 class="mb-0">
                                 <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#moderation-changes" aria-expanded="false" aria-controls="moderation-changes">
-                                    Proposed Changes
+                                    <liferay-ui:message key="proposed.changes" />
                                 </button>
                             </h2>
                         </div>
                         <div id="moderation-changes" class="collapse" aria-labelledby="moderation-changes-heading" data-parent="#moderation-wizard">
                             <div class="card-body">
-                                <h4 class="mt-2">Basic fields</h4>
+                                <h4 class="mt-2"><liferay-ui:message key="basic.fields" /></h4>
                                 <sw360:DisplayReleaseChanges
                                     actual="${actual_release}"
                                     additions="${moderationRequest.releaseAdditions}"
@@ -77,7 +77,7 @@
                                     tableClasses="table table-bordered"
                                 />
 
-                                <h4 class="mt-4">Attachments</h4>
+                                <h4 class="mt-4"><liferay-ui:message key="attachments" /></h4>
                                 <sw360:CompareAttachments
                                     actual="${actual_release.attachments}"
                                     additions="${moderationRequest.releaseAdditions.attachments}"
@@ -94,7 +94,7 @@
                     <div id="current-document-heading" class="card-header">
                         <h2 class="mb-0">
                             <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#current-document" aria-expanded="false" aria-controls="current-document">
-                                Current Release
+                                <liferay-ui:message key="current.release" />
                             </button>
                         </h2>
                     </div>

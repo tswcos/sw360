@@ -21,10 +21,10 @@
        </colgroup>
     <thead>
         <tr>
-            <th>Vendor Name</th>
-            <th>Release Name</th>
-            <th>Release Version</th>
-            <th>Release Relation <sw360:DisplayEnumInfo type="<%=ReleaseRelationship.class%>"/></th>
+            <th><liferay-ui:message key="vendor.name" /></th>
+            <th><liferay-ui:message key="release.name" /></th>
+            <th><liferay-ui:message key="release.version" /></th>
+            <th><liferay-ui:message key="release.relation" /> <sw360:DisplayEnumInfo type="<%=ReleaseRelationship.class%>"/></th>
             <th></th>
         </tr>
     </thead>
@@ -33,4 +33,4 @@
     </tbody>
 </table>
 
-<button type="button" class="btn btn-secondary" id="addLinkedReleasesToReleaseButton">Click to add Releases</button>
+<button type="button" class="btn btn-secondary" id="addLinkedReleasesToReleaseButton"><liferay-ui:message key="click.to.add.releases" /></button>

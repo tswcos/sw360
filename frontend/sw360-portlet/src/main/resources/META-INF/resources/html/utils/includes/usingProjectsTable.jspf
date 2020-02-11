@@ -12,8 +12,8 @@
 
 <core_rt:if test="${usingProjects != null && allUsingProjectsCount > 0}">
     <div class="alert alert-info mt-default">
-        <sw360:out value="${documentName}"/> is used by a total of ${allUsingProjectsCount}
-                        (${usingProjects.size()} visible / ${allUsingProjectsCount - usingProjects.size()} restricted) projects.
+        <sw360:out value="${documentName}"/> 
+        <liferay-ui:message key="is.used.by.a.total.of.allUsingProjectsCount.usingProjects.size.visible.allUsingProjectsCount.usingProjects.size.restricted.projects" />
     </div>
 
     <table id="usingProjectsTable" class="table table-bordered mt-1">
@@ -24,9 +24,9 @@
         </colgroup>
         <thead>
             <tr>
-                <th>Project Name</th>
-                <th>Group</th>
-                <th>Responsible</th>
+                <th><liferay-ui:message key="project.name" /></th>
+                <th><liferay-ui:message key="group" /></th>
+                <th><liferay-ui:message key="responsible" /></th>
             </tr>
         </thead>
     </table>

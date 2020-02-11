@@ -32,7 +32,7 @@
     <portlet:param name="<%=PortalConstants.DOCUMENT_TYPE%>" value="${documentType}"/>
 </portlet:resourceURL>
 
-<table id="attachmentInfo" class="table edit-table attachments" title="Attachment Information ${documentType}"
+<table id="attachmentInfo" class="table edit-table attachments" title="<liferay-ui:message key="attachment.information" /> ${documentType}"
   data-ajax-url="<%=attachmentListAjaxURL%>"
   data-input-filename-name="<portlet:namespace/><%=Release._Fields.ATTACHMENTS%><%=Attachment._Fields.FILENAME%>"
   data-input-content-id-name="<portlet:namespace/><%=Release._Fields.ATTACHMENTS%><%=Attachment._Fields.ATTACHMENT_CONTENT_ID%>"
@@ -56,34 +56,34 @@
     </colgroup>
     <thead>
         <tr>
-            <th class="headLabel" colspan="12">Attachments</th>
+            <th class="headLabel" colspan="12"><liferay-ui:message key="attachments" /></th>
         </tr>
         <tr>
-            <th class="headlabel" rowspan="2">Filename</th>
-            <th class="headlabel" rowspan="2">Type</th>
-            <th class="headlabel" colspan="4">Upload</th>
-            <th class="headlabel" colspan="5">Approval</th>
+            <th class="headlabel" rowspan="2"><liferay-ui:message key="filename" /></th>
+            <th class="headlabel" rowspan="2"><liferay-ui:message key="type" /></th>
+            <th class="headlabel" colspan="4"><liferay-ui:message key="upload" /></th>
+            <th class="headlabel" colspan="5"><liferay-ui:message key="approval" /></th>
             <th class="headlabel" rowspan="2"></th>
         </tr>
         <tr>
             <!-- Uploader -->
-            <th class="headlabel">Comment</th>
-            <th class="headlabel">Group</th>
-            <th class="headlabel">Name</th>
-            <th class="headlabel">Date</th>
+            <th class="headlabel"><liferay-ui:message key="comment" /></th>
+            <th class="headlabel"><liferay-ui:message key="group" /></th>
+            <th class="headlabel"><liferay-ui:message key="name" /></th>
+            <th class="headlabel"><liferay-ui:message key="date" /></th>
             <!-- Approver -->
-            <th class="headlabel">Status</th>
-            <th class="headlabel">Comment</th>
-            <th class="headlabel">Group</th>
-            <th class="headlabel">Name</th>
-            <th class="headlabel">Date</th>
+            <th class="headlabel"><liferay-ui:message key="status" /></th>
+            <th class="headlabel"><liferay-ui:message key="comment" /></th>
+            <th class="headlabel"><liferay-ui:message key="group" /></th>
+            <th class="headlabel"><liferay-ui:message key="name" /></th>
+            <th class="headlabel"><liferay-ui:message key="date" /></th>
         </tr>
     </thead>
     <tbody>
     </tbody>
 </table>
 
-<button id="upload-attachment-button" type="button" class="btn btn-secondary mt-3">Add Attachment</button>
+<button id="upload-attachment-button" type="button" class="btn btn-secondary mt-3"><liferay-ui:message key="add.attachment" /></button>
 
 <%@include file="/html/utils/includes/attachmentsUpload.jspf" %>
 
@@ -160,7 +160,7 @@
             order: [[0, 'asc']],
             deferRender: true,
             language: {
-                emptyTable: "No attachments yet."
+                emptyTable: "<liferay-ui:message key="no.attachments.yet" />"
             }
         });
 

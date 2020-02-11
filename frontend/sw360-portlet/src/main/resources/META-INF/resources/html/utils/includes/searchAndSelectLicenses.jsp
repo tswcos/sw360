@@ -20,18 +20,18 @@
                     <form>
                         <div class="row form-group">
                             <div class="col-6">
-                                <input type="text" name="search" id="search-licenses-text" placeholder="Enter search text..." class="form-control" autofocus/>
+                                <input type="text" name="search" id="search-licenses-text" placeholder="<liferay-ui:message key="enter.search.text" />" class="form-control" autofocus/>
                             </div>
                             <div class="col">
-                                <button type="button" class="btn btn-secondary" id="search-licenses-button">Search</button>
-                                <button type="button" class="btn btn-secondary" id="reset-licenses-button">Reset</button>
+                                <button type="button" class="btn btn-secondary" id="search-licenses-button"><liferay-ui:message key="search" /></button>
+                                <button type="button" class="btn btn-secondary" id="reset-licenses-button"><liferay-ui:message key="reset" /></button>
                             </div>
                         </div>
 
                         <div id="usersearchresults">
                             <div id="search-spinner" class="spinner text-center" style="display: none;">
                                 <div class="spinner-border" role="status">
-                                    <span class="sr-only">Loading...</span>
+                                    <span class="sr-only"><liferay-ui:message key="loading" /></span>
                                 </div>
                             </div>
 
@@ -43,7 +43,7 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th>License</th>
+                                        <th><liferay-ui:message key="license" /></th>
                                     </tr>
                                 </thead>
                                 <tbody id="search-licenses-result-table-body">
@@ -53,8 +53,8 @@
                     </form>
 				</div>
 			    <div class="modal-footer">
-		        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-			        <button id="search-add-licenses-button" type="button" class="btn btn-primary">Select Licenses</button>
+		        <button type="button" class="btn btn-light" data-dismiss="modal"><liferay-ui:message key="close" /></button>
+			        <button id="search-add-licenses-button" type="button" class="btn btn-primary"><liferay-ui:message key="select.licenses" /></button>
 			    </div>
 			</div>
 		</div>

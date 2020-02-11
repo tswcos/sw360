@@ -82,7 +82,7 @@ define('utils/includes/searchAndSelectIds', ['jquery', 'utils/keyboard', 'module
                     ],
                     initComplete: pr.enableSearchButton,
                     language: {
-                        emptyTable: 'Please perform a new search.'
+                        emptyTable: '<liferay-ui:message key="please.perform.a.new.search" />'
                     },
                     select: currentState.multi ? 'multi' : 'single'
                 });

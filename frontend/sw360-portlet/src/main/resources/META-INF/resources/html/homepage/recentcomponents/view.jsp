@@ -20,7 +20,7 @@
              class="java.util.ArrayList" scope="request"/>
 
 
-<h4>Recent Components</h4>
+<h4><liferay-ui:message key="recent.components" /></h4>
 <div class="row">
     <div class="col">
         <core_rt:if test="${components.size() > 0 }">
@@ -33,7 +33,7 @@
             </ul>
         </core_rt:if>
         <core_rt:if test="${components.size() == 0}">
-            <div class="alert alert-info">No recent components.</div>
+            <div class="alert alert-info"><liferay-ui:message key="no.recent.components" /></div>
         </core_rt:if>
     </div>
 </div>

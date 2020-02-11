@@ -22,10 +22,10 @@
         </colgroup>
         <thead>
             <tr>
-                <th>Vendor</th>
-                <th>Name</th>
-                <th>Main Licenses</th>
-                <th>Component Type</th>
+                <th><liferay-ui:message key="vendor" /></th>
+                <th><liferay-ui:message key="name" /></th>
+                <th><liferay-ui:message key="main.licenses" /></th>
+                <th><liferay-ui:message key="component.type" /></th>
             </tr>
         </thead>
         <tbody>

@@ -22,7 +22,7 @@
 </portlet:resourceURL>
 
 <section id="my-projects">
-    <h4 class="actions">My Projects <span title="Reload"><clay:icon symbol="reload"/></span></h4>
+    <h4 class="actions"><liferay-ui:message key="my.projects" /> <span title="<liferay-ui:message key="reload" />"><clay:icon symbol="reload"/></span></h4>
     <div class="row">
         <div class="col">
             <table id="myProjectsTable" class="table table-bordered table-lowspace" data-load-url="<%=loadProjectsURL%>">
@@ -40,7 +40,6 @@
 <script>
     require(['jquery', 'bridges/datatables', 'utils/link' ], function($, datatables, link, event) {
         var table;
-
         $('#my-projects h4 svg')
             .attr('data-action', 'reload-my-projects')
             .addClass('spinning disabled');
@@ -62,12 +61,18 @@
 				"<'row'<'col-sm-12'tr>>" +
 				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
             columns: [
-                {"title": "Project Name", data: 'name', render: renderProjectNameLink },
-                {"title": "Description", data: 'description', render: $.fn.dataTable.render.ellipsis },
-                {"title": "Approved Releases", data: 'releaseClearingState', render: renderReleaseClearingState},
+                {"title": "<liferay-ui:message key="project.name" />", data: 'name', render: renderProjectNameLink },
+                {"title": "<liferay-ui:message key="description" />", data: 'description', render: $.fn.dataTable.render.ellipsis },
+                {"title": "<liferay-ui:message key="approved.releases" />", data: 'releaseClearingState', render: renderReleaseClearingState},
             ],
             language: {
-                emptyTable: 'You do not own any projects.'
+				paginate: {
+                  previous: "<liferay-ui:message key="previous" />",
+                  next: "<liferay-ui:message key="next" />"
+                },
+                emptyTable: '<liferay-ui:message key="you.do.not.own.any.projects" />',
+				info: "<liferay-ui:message key="showing" />",
+				infoEmpty: "<liferay-ui:message key="infoempty" />"
             },
             initComplete: function() {
                 $('#my-projects h4 svg').removeClass('spinning disabled');
@@ -84,7 +89,7 @@
 
         function renderReleaseClearingState(state) {
             return $('<span/>', {
-                title: 'approved releases / total number of releases'
+                title: '<liferay-ui:message key="approved.releases.total.number.of.releases" />'
             }).text(state)[0].outerHTML;
         }
 

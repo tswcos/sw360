@@ -24,20 +24,20 @@
     <tr id="releaseLinkRow${uuid}" >
         <td>
             <div class="form-group">
-                <input id="releaseVendor" type="text" placeholder="Enter vendor" class="form-control"
+                <input id="releaseVendor" type="text" placeholder="<liferay-ui:message key="enter.vender" />" class="form-control"
                     value="<sw360:out value="${releaseLink.vendor}"/>" readonly />
             </div>
         </td>
         <td>
             <div class="form-group">
                 <input type="hidden" value="${releaseLink.id}" name="<portlet:namespace/><%=Release._Fields.RELEASE_ID_TO_RELATIONSHIP%><%=ReleaseLink._Fields.ID%>">
-                <input id="releaseName" type="text" placeholder="Enter release" class="form-control"
+                <input id="releaseName" type="text" placeholder="<liferay-ui:message key="enter.release" />" class="form-control"
                     value="<sw360:out value="${releaseLink.name}"/>" readonly/>
             </div>
         </td>
         <td>
             <div class="form-group">
-                <input id="releaseVersion" class="form-control" type="text" placeholder="Enter version"
+                <input id="releaseVersion" class="form-control" type="text" placeholder="<liferay-ui:message key="enter.version" />"
                     value="<sw360:out value="${releaseLink.version}"/>" readonly/>
             </div>
         </td>
@@ -52,7 +52,7 @@
         </td>
         <td class="actions">
             <div class="actions">
-                <svg class="lexicon-icon" data-action="delete-release" data-uuid="${uuid}"><title>Delete</title><use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#delete"/></svg>
+                <svg class="lexicon-icon" data-action="delete-release" data-uuid="${uuid}"><title><liferay-ui:message key="delete" /></title><use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#delete"/></svg>
             </div>
         </td>
     </tr>

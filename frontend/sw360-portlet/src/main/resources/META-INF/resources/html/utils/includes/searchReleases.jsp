@@ -31,13 +31,13 @@
                     <form>
                         <div class="row form-group">
                             <div class="col-6">
-                                <input type="text" name="searchrelease" id="searchrelease" placeholder="Enter search text..." class="form-control" autofocus/>
+                                <input type="text" name="searchrelease" id="searchrelease" placeholder="<liferay-ui:message key="enter.search.text" />" class="form-control" autofocus/>
                             </div>
                             <div class="col">
-                                <button type="button" class="btn btn-secondary" id="searchbuttonrelease">Search</button>
+                                <button type="button" class="btn btn-secondary" id="searchbuttonrelease"><liferay-ui:message key="search" /></button>
 
                                 <core_rt:if test="${enableSearchForReleasesFromLinkedProjects}">
-                                    <button type="button" class="btn btn-secondary" id="linkedReleasesButton">Releases of linked projects</button>
+                                    <button type="button" class="btn btn-secondary" id="linkedReleasesButton"><liferay-ui:message key="releases.of.linked.projects" /></button>
                                 </core_rt:if>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                         <div id="search-release-form">
                             <div class="spinner text-center" style="display: none;">
                                 <div class="spinner-border" role="status">
-                                    <span class="sr-only">Loading...</span>
+                                    <span class="sr-only"><liferay-ui:message key="loading" /></span>
                                 </div>
                             </div>
 
@@ -53,11 +53,11 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th>Vendor</th>
-                                        <th>Release name</th>
-                                        <th>Version</th>
-                                        <th>Clearing state</th>
-                                        <th>Mainline state</th>
+                                        <th><liferay-ui:message key="vendor" /></th>
+                                        <th><liferay-ui:message key="release.name" /></th>
+                                        <th><liferay-ui:message key="version" /></th>
+                                        <th><liferay-ui:message key="clearing.state" /></th>
+                                        <th><liferay-ui:message key="mainline.state" /></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -67,8 +67,8 @@
                     </form>
 				</div>
 			    <div class="modal-footer">
-		        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-			        <button id="selectReleaseButton" type="button" class="btn btn-primary" title="Link releases">Link releases</button>
+		        <button type="button" class="btn btn-light" data-dismiss="modal"><liferay-ui:message key="close" /></button>
+			        <button id="selectReleaseButton" type="button" class="btn btn-primary" title="<liferay-ui:message key="link.releases" />"><liferay-ui:message key="link.releases" /></button>
 			    </div>
 			</div>
 		</div>
@@ -138,8 +138,8 @@
                 paging: false,
                 info: false,
                 language: {
-                    emptyTable: "No releases found.",
-                    processing: "Processing..."
+                    emptyTable: "<liferay-ui:message key="no.releases.found" />",
+                    processing: "<liferay-ui:message key="processing" />"
                 },
                 order: [
                     [2, 'asc']
@@ -172,7 +172,7 @@
                     $dialog.$.find('#linkedReleasesButton').prop('disabled', false);
                 },
                 error: function() {
-                    $dialog.alert('Cannot link to release.');
+                    $dialog.alert('<liferay-ui:message key="cannot.link.to.release" />');
                 }
             });
         }

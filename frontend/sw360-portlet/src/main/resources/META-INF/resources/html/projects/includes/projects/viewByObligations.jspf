@@ -36,14 +36,14 @@
         <thead>
             <tr>
                 <th>
-                    <span class="more-info shown" title="Expand the icon to see obligation text" data-show="false">&#x25BA</span>
+                    <span class="more-info shown" title="<liferay-ui:message key="expand.the.icon.to.see.obligation.text" />" data-show="false">&#x25BA</span>
                 </th>
-                <th>Obligation</th>
-                <th>Licenses</th>
-                <th>Releases</th>
-                <th>Status</th>
-                <th>Action</th>
-                <th>Comment</th>
+                <th><liferay-ui:message key="obligation" /></th>
+                <th><liferay-ui:message key="licenses" /></th>
+                <th><liferay-ui:message key="releases" /></th>
+                <th><liferay-ui:message key="status" /></th>
+                <th><liferay-ui:message key="action" /></th>
+                <th><liferay-ui:message key="comment" /></th>
             </tr>
         </thead>
         <tbody>

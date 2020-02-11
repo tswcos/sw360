@@ -23,7 +23,7 @@
 
 <div id="releaseMergeWizard" class="container" data-step-id="0" data-release-target-id="${release.id}" data-componentid="${release.componentId}">
     <div class="row portlet-toolbar">
-        <div class="col portlet-title text-truncate" title="Merge into ${sw360:printReleaseName(release)}">
+        <div class="col portlet-title text-truncate" title="<liferay-ui:message key="merge.into" /> ${sw360:printReleaseName(release)}">
             Merge into ${sw360:printReleaseName(release)}
         </div>
     </div>
@@ -31,9 +31,9 @@
         <div class="col">
             <div class="wizardHeader">
                 <ul>
-                    <li class="active">1. Choose source<br /><small>Choose a release that should be merged into the current one</small></li>
-                    <li>2. Merge data<br /><small>Merge data from source into target release</small></li>
-                    <li>3. Confirm<br /><small>Check the merged version and confirm</small></li>
+                    <li class="active"><liferay-ui:message key="choose.source" /><br /><small><liferay-ui:message key="choose.a.release.that.should.be.merged.into.the.current.one" /></small></li>
+                    <li><liferay-ui:message key="merge.data" /><br /><small><liferay-ui:message key="merge.data.from.source.into.target.release" /></small></li>
+                    <li><liferay-ui:message key="confirm" /><br /><small><liferay-ui:message key="check.the.merged.version.and.confirm" /></small></li>
                 </ul>
             </div>
         </div>
@@ -44,32 +44,31 @@
                 <div class="step active" data-step-id="1">
                     <div class="spinner spinner-with-text">
                         <div class="spinner-border" role="status">
-                            <span class="sr-only">Loading data for step 1, please wait...</span>
+                            <span class="sr-only"><liferay-ui:message key="loading.data.for.step.1.please.wait" /></span>
                         </div>
-                        Loading data for step 1, please wait...
+                        <liferay-ui:message key="loading.data.for.step.1.please.wait" />
                     </div>
                 </div>
                 <div class="step" data-step-id="2">
                     <div class="spinner spinner-with-text">
                         <div class="spinner-border" role="status">
-                            <span class="sr-only">Loading data for step 2, please wait...</span>
+                            <span class="sr-only"><liferay-ui:message key="" /><liferay-ui:message key="loading.data.for.step.2.please.wait" /></span>
                         </div>
-                        Loading data for step 2, please wait...
+                        <liferay-ui:message key="loading.data.for.step.2.please.wait" />
                     </div>
                 </div>
                 <div class="step" data-step-id="3">
                     <div class="spinner spinner-with-text">
                         <div class="spinner-border" role="status">
-                            <span class="sr-only">Loading data for step 3, please wait...</span>
+                            <span class="sr-only"><liferay-ui:message key="" /><liferay-ui:message key="loading.data.for.step.3.please.wait" /></span>
                         </div>
-                        Loading data for step 3, please wait...
+                        <liferay-ui:message key="loading.data.for.step.3.please.wait" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <%--for javascript library loading --%>
 <%@ include file="/html/utils/includes/requirejs.jspf" %>
 <script>
@@ -108,13 +107,13 @@
                     });
                     let $idList = $('<ul>');
 
-                    $error.append($('<p/>').append($('<b/>').text('Could not merge releases: ' + data.error)));
-                    $error.append($('<p/>').text('This error can lead to inconsistencies in the database. Please inform the administrator with the following information:'));
+                    $error.append($('<p/>').append($('<b/>').text('<liferay-ui:message key="could.not.merge.releases" />' + data.error)));
+                    $error.append($('<p/>').text('<liferay-ui:message key="this.error.can.lead.to.inconsistencies.in.the.database.please.inform.the.administrator.with.the.following.information" />'));
                     $error.append($('<p>').append($idList));
                     
                     let releaseSourceId = $stepElement.data('releaseSourceId');
-                    $idList.append($('<li>').text('Source release: ' + releaseSourceId));
-                    $idList.append($('<li>').text('Target release: ' + $wizardRoot.data('releaseTargetId')));
+                    $idList.append($('<li>').text('<liferay-ui:message key="source.release" />' + releaseSourceId));
+                    $idList.append($('<li>').text('<liferay-ui:message key="target.release" />' + $wizardRoot.data('releaseTargetId')));
 
                     $stepElement.html('').append($error);
                     return false;
@@ -132,7 +131,7 @@
             $stepElement.html('' +
                     '<div class="stepFeedback"></div>' +
                     '<form>' +
-                    '    <table id="releaseSourcesTable" class="table table-bordered" title="Source release">' +
+                    '    <table id="releaseSourcesTable" class="table table-bordered" title="<liferay-ui:message key="source.release" />">' +
                     '        <colgroup>' +
                     '            <col style="width: 1.7rem;" />' +
                     '            <col style="width: 70%;" />' +
@@ -142,9 +141,9 @@
                     '        <thead>' +
                     '            <tr>' +
                     '                <th></th>' +
-                    '                <th>Release name</th>' +
-                    '                <th>Version</th>' + 
-                    '                <th>Created by</th>' +
+                    '                <th><liferay-ui:message key="release.name" /></th>' +
+                    '                <th><liferay-ui:message key="version" /></th>' + 
+                    '                <th><liferay-ui:message key="created.by" /></th>' +
                     '            </tr>' +
                     '        </thead>' +
                     '        <tbody>' +
@@ -161,8 +160,21 @@
                     { data: "version" },
                     { data: "createdBy" }
                 ],
+				language: {					
+					select: {
+		                style: 'single',
+						rows: "<liferay-ui:message key="x.rows.selected" />"
+					},
+					paginate: {
+						previous: "<liferay-ui:message key="previous" />",
+						next: "<liferay-ui:message key="next" />"
+					},
+					emptyTable: "<liferay-ui:message key="no.data.available.in.table" />",
+					info: "<liferay-ui:message key="showing" />",
+					infoEmpty: "<liferay-ui:message key="infoempty" />",
+					lengthMenu: "<liferay-ui:message key="show.x.entries" />"
+					},
                 order: [ [ 1, 'asc' ] ],
-                select: 'single'
             }, undefined, [0], true);
             datatables.enableCheckboxForSelection(table, 0);
         }
@@ -170,7 +182,7 @@
         function submitChosenRelease($stepElement) {
             var checkedList = $stepElement.find('input:checked');
             if (checkedList.length !== 1 || $(checkedList.get(0)).val() ===  $wizardRoot.data('releaseTargetId')) {
-                $stepElement.find('.stepFeedback').html('<div class="alert alert-danger">Please choose exactly one release, which is not the release itself!</div>');
+                $stepElement.find('.stepFeedback').html('<div class="alert alert-danger"><liferay-ui:message key="please.choose.exactly.one.release.which.is.not.the.release.itself" /></div>');
                 $('html, body').stop().animate({ scrollTop: 0 }, 300, 'swing');
                 setTimeout(function() {
                     $stepElement.find('.stepFeedback').html('');
@@ -547,7 +559,7 @@
                 $stepElement.html('<div class="stepFeedback"></div>');
             }
 
-            $stepElement.find('.stepFeedback').html('<div class="alert alert-danger">Cannot continue to merge of releases: ' + textStatus + error + '</div>');
+            $stepElement.find('.stepFeedback').html('<div class="alert alert-danger"><liferay-ui:message key="cannot.continue.to.merge.of.releases" />' + textStatus + error + '</div>');
             $('html, body').stop().animate({ scrollTop: 0 }, 300, 'swing');
         }
 
@@ -560,12 +572,12 @@
         function flagFormatter(flag) {
             if(flag) {
                 return  '<span class=\"text-success\">' +
-                        '   <svg class=\"lexicon-icon\"><title>Yes</title><use href=\"/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#check-circle\"/></svg>' +
+                        '   <svg class=\"lexicon-icon\"><title><liferay-ui:message key="yes" /></title><use href=\"/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#check-circle\"/></svg>' +
                         '   &nbsp;Yes' +
                         '</span>';
             } else {
                 return  '<span class=\"text-danger\">' +
-                        '   <svg class=\"lexicon-icon\"><title>Yes</title><use href=\"/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#times-circle\"/></svg>' +
+                        '   <svg class=\"lexicon-icon\"><title><liferay-ui:message key="yes" /></title><use href=\"/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#times-circle\"/></svg>' +
                         '   &nbsp;No' +
                         '</span>';
             }

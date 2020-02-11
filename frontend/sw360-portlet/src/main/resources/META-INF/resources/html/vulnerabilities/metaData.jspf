@@ -12,7 +12,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Vulnerability Metadata</th>
+            <th><liferay-ui:message key="vulnerability.metadata" /></th>
         </tr>
     </thead>
     <tr>

@@ -37,8 +37,8 @@
                 <%@ include file="/html/utils/includes/quickfilter.jspf" %>
             </div>
             <div id="moderationTabs" class="list-group" data-initial-tab="${selectedTab}" role="tablist">
-                <a class="list-group-item list-group-item-action active" href="#tab-Open" data-toggle="list" role="tab">Open</a>
-                <a class="list-group-item list-group-item-action" href="#tab-Closed" data-toggle="list" role="tab">Closed</a>
+                <a class="list-group-item list-group-item-action active" href="#tab-Open" data-toggle="list" role="tab"><liferay-ui:message key="open" /></a>
+                <a class="list-group-item list-group-item-action" href="#tab-Closed" data-toggle="list" role="tab"><liferay-ui:message key="closed" /></a>
             </div>
 		</div>
 		<div class="col">
@@ -46,8 +46,8 @@
 				<div class="col-auto">
 
 				</div>
-                <div class="col portlet-title text-truncate" title="Moderations (${moderationRequests.size()}/${closedModerationRequests.size()})">
-					Moderations (${moderationRequests.size()}/<span id="requestCounter">${closedModerationRequests.size()}</span>)
+                <div class="col portlet-title text-truncate" title="<liferay-ui:message key="moderations" /> (${moderationRequests.size()}/${closedModerationRequests.size()})">
+					<liferay-ui:message key="moderations" /> (${moderationRequests.size()}/<span id="requestCounter">${closedModerationRequests.size()}</span>)
 				</div>
             </div>
 
@@ -142,7 +142,7 @@
                     "5": '<sw360:DisplayUserEmailCollection value="${moderation.moderators}" bare="true"/>',
                     "6": "<sw360:DisplayEnum value="${moderation.moderationState}"/>",
                     <core_rt:if test="${isUserAtLeastClearingAdmin == 'Yes'}">
-                        "7": '<div class="actions"><svg class="delete lexicon-icon" data-moderation-request="<sw360:out value="${moderation.id}"/>" data-document-name="${moderation.documentName}"><title>Delete</title><use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#trash"/></svg></div>'
+                        "7": '<div class="actions"><svg class="delete lexicon-icon" data-moderation-request="<sw360:out value="${moderation.id}"/>" data-document-name="${moderation.documentName}"><title><liferay-ui:message key="delete" /></title><use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#trash"/></svg></div>'
                     </core_rt:if>
                     <core_rt:if test="${isUserAtLeastClearingAdmin != 'Yes'}">
                         "7": '<span class="badge badge-success">READY</span>'
@@ -158,17 +158,24 @@
                 searching: true,
                 data: tableData,
                 columns: [
-                    {title: "Date", render: {display: renderTimeToReadableFormat}, className: 'text-nowrap' },
-                    {title: "Type", className: 'text-nowrap'},
-                    {title: "Document Name"},
-                    {title: "Requesting User"},
-                    {title: "Department"},
-                    {title: "Moderators", render: {display: renderModeratorsListExpandable}},
-                    {title: "State", className: 'text-nowrap'},
-                    {title: "Actions", className: 'one action'}
+                    {title: "<liferay-ui:message key="date" />", render: {display: renderTimeToReadableFormat}, className: 'text-nowrap' },
+                    {title: "<liferay-ui:message key="type" />", className: 'text-nowrap'},
+                    {title: "<liferay-ui:message key="document.name" />"},
+                    {title: "<liferay-ui:message key="requesting.user" />"},
+                    {title: "<liferay-ui:message key="department" />"},
+                    {title: "<liferay-ui:message key="moderators" />", render: {display: renderModeratorsListExpandable}},
+                    {title: "<liferay-ui:message key="state" />", className: 'text-nowrap'},
+                    {title: "<liferay-ui:message key="actions" />", className: 'one action'}
                 ],
                 language: {
-                    emptyTable: "No moderation requests found."
+					paginate: {
+						  previous: "<liferay-ui:message key="previous" />",
+						  next: "<liferay-ui:message key="next" />"
+						},
+					emptyTable: "<liferay-ui:message key="no.moderation.requests.found" />",
+					info: "<liferay-ui:message key="showing" />",
+					infoEmpty: "<liferay-ui:message key="infoempty" />",
+					lengthMenu: "<liferay-ui:message key="show.x.entries" />"
                 },
                 initComplete: datatables.showPageContainer
             }, [0,1,2,3,4,5,6], [7]);
@@ -194,12 +201,12 @@
                             $('#requestCounter').parent().attr('title', $('#requestCounter').parent().text());
                             $dialog.close();
                         } else {
-                            $dialog.alert("I could not delete the moderation request!");
+                            $dialog.alert("<liferay-ui:message key="i.could.not.delete.the.moderation.request" />");
                         }
                     },
                     error: function () {
                         callback();
-                        $dialog.alert("I could not delete the moderation request!");
+                        $dialog.alert("<liferay-ui:message key="i.could.not.delete.the.moderation.request" />");
                     }
                 });
             }
@@ -207,9 +214,9 @@
             $dialog = dialog.confirm(
                 'danger',
                 'question-circle',
-                'Delete Moderation Request?',
-                '<p>Do you really want to delete the moderation request <b data-name="name"></b>?</p>',
-                'Delete Moderation Request',
+                '<liferay-ui:message key="delete.moderation.request" />?',
+                '<p><liferay-ui:message key="do.you.really.want.to.delete.the.moderation.request.x" /></p>',
+                '<liferay-ui:message key="delete.moderation.request" />',
                 {
                     name: docName,
                 },

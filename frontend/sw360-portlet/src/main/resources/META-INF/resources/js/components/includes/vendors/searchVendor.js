@@ -59,7 +59,7 @@ define('components/includes/vendors/searchVendor', ['jquery', 'bridges/datatable
                 $('#searchbuttonvendor').prop('disabled', false);
             },
             language: {
-                emptyTable: 'Please perform a new search.'
+                emptyTable: '<liferay-ui:message key="please.perform.a.new.search" />'
             },
             select: 'single'
         });

@@ -39,14 +39,14 @@
         <thead>
             <tr>
                 <th>
-                    <svg class="lexicon-icon"><title>More Info</title><use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#info-circle-open"/></svg>
+                    <svg class="lexicon-icon"><title><liferay-ui:message key="more.info" /></title><use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#info-circle-open"/></svg>
                 </th>
-                <th>Obligation</th>
-                <th>Licenses</th>
-                <th>Releases</th>
-                <th>Status</th>
-                <th>Action</th>
-                <th>Comment</th>
+                <th><liferay-ui:message key="obligation" /></th>
+                <th><liferay-ui:message key="licenses" /></th>
+                <th><liferay-ui:message key="releases" /></th>
+                <th><liferay-ui:message key="status" /></th>
+                <th><liferay-ui:message key="action" /></th>
+                <th><liferay-ui:message key="comment" /></th>
             </tr>
         </thead>
         <tbody>
@@ -155,7 +155,7 @@ require(['jquery', 'bridges/datatables', 'utils/render', 'modules/button'], func
     }
 
     function renderComment(comment, type, row, meta) {
-        return '<textarea class="obl_comment form-control" rows="1" placeholder="Enter Comment">' + comment + '</textarea>';
+        return '<textarea class="obl_comment form-control" rows="1" placeholder="<liferay-ui:message key="enter.comment" />">' + comment + '</textarea>';
     }
 
     function renderReleaseLink(releaseLinks, type, row, meta) {

@@ -31,7 +31,7 @@
 
     <core_rt:if test="${empty attachments}">
         <div class="alert alert-info" role="alert">
-            No attachments yet.
+            <liferay-ui:message key="no.attachments.yet" />
         </div>
 
         <script>
@@ -42,7 +42,7 @@
     </core_rt:if>
 
     <core_rt:if test="${not empty attachments}">
-        <table id="attachmentsDetail" class="table table-bordered" title="Attachment Information">
+        <table id="attachmentsDetail" class="table table-bordered" title="<liferay-ui:message key="attachment.information" />">
             <colgroup>
                 <col />  <!-- set by class -->
                 <col style="width: 25%;" />
@@ -63,15 +63,15 @@
                             contextType="${documentType}"
                             contextId="${documentID}" />
                     </th>
-                    <th>File name</th>
-                    <th>Size</th>
-                    <th>Type</th>
-                    <th>Group</th>
-                    <th>Uploaded by</th>
-                    <th>Group</th>
-                    <th>Checked by</th>
-                    <th>Usages</th>
-                    <th>Actions</th>
+                    <th><liferay-ui:message key="file.name" /></th>
+                    <th><liferay-ui:message key="size" /></th>
+                    <th><liferay-ui:message key="type" /></th>
+                    <th><liferay-ui:message key="group" /></th>
+                    <th><liferay-ui:message key="uploaded.by" /></th>
+                    <th><liferay-ui:message key="group" /></th>
+                    <th><liferay-ui:message key="checked.by" /></th>
+                    <th><liferay-ui:message key="usages" /></th>
+                    <th><liferay-ui:message key="actions" /></th>
                 </tr>
             </thead>
             <tbody>
@@ -164,6 +164,15 @@
                             }
                         }
                     ],
+                    language: {					
+						paginate: {
+						  previous: "<liferay-ui:message key="previous" />",
+						  next: "<liferay-ui:message key="next" />"
+						},
+						emptyTable: "<liferay-ui:message key="no.data.available.in.table" />",
+						info: "<liferay-ui:message key="showing" />",
+						infoEmpty: "<liferay-ui:message key="infoempty" />"
+					},
                     "order": [[1, 'asc']]
                 } );
 

@@ -23,31 +23,31 @@
 <table class="table edit-table three-columns" id="ProjectBasicInfo">
     <thead>
         <tr>
-            <th colspan="3">General Information</th>
+            <th colspan="3"><liferay-ui:message key="general.information" /></th>
         </tr>
     </thead>
     <tr>
         <td>
             <div class="form-group">
-                <label class="mandatory" for="proj_name">Name</label>
+                <label class="mandatory" for="proj_name"><liferay-ui:message key="name" /></label>
                 <input id="proj_name" name="<portlet:namespace/><%=Project._Fields.NAME%>" type="text"
-                    placeholder="Enter Name" class="form-control" minlength="2"
+                    placeholder="<liferay-ui:message key="enter.name" />" class="form-control" minlength="2"
                     value="<sw360:out value="${project.name}"/>" required/>
                  <div class="invalid-feedback">
-                    Please enter a project name!
+                    <liferay-ui:message key="please.enter.a.project.name" />
                 </div>
             </div>
         </td>
         <td>
             <div class="form-group">
-                <label for="proj_version">Version</label>
+                <label for="proj_version"><liferay-ui:message key="version" /></label>
                 <input id="proj_version" class="form-control" name="<portlet:namespace/><%=Project._Fields.VERSION%>" type="text"
-                    placeholder="Enter Version" value="<sw360:out value="${project.version}"/>" />
+                    placeholder="<liferay-ui:message key="enter.version" />" value="<sw360:out value="${project.version}"/>" />
             </div>
         </td>
         <td>
             <div class="form-group">
-                <label class="mandatory" for="proj_projectvisibility">Project visibility</label>
+                <label class="mandatory" for="proj_projectvisibility"><liferay-ui:message key="project.visibility" /></label>
                 <select class="form-control" id="proj_projectvisibility"
                         name="<portlet:namespace/><%=Project._Fields.VISBILITY%>"
                         required
@@ -55,11 +55,11 @@
                     <sw360:DisplayEnumOptions type="<%=Visibility.class%>" selected="${project.visbility}"/>
                 </select>
                 <div class="invalid-feedback">
-                    Please select the project visibility!
+                    <liferay-ui:message key="please.select.the.project.visibility" />
                 </div>
                 <small class="form-text">
                     <sw360:DisplayEnumInfo type="<%=Visibility.class%>"/>
-                    Learn more about project visibilities.
+                    <liferay-ui:message key="learn.more.about.project.visibilities" />
                 </small>
             </div>
         </td>
@@ -72,18 +72,18 @@
         </td>
         <td>
             <div class="form-group">
-                <label for="proj_url">HomePage URL</label>
+                <label for="proj_url"><liferay-ui:message key="homepage.url" /></label>
                 <input class="form-control" id="proj_url" name="<portlet:namespace/><%=Project._Fields.HOMEPAGE%>"
                     type="URL"
-                    value="<sw360:out value="${project.homepage}"/>" placeholder="Enter Home Url"/>
+                    value="<sw360:out value="${project.homepage}"/>" placeholder="<liferay-ui:message key="enter.home.url" />"/>
             </div>
         </td>
         <td>
             <div class="form-group">
-                <label for="proj_wiki">Wiki URL</label>
+                <label for="proj_wiki"><liferay-ui:message key="wiki.url" /></label>
                 <input class="form-control" id="proj_wiki" name="<portlet:namespace/><%=Project._Fields.WIKI%>"
                     type="URL"
-                    value="<sw360:out value="${project.wiki}"/>" placeholder="Enter Wiki Url"/>
+                    value="<sw360:out value="${project.wiki}"/>" placeholder="<liferay-ui:message key="enter.wiki.url" />"/>
             </div>
         </td>
     </tr>
@@ -91,7 +91,7 @@
     <tr>
         <td>
             <div class="form-group">
-                <label class="mandatory" for="proj_projecttype">Project type</label>
+                <label class="mandatory" for="proj_projecttype"><liferay-ui:message key="project.type" /></label>
                 <select class="form-control" id="proj_projecttype"
                         name="<portlet:namespace/><%=Project._Fields.PROJECT_TYPE%>"
                         required>
@@ -99,35 +99,35 @@
                     <sw360:DisplayEnumOptions type="<%=ProjectType.class%>" selected="${project.projectType}"/>
                 </select>
                 <div class="invalid-feedback">
-                    Please select the project type!
+                    <liferay-ui:message key="please.select.the.project.type" />
                 </div>
                 <small class="form-text">
                     <sw360:DisplayEnumInfo type="<%=ProjectType.class%>"/>
-                    Learn more about project types.
+                    <liferay-ui:message key="learn.more.about.project.types" />
                 </small>
             </div>
         </td>
         <td>
             <div class="form-group">
-                <label for="proj_tag">Tag</label>
+                <label for="proj_tag"><liferay-ui:message key="tag" /></label>
                 <input class="form-control" id="proj_tag" name="<portlet:namespace/><%=Project._Fields.TAG%>"
                     type="text"
-                    value="<sw360:out value="${project.tag}"/>" placeholder="Enter one word tag"/>
+                    value="<sw360:out value="${project.tag}"/>" placeholder="<liferay-ui:message key="enter.one.word.tag" />"/>
             </div>
         </td>
         <td>
             <div class="form-group">
-                <label for="proj_desc">Description</label>
+                <label for="proj_desc"><liferay-ui:message key="description" /></label>
                 <textarea class="form-control" id="proj_desc"
                         name="<portlet:namespace/><%=Project._Fields.DESCRIPTION%>" rows="3"
-                        placeholder="Enter Description"><sw360:out value="${project.description}" stripNewlines="false"/></textarea>
+                        placeholder="<liferay-ui:message key="enter.description" />"><sw360:out value="${project.description}" stripNewlines="false"/></textarea>
             </div>
         </td>
     </tr>
     <tr>
         <td>
             <div class="form-group">
-                <label for="proj_domain">Domain</label>
+                <label for="proj_domain"><liferay-ui:message key="domain" /></label>
                 <select class="form-control" id="domain" name="<portlet:namespace/><%=Project._Fields.DOMAIN%>" data-selected="${project.domain}">
                     <option value>-- Select Domain --</option>
                     <core_rt:forEach items="${domain}" var="entry">
@@ -158,10 +158,10 @@
                         <core_rt:if test="${empty project.securityResponsibles}"> disabled="disabled" </core_rt:if>
                 />
                 <label class="form-check-label" for="enable_svm">
-                    Enable Security Vulnerability Monitoring
+                    <liferay-ui:message key="enable.security.vulnerability.monitoring" />
                 </label>
                 <small class="form-text">
-                    You need a security responsible to activate monitoring.
+                    <liferay-ui:message key="you.need.a.security.responsible.to.activate.monitoring" />
                 </small>
             </div>
         </td>
@@ -173,7 +173,7 @@
                             <core_rt:if test="${project.enableVulnerabilitiesDisplay}"> checked="checked" </core_rt:if>
                 />
                 <label class="form-check-label" for="enable_vulnerabilities_display">
-                    Enable Displaying Vulnerabilities
+                    <liferay-ui:message key="enable.displaying.vulnerabilities" />
                 </label>
             </div>
         </td>
@@ -184,19 +184,19 @@
 <table class="table edit-table three-columns" id="ProjectRolesInfo">
     <thead>
     <tr>
-        <th colspan="3" class="headlabel">Roles</th>
+        <th colspan="3" class="headlabel"><liferay-ui:message key="roles" /></th>
     </tr>
     </thead>
 
     <tr>
         <td>
             <div class="form-group">
-                <label class="mandatory" for="group">Group</label>
+                <label class="mandatory" for="group"><liferay-ui:message key="group" /></label>
                 <input id="group" class="form-control" name="<portlet:namespace/><%=Project._Fields.BUSINESS_UNIT%>" type="text"
-                    placeholder="Enter Group" required
+                    placeholder="<liferay-ui:message key="enter.group" />" required
                     value="<sw360:out value="${project.businessUnit}"/>"/>
                 <div class="invalid-feedback">
-                        Please enter a group!
+                        <liferay-ui:message key="please.enter.a.group" />
                 </div>
             </div>
         </td>
@@ -214,23 +214,23 @@
     <tr>
         <td>
             <div class="form-group">
-                <label for="proj_accounting_unit">Owner accounting unit</label>
+                <label for="proj_accounting_unit"><liferay-ui:message key="owner.accounting.unit" /></label>
                 <input class="form-control" id="proj_accounting_unit" name="<portlet:namespace/><%=Project._Fields.OWNER_ACCOUNTING_UNIT%>"
                     type="text"
-                    value="<sw360:out value="${project.ownerAccountingUnit}"/>" placeholder="Enter owner's accounting unit"/>
+                    value="<sw360:out value="${project.ownerAccountingUnit}"/>" placeholder="<liferay-ui:message key="enter.owners.accounting.unit" />"/>
             </div>
         </td>
         <td>
             <div class="form-group">
-                <label for="proj_billing_group">Owner billing group</label>
+                <label for="proj_billing_group"><liferay-ui:message key="owner.billing.group" /></label>
                 <input class="form-control" id="proj_billing_group" name="<portlet:namespace/><%=Project._Fields.OWNER_GROUP%>"
                     type="text"
-                    value="<sw360:out value="${project.ownerGroup}"/>" placeholder="Enter owner's billing group"/>
+                    value="<sw360:out value="${project.ownerGroup}"/>" placeholder="<liferay-ui:message key="enter.owners.billing.group" />"/>
             </div>
         </td>
         <td>
             <div class="form-group">
-                <label for="proj_owner_country">Owner country</label>
+                <label for="proj_owner_country"><liferay-ui:message key="owner.country" /></label>
                 <select class="form-control" id="proj_owner_country"
                         name="<portlet:namespace/><%=Project._Fields.OWNER_COUNTRY%>">
                     <sw360:DisplayCountryCodeSelection selected='${project.ownerCountry}' preferredCountryCodes='${preferredCountryCodes}'/>

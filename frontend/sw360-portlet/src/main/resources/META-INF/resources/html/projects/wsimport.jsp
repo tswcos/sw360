@@ -28,14 +28,14 @@
 
 <div id="header"></div>
 <p class="pageHeader">
-    <span class="pageHeaderBigSpan">wsimport</span>
+    <span class="pageHeaderBigSpan"><liferay-ui:message key="wsimport" /></span>
     <span class="pull-right"></span>
 </p>
 
 <div id="wsimport-source" class="content1">
     <div id="remoteLoginForm">
         <div class='form-group'>
-            <label class="control-label textlabel stackedLabel" for="input-dataserver-url">REST Server URL:</label>
+            <label class="control-label textlabel stackedLabel" for="input-dataserver-url"><liferay-ui:message key="rest.server.url" />:</label>
             <div class='controls'>
                 <input  class="form-control toplabelledInput"
                         id="input-dataserver-url"
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class='form-group'>
-            <label class="control-label textlabel stackedLabel" for="input-dataserver-token">Whitesource organization API key:</label>
+            <label class="control-label textlabel stackedLabel" for="input-dataserver-token"><liferay-ui:message key="whitesource.organization.api.key" />:</label>
             <div class='controls'>
                 <input  class="form-control toplabelledInput"
                         id="input-dataserver-token"
@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class='form-group'>
-            <label class="control-label textlabel stackedLabel" for="input-dataserver-userkey">Whitesource user key:</label>
+            <label class="control-label textlabel stackedLabel" for="input-dataserver-userkey"><liferay-ui:message key="whitesource.user.key" />:</label>
             <div class='controls'>
                 <input  class="form-control toplabelledInput"
                         id="input-dataserver-userkey"
@@ -76,7 +76,7 @@
 
 <div id="wsimport-data" class="content2">
     <div id="importProduct" class="wsimport_content">
-        <span><h4>Select product</h4></span>
+        <span><h4><liferay-ui:message key="select.product" /></h4></span>
         <form>
             <table  id="productTable" class="display wsimport_table">
                 <tfoot>
@@ -88,7 +88,7 @@
         </form>
     </div>
     <div id="importProject" class="wsimport_content">
-        <span><h4>Select project(s)</h4></span>
+        <span><h4><liferay-ui:message key="select.projects" /></h4></span>
         <form>
             <table  id="projectTable" class="display wsimport_table">
                 <tfoot>

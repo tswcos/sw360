@@ -27,7 +27,7 @@
 <c:set var="tableModeSourceBundle" value="<%=PortalConstants.PROJECT_LINK_TABLE_MODE_SOURCE_BUNDLE%>"/>
 
 <div id="infobar" class="alert alert-info">
-    <div class="spinner">Loading previously stored selection...</div>
+    <div class="spinner"><liferay-ui:message key="loading.previously.stored.selection" /></div>
 </div>
 
 <table class="table" id="LinkedProjectsInfo" style="width: 100%; max-width: 100%;"
@@ -56,12 +56,12 @@
     <thead>
         <tr>
             <th><input type="checkbox" class="form-check-input" checked="checked" id="selectAllCheckbox"/></th>
-            <th>Lvl</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Clearing State</th>
-            <th>Uploaded by</th>
-            <th>Clearing Team</th>
+            <th><liferay-ui:message key="lvl" /></th>
+            <th><liferay-ui:message key="name" /></th>
+            <th><liferay-ui:message key="type" /></th>
+            <th><liferay-ui:message key="clearing.state" /></th>
+            <th><liferay-ui:message key="uploaded.by" /></th>
+            <th><liferay-ui:message key="clearing.team" /></th>
         </tr>
     </thead>
     <tbody>
@@ -85,9 +85,9 @@
                     <core_rt:if test="${projectLinkTableMode == tableModeLicenseInfo}">
                         <div class="form-group">
                             <button type="button" id="${projectPath}_use-sel" class="mt-1 mb-1 btn btn-sm btn-secondary use-subproject-selection" data-tt-parent-id="${projectLink.nodeId}">
-                                Use selection of this subproject
+                                <liferay-ui:message key="use.selection.of.this.subproject" />
                             </button>
-                            <span class="text-danger"><clay:icon symbol="warning"/> Current selection will be overwritten!</span>
+                            <span class="text-danger"><clay:icon symbol="warning"/> <liferay-ui:message key="current.selection.will.be.overwritten" /></span>
                         </div>
                     </core_rt:if>
                 </td>
@@ -168,7 +168,7 @@
                                   used in <b>${attachmenUsageCountMap[mapKey]}</b> projects
                                 </core_rt:when>
                                 <core_rt:otherwise>
-                                  <i>not used in any project yet</i>
+                                  <i><liferay-ui:message key="not.used.in.any.project.yet" /></i>
                                 </core_rt:otherwise>
                             </core_rt:choose>
                     </td>
@@ -182,7 +182,7 @@
                 <core_rt:if test="${projectLinkTableMode == tableModeLicenseInfo}">
                     <tr data-tt-id="${releaseLink.nodeId}_${attachment.attachmentContentId}_loader" data-tt-parent-id="${releaseLink.nodeId}_${attachment.attachmentContentId}">
                         <td colspan="7">
-                            <div class="spinner"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading license information. Please wait...</div>
+                            <div class="spinner"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> <liferay-ui:message key="loading.license.information.please.wait" /></div>
                         </td>
                     </tr>
                 </core_rt:if>
@@ -191,7 +191,7 @@
     </core_rt:forEach>
     <core_rt:if test="${projectList.size() < 1 and $releaseList.size() < 1}">
         <tr>
-            <td colspan="7">No linked releases or projects</td>
+            <td colspan="7"><liferay-ui:message key="no.linked.releases.or.projects" /></td>
         </tr>
     </core_rt:if>
     </tbody>

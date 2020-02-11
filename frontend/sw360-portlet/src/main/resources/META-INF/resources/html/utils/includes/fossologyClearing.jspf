@@ -42,21 +42,17 @@
                     <div class="row mt-4">
                         <div class="col">
                             <small class="form-text portlet-msg-info"">
-                                <h3>How it works:</h3>
+                                <h3><liferay-ui:message key="how.it.works" />:</h3>
                                 <p>
-                                    If the source of a release is attached to it, a basic FOSSology process can be invoked
-                                    by just opening this dialog. It consists of:
+                                    <liferay-ui:message key="if.the.source.of.a.release.is.attached.to.it.a.basic.fossology.process.can.be.invoked.by.just.opening.this.dialog.it.consists.of" />
                                     <ol>
-                                        <li>Upload the sources to FOSSology</li>
-                                        <li>Scan the sources</li>
-                                        <li>Generate a report out of the scan results and attach it to this release</li>
+                                        <li><liferay-ui:message key="upload.the.sources.to.fossology" /></li>
+                                        <li><liferay-ui:message key="scan.the.sources" /></li>
+                                        <li><liferay-ui:message key="generate.a.report.out.of.the.scan.results.and.attach.it.to.this.release" /></li>
                                     </ol>
                                 </p>
                                 <p>
-                                    If a FOSSology process got stuck or if the source attachment was not correct, you can
-                                    start all over by setting the current FOSSology process to status OUTDATED. A new one
-                                    will be started automatically, so make sure you corrected all attachments or other
-                                    problems first before changing the state.
+                                    <liferay-ui:message key="if.a.fossology.process.got.stuck.or.if.the.source.attachment.was.not.correct.you.can.start.all.over.by.setting.the.current.fossology.process.to.status.outdated.a.new.one.will.be.started.automatically.so.make.sure.you.corrected.all.attachments.or.other.problems.first.before.changing.the.state" />
                                 </p>
                             </small>
                         </div>
@@ -64,7 +60,7 @@
                     <div class="row mt-2">
                         <div class="col">
                             <div class="source-attachment">
-                                Found source attachment: <span id="name-of-source-attachment" class="ml-2"></span>
+                                <liferay-ui:message key="found.source.attachment" /> <span id="name-of-source-attachment" class="ml-2"></span>
                             </div>
                         </div>
                     </div>
@@ -78,15 +74,15 @@
                     <div class="row mt-4">
                         <div class="col">
                             <div class="auto-refresh text-right">
-                                Auto-refresh in <span id="auto-refresh-seconds" class="ml-2">5</span>
+                                <liferay-ui:message key="auto.refresh.in" /> <span id="auto-refresh-seconds" class="ml-2">5</span>
                             </div>
                         </div>
                     </div>
 				</div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-submit="outdated">Set Outdated</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-light" data-submit="outdated"><liferay-ui:message key="set.outdated" /></button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal"><liferay-ui:message key="close" /></button>
                 </div>
 			</div>
 		</div>

@@ -9,7 +9,7 @@
   ~ http://www.eclipse.org/legal/epl-v10.html
   --%>
 
-<h4>Vulnerability References</h4>
+<h4><liferay-ui:message key="vulnerability.references" /></h4>
 <ul>
     <core_rt:forEach items="${vulnerability.references}" var="reference">
         <li><sw360:DisplayLink target="${reference}"/></li>
