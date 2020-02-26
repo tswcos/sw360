@@ -14,7 +14,7 @@
 </portlet:resourceURL>
 
 <div class="dialogs">
-    <div id="addVendorDialog" data-title="Create new Vendor" class="modal fade" tabindex="-1" role="dialog" data-add-vendor-url="<%=addVendorURL%>">
+    <div id="addVendorDialog" data-title="<liferay-ui:message key="create.new.vendor" />" class="modal fade" tabindex="-1" role="dialog" data-add-vendor-url="<%=addVendorURL%>">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-body container">

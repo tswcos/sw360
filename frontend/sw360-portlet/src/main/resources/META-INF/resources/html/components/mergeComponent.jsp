@@ -23,8 +23,8 @@
 
 <div id="componentMergeWizard" class="container" data-step-id="0" data-component-target-id="${component.id}">
     <div class="row portlet-toolbar">
-        <div class="col portlet-title text-truncate" title="Merge into ${sw360:printComponentName(component)}">
-            Merge into ${sw360:printComponentName(component)}
+        <div class="col portlet-title text-truncate" title="<liferay-ui:message key="merge.into" /> ${sw360:printComponentName(component)}">
+            <liferay-ui:message key="merge.into" /> ${sw360:printComponentName(component)}
         </div>
     </div>
     <div class="row">
@@ -166,16 +166,22 @@
                     { data: "createdBy" },
                     { data: "releases" }
                 ],
-				language: {					
-					paginate: {
-						previous: "<liferay-ui:message key="previous" />",
-						next: "<liferay-ui:message key="next" />"
-					},
-					emptyTable: "<liferay-ui:message key="no.data.available.in.table" />",
-					info: "<liferay-ui:message key="showing" />",
-					infoEmpty: "<liferay-ui:message key="infoempty" />",
-					lengthMenu: "<liferay-ui:message key="show.x.entries" />"
-					},
+                language: {
+                    paginate: {
+                        previous: "<liferay-ui:message key="previous" />",
+                        next: "<liferay-ui:message key="next" />"
+                    },
+                    emptyTable: "<liferay-ui:message key="no.data.available.in.table" />",
+                    info: "<liferay-ui:message key="showing" />",
+                    infoEmpty: "<liferay-ui:message key="infoempty" />",
+                    lengthMenu: '<liferay-ui:message key="show" /> <select>'+
+                    '<option value="10">10</option>'+
+                    '<option value="25">25</option>'+
+                    '<option value="50">50</option>'+
+                    '<option value="100">100</option>'+
+                    '<option value="-1"><liferay-ui:message key="all" /></option>'+
+                    '</select> <liferay-ui:message key="entries" />'
+                },
                 order: [ [ 1, 'asc' ] ],
                 select: 'single'
             }, undefined, [0], true);
@@ -204,39 +210,39 @@
             $stepElement.data('componentSourceId', data.componentSource.id);
             $stepElement.data('releaseCount', (data.componentTarget.releases.length || 0) + (data.componentSource.releases.length || 0));
 
-            $stepElement.append(wizard.createCategoryLine('General'));
-            $stepElement.append(wizard.createSingleMergeLine('Name', data.componentTarget.name, data.componentSource.name));
-            $stepElement.append(wizard.createSingleMergeLine('Created on', data.componentTarget.createdOn, data.componentSource.createdOn));
+            $stepElement.append(wizard.createCategoryLine('<liferay-ui:message key="general" />'));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="name" />', data.componentTarget.name, data.componentSource.name));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="created.on" />', data.componentTarget.createdOn, data.componentSource.createdOn));
             $stepElement.append(
                 renderCreatedBy(
-                    wizard.createSingleMergeLine('Created by', data.componentTarget.createdBy, data.componentSource.createdBy),
+                    wizard.createSingleMergeLine('<liferay-ui:message key="created.by" />', data.componentTarget.createdBy, data.componentSource.createdBy),
                     data.componentSource.createdBy != data.componentTarget.createdBy,
                     data.componentSource.createdBy,
                     'text-center'
                 )
             );
-            $stepElement.append(wizard.createMultiMergeLine('Categories', data.componentTarget.categories, data.componentSource.categories));
-            $stepElement.append(wizard.createSingleMergeLine('Component Type', data.componentTarget.componentType, data.componentSource.componentType, getComponentTypeDisplayString));
-            $stepElement.append(wizard.createSingleMergeLine('Default Vendor', data.componentTarget.defaultVendor, data.componentSource.defaultVendor, getDefaultVendorDisplayString));
-            $stepElement.append(wizard.createSingleMergeLine('Homepage', data.componentTarget.homepage, data.componentSource.homepage));
-            $stepElement.append(wizard.createSingleMergeLine('Blog', data.componentTarget.blog, data.componentSource.blog));
-            $stepElement.append(wizard.createSingleMergeLine('Wiki', data.componentTarget.wiki, data.componentSource.wiki));
-            $stepElement.append(wizard.createSingleMergeLine('Mailing list', data.componentTarget.mailinglist, data.componentSource.mailinglist));
-            $stepElement.append(wizard.createSingleMergeLine('Description', data.componentTarget.description, data.componentSource.description));
-            $stepElement.append(wizard.createMapMergeLine('External ids', data.componentTarget.externalIds, data.componentSource.externalIds));
-            $stepElement.append(wizard.createMapMergeLine('Additional Data', data.componentTarget.additionalData, data.componentSource.additionalData));
+            $stepElement.append(wizard.createMultiMergeLine('<liferay-ui:message key="categories" />', data.componentTarget.categories, data.componentSource.categories));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="component.type" />', data.componentTarget.componentType, data.componentSource.componentType, getComponentTypeDisplayString));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="default.vendor" />', data.componentTarget.defaultVendor, data.componentSource.defaultVendor, getDefaultVendorDisplayString));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="homepage" />', data.componentTarget.homepage, data.componentSource.homepage));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="blog" />', data.componentTarget.blog, data.componentSource.blog));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="wiki" />', data.componentTarget.wiki, data.componentSource.wiki));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="mailing.list" />', data.componentTarget.mailinglist, data.componentSource.mailinglist));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="description" />', data.componentTarget.description, data.componentSource.description));
+            $stepElement.append(wizard.createMapMergeLine('<liferay-ui:message key="external.ids" />', data.componentTarget.externalIds, data.componentSource.externalIds));
+            $stepElement.append(wizard.createMapMergeLine('<liferay-ui:message key="additional.data" />', data.componentTarget.additionalData, data.componentSource.additionalData));
 
-            $stepElement.append(wizard.createCategoryLine('Roles'));
-            $stepElement.append(wizard.createSingleMergeLine('Component owner', data.componentTarget.componentOwner, data.componentSource.componentOwner));
-            $stepElement.append(wizard.createSingleMergeLine('Owner accounting unit', data.componentTarget.ownerAccountingUnit, data.componentSource.ownerAccountingUnit));
-            $stepElement.append(wizard.createSingleMergeLine('Owner billing group', data.componentTarget.ownerGroup, data.componentSource.ownerGroup));
-            $stepElement.append(wizard.createSingleMergeLine('Owner country', data.componentTarget.ownerCountry, data.componentSource.ownerCountry));
-            $stepElement.append(wizard.createMultiMergeLine('Moderators', data.componentTarget.moderators, data.componentSource.moderators));
-            $stepElement.append(wizard.createMultiMergeLine('Subscribers', data.componentTarget.subscribers, data.componentSource.subscribers));
-            $stepElement.append(wizard.createMultiMapMergeLine('Additional Roles', data.componentTarget.roles, data.componentSource.roles));
+            $stepElement.append(wizard.createCategoryLine('<liferay-ui:message key="roles" />'));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="component.owner" />', data.componentTarget.componentOwner, data.componentSource.componentOwner));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="owner.accounting.unit" />', data.componentTarget.ownerAccountingUnit, data.componentSource.ownerAccountingUnit));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="owner.billing.group" />', data.componentTarget.ownerGroup, data.componentSource.ownerGroup));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="owner.country" />', data.componentTarget.ownerCountry, data.componentSource.ownerCountry));
+            $stepElement.append(wizard.createMultiMergeLine('<liferay-ui:message key="moderators" />', data.componentTarget.moderators, data.componentSource.moderators));
+            $stepElement.append(wizard.createMultiMergeLine('<liferay-ui:message key="subscribers" />', data.componentTarget.subscribers, data.componentSource.subscribers));
+            $stepElement.append(wizard.createMultiMapMergeLine('<liferay-ui:message key="additional.roles" />', data.componentTarget.roles, data.componentSource.roles));
 
-            $stepElement.append(wizard.createCategoryLine('Releases'));
-            releases = wizard.createMultiMergeLine('Releases', data.componentTarget.releases, data.componentSource.releases, function(release) {
+            $stepElement.append(wizard.createCategoryLine('<liferay-ui:message key="releases" />'));
+            releases = wizard.createMultiMergeLine('<liferay-ui:message key="releases" />', data.componentTarget.releases, data.componentSource.releases, function(release) {
                 if (!release) {
                     return '';
                 }
@@ -251,13 +257,13 @@
             releases.find('.merge.single.right').each(function(index, element) {
                 var $row = $(element);
                 if(releaseMap[$row.data().origVal.id]) {
-                    wizard.mergeByDefault('Releases', index);
+                    wizard.mergeByDefault('<liferay-ui:message key="releases" />', index);
                 }
-                wizard.lockRow('Releases', index, true);
+                wizard.lockRow('<liferay-ui:message key="releases" />', index, true);
             });
 
-            $stepElement.append(wizard.createCategoryLine('Attachments'));
-            $stepElement.append(wizard.createMultiMergeLine('Attachments', data.componentTarget.attachments, data.componentSource.attachments, function(attachment) {
+            $stepElement.append(wizard.createCategoryLine(''));
+            $stepElement.append(wizard.createMultiMergeLine('<liferay-ui:message key="attachments" />', data.componentTarget.attachments, data.componentSource.attachments, function(attachment) {
                 if (!attachment) {
                     return '';
                 }
@@ -281,30 +287,30 @@
 
             componentSelection.id = $wizardRoot.data('componentTargetId');
 
-            componentSelection.name = wizard.getFinalSingleValue('Name');
-            componentSelection.createdOn = wizard.getFinalSingleValue('Created on');
-            componentSelection.createdBy = wizard.getFinalSingleValue('Created by');
-            componentSelection.categories = wizard.getFinalMultiValue('Categories');
-            componentSelection.componentType = wizard.getFinalSingleValue('Component Type');
-            componentSelection.defaultVendor = wizard.getFinalSingleValue('Default Vendor');
+            componentSelection.name = wizard.getFinalSingleValue('<liferay-ui:message key="name" />');
+            componentSelection.createdOn = wizard.getFinalSingleValue('<liferay-ui:message key="created.on" />');
+            componentSelection.createdBy = wizard.getFinalSingleValue('<liferay-ui:message key="created.by" />');
+            componentSelection.categories = wizard.getFinalMultiValue('<liferay-ui:message key="categories" />');
+            componentSelection.componentType = wizard.getFinalSingleValue('<liferay-ui:message key="component.type" />');
+            componentSelection.defaultVendor = wizard.getFinalSingleValue('<liferay-ui:message key="default.vendor" />');
             componentSelection.defaultVendorId = componentSelection.defaultVendor ? componentSelection.defaultVendor.id : undefined;
-            componentSelection.homepage = wizard.getFinalSingleValue('Homepage');
-            componentSelection.blog = wizard.getFinalSingleValue('Blog');
-            componentSelection.wiki = wizard.getFinalSingleValue('Wiki');
-            componentSelection.mailinglist = wizard.getFinalSingleValue('Mailing list');
-            componentSelection.description = wizard.getFinalSingleValue('Description');
-            componentSelection.externalIds = wizard.getFinalMapValue('External ids');
-            componentSelection.additionalData = wizard.getFinalMapValue('Additional Data');
+            componentSelection.homepage = wizard.getFinalSingleValue('<liferay-ui:message key="homepage" />');
+            componentSelection.blog = wizard.getFinalSingleValue('<liferay-ui:message key="blog" />');
+            componentSelection.wiki = wizard.getFinalSingleValue('<liferay-ui:message key="wiki" />');
+            componentSelection.mailinglist = wizard.getFinalSingleValue('<liferay-ui:message key="mailing.list" />');
+            componentSelection.description = wizard.getFinalSingleValue('<liferay-ui:message key="description" />');
+            componentSelection.externalIds = wizard.getFinalMapValue('<liferay-ui:message key="external.ids" />');
+            componentSelection.additionalData = wizard.getFinalMapValue('<liferay-ui:message key="additional.data" />');
 
-            componentSelection.componentOwner = wizard.getFinalSingleValue('Component owner');
-            componentSelection.ownerAccountingUnit = wizard.getFinalSingleValue('Owner accounting unit');
-            componentSelection.ownerGroup = wizard.getFinalSingleValue('Owner billing group');
-            componentSelection.ownerCountry = wizard.getFinalSingleValue('Owner country');
-            componentSelection.moderators = wizard.getFinalMultiValue('Moderators');
-            componentSelection.subscribers = wizard.getFinalMultiValue('Subscribers');
-            componentSelection.roles = wizard.getFinalMultiMapValue('Additional Roles');
+            componentSelection.componentOwner = wizard.getFinalSingleValue('<liferay-ui:message key="component.owner" />');
+            componentSelection.ownerAccountingUnit = wizard.getFinalSingleValue('<liferay-ui:message key="owner.accounting.unit" />');
+            componentSelection.ownerGroup = wizard.getFinalSingleValue('<liferay-ui:message key="owner.billing.group" />');
+            componentSelection.ownerCountry = wizard.getFinalSingleValue('<liferay-ui:message key="owner.country" />');
+            componentSelection.moderators = wizard.getFinalMultiValue('<liferay-ui:message key="moderators" />');
+            componentSelection.subscribers = wizard.getFinalMultiValue('<liferay-ui:message key="subscribers" />');
+            componentSelection.roles = wizard.getFinalMultiMapValue('<liferay-ui:message key="additional.roles" />');
 
-            releases = wizard.getFinalMultiValue('Releases');
+            releases = wizard.getFinalMultiValue('<liferay-ui:message key="releases" />');
             componentSelection.releases = [];
             $.each(releases, function(index, value) {
                 /* add just required fields for easy identification */
@@ -320,7 +326,7 @@
                 return false;
             }
 
-            attachments = wizard.getFinalMultiValue('Attachments');
+            attachments = wizard.getFinalMultiValue('<liferay-ui:message key="attachments" />');
             componentSelection.attachments = [];
             $.each(attachments, function(index, value) {
                 /* add just required fields for easy identification */
@@ -340,47 +346,47 @@
 
             $stepElement.html('<div class="stepFeedback"></div>');
 
-            $stepElement.append(wizard.createCategoryLine('General'));
-            $stepElement.append(wizard.createSingleDisplayLine('Name', data.componentSelection.name));
-            $stepElement.append(wizard.createSingleDisplayLine('Created on', data.componentSelection.createdOn));
+            $stepElement.append(wizard.createCategoryLine('<liferay-ui:message key="general" />'));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="name" />', data.componentSelection.name));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="created.on" />', data.componentSelection.createdOn));
             $stepElement.append(
                 renderCreatedBy(
-                    wizard.createSingleDisplayLine('Created by', data.componentSelection.createdBy),
+                    wizard.createSingleDisplayLine('<liferay-ui:message key="created.by" />', data.componentSelection.createdBy),
                     componentSource.createdBy != componentTarget.createdBy,
                     data.componentSelection.createdBy === componentSource.createdBy ? componentTarget.createdBy : componentSource.createdBy,
                     'pl-3'
                 )
             );
-            $stepElement.append(wizard.createMultiDisplayLine('Categories', data.componentSelection.categories));
-            $stepElement.append(wizard.createSingleDisplayLine('Component Type', data.componentSelection.componentType, getComponentTypeDisplayString));
-            $stepElement.append(wizard.createSingleDisplayLine('Default Vendor', data.componentSelection.defaultVendor, getDefaultVendorDisplayString));
-            $stepElement.append(wizard.createSingleDisplayLine('Homepage', data.componentSelection.homepage));
-            $stepElement.append(wizard.createSingleDisplayLine('Blog', data.componentSelection.blog));
-            $stepElement.append(wizard.createSingleDisplayLine('Wiki', data.componentSelection.wiki));
-            $stepElement.append(wizard.createSingleDisplayLine('Mailing list', data.componentSelection.mailinglist));
-            $stepElement.append(wizard.createSingleDisplayLine('Description', data.componentSelection.description));
-            $stepElement.append(wizard.createMapDisplayLine('External ids', data.componentSelection.externalIds));
-            $stepElement.append(wizard.createMapDisplayLine('Additional Data', data.componentSelection.additionalData));
+            $stepElement.append(wizard.createMultiDisplayLine('<liferay-ui:message key="categories" />', data.componentSelection.categories));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="component.type" />', data.componentSelection.componentType, getComponentTypeDisplayString));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="default.vendor" />', data.componentSelection.defaultVendor, getDefaultVendorDisplayString));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="homepage" />', data.componentSelection.homepage));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="blog" />', data.componentSelection.blog));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="wiki" />', data.componentSelection.wiki));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="mailing.list" />', data.componentSelection.mailinglist));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="description" />', data.componentSelection.description));
+            $stepElement.append(wizard.createMapDisplayLine('<liferay-ui:message key="external.ids" />', data.componentSelection.externalIds));
+            $stepElement.append(wizard.createMapDisplayLine('<liferay-ui:message key="additional.data" />', data.componentSelection.additionalData));
 
-            $stepElement.append(wizard.createCategoryLine('Roles'));
-            $stepElement.append(wizard.createSingleDisplayLine('Component owner', data.componentSelection.componentOwner));
-            $stepElement.append(wizard.createSingleDisplayLine('Owner accounting unit', data.componentSelection.ownerAccountingUnit));
-            $stepElement.append(wizard.createSingleDisplayLine('Owner billing group', data.componentSelection.ownerGroup));
-            $stepElement.append(wizard.createSingleDisplayLine('Owner country', data.componentSelection.ownerCountry));
-            $stepElement.append(wizard.createMultiDisplayLine('Moderators', data.componentSelection.moderators));
-            $stepElement.append(wizard.createMultiDisplayLine('Subscribers', data.componentSelection.subscribers));
-            $stepElement.append(wizard.createMultiMapDisplayLine('Additional Roles', data.componentSelection.roles));
+            $stepElement.append(wizard.createCategoryLine('<liferay-ui:message key="roles" />'));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="component.owner" />', data.componentSelection.componentOwner));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="owner.accounting.unit" />', data.componentSelection.ownerAccountingUnit));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="owner.billing.group" />', data.componentSelection.ownerGroup));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="owner.country" />', data.componentSelection.ownerCountry));
+            $stepElement.append(wizard.createMultiDisplayLine('<liferay-ui:message key="moderators" />', data.componentSelection.moderators));
+            $stepElement.append(wizard.createMultiDisplayLine('<liferay-ui:message key="subscribers" />', data.componentSelection.subscribers));
+            $stepElement.append(wizard.createMultiMapDisplayLine('<liferay-ui:message key="additional.roles" />', data.componentSelection.roles));
 
-            $stepElement.append(wizard.createCategoryLine('Releases'));
-            $stepElement.append(wizard.createMultiDisplayLine('Releases', data.componentSelection.releases, function(release) {
+            $stepElement.append(wizard.createCategoryLine('<liferay-ui:message key="releases" />'));
+            $stepElement.append(wizard.createMultiDisplayLine('<liferay-ui:message key="releases" />', data.componentSelection.releases, function(release) {
                 if (!release) {
                     return '';
                 }
                 return (release.name || '-no-name-') + ' ' + (release.version || '-no-version-');
             }));
 
-            $stepElement.append(wizard.createCategoryLine('Attachments'));
-            $stepElement.append(wizard.createMultiDisplayLine('Attachments', data.componentSelection.attachments, function(attachment) {
+            $stepElement.append(wizard.createCategoryLine('<liferay-ui:message key="attachments" />'));
+            $stepElement.append(wizard.createMultiDisplayLine('<liferay-ui:message key="attachments" />', data.componentSelection.attachments, function(attachment) {
                 if (!attachment) {
                     return '';
                 }
@@ -391,7 +397,7 @@
         function renderCreatedBy($line, renderInfo, user, alignment) {
             var $info = "<small class='merge-info-createdby form-text mt-0 pb-2 " + alignment + "'>" + 
                 "<svg class='lexicon-icon'><use href='/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#info-circle-open' /></svg> " + 
-                "The user <b class='user'>" + user + "</b> will be added to the list of moderators." +
+                <liferay-ui:message key="the.user.x.will.be.added.to.the.list.of.moderators" /> +
                 "</small>";
 
             if(renderInfo) {

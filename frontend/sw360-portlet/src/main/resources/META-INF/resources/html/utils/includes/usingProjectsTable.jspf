@@ -47,7 +47,14 @@
 
             datatables.create('#usingProjectsTable', {
                 data: result,
-                lengthChange: false
+                lengthChange: false,
+                language: {
+                    paginate: {
+                        previous: "<liferay-ui:message key="previous" />",
+                        next: "<liferay-ui:message key="next" />"
+                    },
+                    info: "<liferay-ui:message key="showing" />"
+                }
             }, undefined, undefined, true);
         });
     </script>

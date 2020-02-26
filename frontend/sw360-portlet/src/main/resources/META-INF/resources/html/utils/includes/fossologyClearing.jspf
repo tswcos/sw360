@@ -24,7 +24,7 @@
 
 
 <div class="dialogs">
-	<div id="fossologyClearingDialog" data-title="Fossology Process" class="modal fade" tabindex="-1" role="dialog"
+	<div id="fossologyClearingDialog" data-title="<liferay-ui:message key="fossology.process" />" class="modal fade" tabindex="-1" role="dialog"
         data-portlet-namespace="<portlet:namespace/>"
         data-fossology-status-url="<%=statusURL%>"
         data-fossology-process-url="<%=processURL%>"

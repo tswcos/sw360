@@ -31,7 +31,7 @@
             <span>
                 <sw360:out value="${project.releaseClearingStateSummary.underClearing}" default="--"/>
             </span>
-            (and <sw360:out value="${project.releaseClearingStateSummary.sentToClearingTool}" default="--"/> already uploaded),
+            (<liferay-ui:message key="and" /> <sw360:out value="${project.releaseClearingStateSummary.sentToClearingTool}" default="--"/> <liferay-ui:message key="already.uploaded" />),
 
             <liferay-ui:message key="report.available" />:
             <span>

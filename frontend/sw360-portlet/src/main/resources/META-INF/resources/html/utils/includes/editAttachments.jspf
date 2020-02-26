@@ -122,7 +122,7 @@
               /*  8 */ { data: "checkedTeam", defaultContent: "", render: $.fn.dataTable.render.ellipsis, className: 'content-middle' },
               /*  9 */ { data: "checkedBy", defaultContent: "", render: $.fn.dataTable.render.ellipsis, className: 'content-middle' },
               /* 10 */ { data: "checkedOn", defaultContent: "", className: 'content-middle' },
-              /* 11 */ { data: "actions", orderable: false, render: $.fn.dataTable.render.actions( [{ key: 'attachmentContentId', 'class': 'delete-attachment', icon: 'trash', title: 'Delete Attachment', approvalKey: 'checkStatus', usageCountsKey: 'usageCounts'}] ), className: "content-middle one action" }
+              /* 11 */ { data: "actions", orderable: false, render: $.fn.dataTable.render.actions( [{ key: 'attachmentContentId', 'class': 'delete-attachment', icon: 'trash', title: '<liferay-ui:message key="delete.attachment" />', approvalKey: 'checkStatus', usageCountsKey: 'usageCounts'}] ), className: "content-middle one action" }
             ],
             columnDefs: [{
                   targets: 1,
@@ -148,19 +148,25 @@
                   targets: 2,
                   createdCell: function(td, cellData, rowData, row, col) {
                       $.fn.dataTable.render.inputText.updateTitle(td);
-                      $.fn.dataTable.render.inputText.useInputDialog(td, "Update create comment");
+                      $.fn.dataTable.render.inputText.useInputDialog(td, "<liferay-ui:message key="update.create.comment" />");
                   }
             }, {
                   targets: 7,
                   createdCell: function(td, cellData, rowData, row, col) {
                       $.fn.dataTable.render.inputText.updateTitle(td);
-                      $.fn.dataTable.render.inputText.useInputDialog(td, "Update approval comment");
+                      $.fn.dataTable.render.inputText.useInputDialog(td, "<liferay-ui:message key="update.approval.comment" />");
                   }
             }],
             order: [[0, 'asc']],
             deferRender: true,
             language: {
-                emptyTable: "<liferay-ui:message key="no.attachments.yet" />"
+                emptyTable: "<liferay-ui:message key="no.attachments.yet" />",
+                paginate: {
+                    previous: "<liferay-ui:message key="previous" />",
+                    next: "<liferay-ui:message key="next" />"
+                },
+                info: "<liferay-ui:message key="showing" />",
+                infoEmpty: "<liferay-ui:message key="infoempty" />"
             }
         });
 
@@ -178,13 +184,13 @@
             var warningMessage;
             var usagesCount = data.usagesCount;
             if(data.approvalstate == <%=CheckStatus.ACCEPTED.getValue()%>) {
-                warningMessage = "<p>An attachment cannot be deleted while it is approved. You have to reject the approval first.</p>";
+                warningMessage = "<p><liferay-ui:message key="an.attachment.cannot.be.deleted.while.it.is.approved.you.have.to.reject.the.approval.first" /></p>";
                 <core_rt:if test="${hasWritePermissions == false}">
-                warningMessage += "<p>For this, you have to create a moderation request.</p>";
+                warningMessage += "<p><liferay-ui:message key="for.this.you.have.to.create.a.moderation.request" /></p>";
                 </core_rt:if>
                 displayDeleteNotAllowedWarning(warningMessage);
             } else if (typeof usagesCount === 'number' && usagesCount !== 0){
-                warningMessage = "<p>An attachment cannot be deleted while it is used by some projects. You have to delete the usages first.</p>";
+                warningMessage = "<p><liferay-ui:message key="an.attachment.cannot.be.deleted.while.it.is.used.by.some.projects.you.have.to.delete.the.usages.first" /></p>";
                 displayDeleteNotAllowedWarning(warningMessage);
             } else {
                 deleteAttachment(data.key);
@@ -206,7 +212,7 @@
             var row = attachmentTable.row('#' + attachmentId),
                 attachmentName = row.data().filename;
 
-            dialog.confirm('danger', 'question-circle', 'Delete Attachment?', '<p>Do you really want to delete attachment <b data-name="name"></b> (<b data-name="id"></b>)?</p>', 'Delete Attachment', {
+            dialog.confirm('danger', 'question-circle', '<liferay-ui:message key="delete.attachment" />?', '<p><liferay-ui:message key="do.you.really.want.to.delete.attachment.x" />(<b data-name="id"></b>)?</p>', '<liferay-ui:message key="delete.attachment" />', {
                 name: attachmentName,
                 id: attachmentId
             }, function(submit, callback) {

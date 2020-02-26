@@ -68,7 +68,7 @@
     <tr>
         <td>
             <sw360:DisplayUserEdit email="${project.createdBy}" id="<%=Project._Fields.CREATED_BY.toString()%>"
-                description="Created by" multiUsers="false" readonly="true"/>
+                description="created.by" multiUsers="false" readonly="true"/>
         </td>
         <td>
             <div class="form-group">
@@ -129,7 +129,7 @@
             <div class="form-group">
                 <label for="proj_domain"><liferay-ui:message key="domain" /></label>
                 <select class="form-control" id="domain" name="<portlet:namespace/><%=Project._Fields.DOMAIN%>" data-selected="${project.domain}">
-                    <option value>-- Select Domain --</option>
+                    <option value><liferay-ui:message key="select.domain" /></option>
                     <core_rt:forEach items="${domain}" var="entry">
                         <c:choose>
                             <c:when test="${entry eq project.domain}">
@@ -203,12 +203,12 @@
         <td>
             <sw360:DisplayUserEdit email="${project.projectResponsible}"
                                 id="<%=Project._Fields.PROJECT_RESPONSIBLE.toString()%>"
-                                description="Project manager" multiUsers="false"/>
+                                description="project.manager" multiUsers="false"/>
         </td>
         <td>
             <sw360:DisplayUserEdit email="${project.projectOwner}"
                     id="<%=Project._Fields.PROJECT_OWNER.toString()%>"
-                    description="Project owner" multiUsers="false"/>
+                    description="project.owner" multiUsers="false"/>
         </td>
     </tr>
     <tr>
@@ -241,21 +241,21 @@
     <tr>
         <td>
             <sw360:DisplayUserEdit email="${project.leadArchitect}" id="<%=Project._Fields.LEAD_ARCHITECT.toString()%>"
-                                description="Lead architect" multiUsers="false"/>
+                                description="lead.architect" multiUsers="false"/>
         </td>
         <td>
             <sw360:DisplayUserEdit emails="${project.moderators}" id="<%=Project._Fields.MODERATORS.toString()%>"
-                                description="Moderators" multiUsers="true"/>
+                                description="moderators" multiUsers="true"/>
         </td>
         <td>
             <sw360:DisplayUserEdit emails="${project.contributors}" id="<%=Project._Fields.CONTRIBUTORS.toString()%>"
-                                description="Contributors" multiUsers="true"/>
+                                description="contributors" multiUsers="true"/>
         </td>
     </tr>
     <tr>
         <td>
             <sw360:DisplayUserEdit emails="${project.securityResponsibles}" id="<%=Project._Fields.SECURITY_RESPONSIBLES.toString()%>"
-                                description="Security Responsibles" multiUsers="true"/>
+                                description="security.responsibles" multiUsers="true"/>
         </td>
         <td></td>
         <td></td>

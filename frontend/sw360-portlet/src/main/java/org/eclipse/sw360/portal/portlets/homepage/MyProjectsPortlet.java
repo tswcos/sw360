@@ -34,15 +34,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.util.ResourceBundleLoader;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import javax.portlet.PortletConfig; 
-import com.liferay.portal.kernel.theme.ThemeDisplay;
-import javax.portlet.PortletRequest;
-import com.liferay.portal.kernel.util.EscapableLocalizableFunction;
 import static org.eclipse.sw360.portal.common.PortalConstants.MY_PROJECTS_PORTLET_NAME;
 
 
@@ -127,7 +118,7 @@ public class MyProjectsPortlet extends Sw360Portlet {
 
         if (releaseClearingStateSummary == null) {
             //releaseCounts = "not available";
-        	releaseCounts = LanguageUtil.get(getResourceBundle(request.getLocale()), "not-available");
+        	releaseCounts = LanguageUtil.get(getResourceBundle(request.getLocale()), "not.available");
         } else {
             int total = releaseClearingStateSummary.newRelease + releaseClearingStateSummary.sentToClearingTool
                     + releaseClearingStateSummary.underClearing + releaseClearingStateSummary.reportAvailable

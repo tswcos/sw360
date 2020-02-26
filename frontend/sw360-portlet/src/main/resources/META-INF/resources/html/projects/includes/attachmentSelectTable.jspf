@@ -318,7 +318,7 @@
                         var errorText = licenses.length > 0 ? ' Error: ' + licenses[0].error + ' Parsed file: ' + licenses[0].file : '';
                         $linkedProjectsInfoTable.find('tr[data-tt-id=' + data.ttId + '_loader] td').append($('<div/>', {
                             'class': 'error foregroundAlert',
-                            text: 'No license found.' + errorText
+                            text: "<liferay-ui:message key="no.license.found" />" + errorText
                         }));
                         $linkedProjectsInfoTable.find('tr[data-tt-id=' + data.ttId + '_loader] td .spinner').hide();
                         loadedCallback();
@@ -423,13 +423,13 @@
 
                 $errorMessage = $('<div/>', {
                     'class': 'alert alert-danger',
-                    text: 'Cannot load license information: ' + error
+                    text: "<liferay-ui:message key="cannot.load.license.information" />" + error
                 });
 
                 $reloadLink = $('<a/>', {
                     href: 'javascript:;',
                     'class': 'text-danger',
-                    text: 'Reload'
+                    text: "<liferay-ui:message key="reload" />"
                 });
                 $reloadLink.on('click', function() {
                     onNodeExpand.call(node);
@@ -463,7 +463,7 @@
                             removeProjectLoader(ttId);
                         }
                         $('#infobar').removeClass('alert-info').addClass('alert-secondary').html($('<span>', {
-                            text: "No previous selection found. If you have writing permissions to this project, your selection will be stored automatically when downloading."
+                            text: "<liferay-ui:message key="no.previous.selection.found.if.you.have.writing.permissions.to.this.project.your.selection.will.be.stored.automatically.when.downloading" />"
                         }));
                     } else {
                         restoreSelection($linkedProjectsInfoTable, result, ttId, prefix, function(error, warnings) {
@@ -482,15 +482,15 @@
                                 ));
                             } else {
                                 $('#infobar').removeClass('alert-info').addClass('alert-success').html($('<span>', {
-                                    text: "Your selection has been restored. However, please check before downloading. You may also restore the default selection" +
-                                        " by clicking on the checkbox in the header row."
+                                    text: "<liferay-ui:message key="your.selection.has.been.restored.however.please.check.before.downloading.you.may.also.restore.the.default.selection" />" +
+                                        " <liferay-ui:message key="by.clicking.on.the.checkbox.in.the.header.row" />"
                                 }));
                             }
                         });
                     }
                 }).fail(function(error) {
                     $('#infobar').removeClass('alert-info').addClass('alert-danger').html($('<span>', {
-                        text: "Cannot load previous selection: " + error.statusText + ' (' + error.status + ')'
+                        text: <liferay-ui:message key="cannot.load.previous.selection.x.y" />
                     }));
                 });
             }
@@ -560,7 +560,7 @@
                             warnings.push({
                                 release: releaseName || 'unknown release',
                                 attachment: attachmentName || 'unknown attachment',
-                                text: 'Last export happened with old storage format, so restored data might not be correct for attachments of releases in subprojects.'
+                                text: "<liferay-ui:message key="last.export.happened.with.old.storage.format.so.restored.data.might.not.be.correct.for.attachments.of.releases.in.subprojects" />"
                             });
                             loadCountdown.decrement();
                         } else {
@@ -577,13 +577,13 @@
                                         warnings.push({
                                             release: findReleaseName($linkedProjectsInfoTable, usage, prefix),
                                             attachment: findAttachmentName($linkedProjectsInfoTable, usage, prefix),
-                                            text: 'License "' + licenseId + '" not found. License is not excluded.'
+                                            text: <liferay-ui:message key="license.x.not.found.license.is.not.excluded" />
                                         });
                                     } else if($row.length > 1) {
                                         warnings.push({
                                             release: findReleaseName($linkedProjectsInfoTable, usage, prefix),
                                             attachment: findAttachmentName($linkedProjectsInfoTable, usage, prefix),
-                                            text: 'License "' + licenseId + '" is not unique. License is not excluded.'
+                                            text: <liferay-ui:message key="license.x.is.not.unique.license.is.not.excluded" />
                                         });
                                     } else {
                                         $row.find('input[name="' + config.portletNamespace + prefix + usage.usageData.licenseInfo.projectPath + ':' + usage.owner.releaseId + ':' + usage.attachmentContentId + '"]').prop('checked', false).trigger('change');

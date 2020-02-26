@@ -21,7 +21,7 @@
     </thead>
     <tr>
         <td>
-            <sw360:DisplayVendorEdit id="<%=Release._Fields.VENDOR_ID.toString()%>" vendor="${release.vendor}" label="Vendor"/>
+            <sw360:DisplayVendorEdit id="<%=Release._Fields.VENDOR_ID.toString()%>" vendor="${release.vendor}" label="vendor"/>
         </td>
         <td>
             <div class="form-group">
@@ -168,16 +168,16 @@
     <tr>
         <td>
             <sw360:DisplayUserEdit email="${release.createdBy}" id="<%=Release._Fields.CREATED_BY.toString()%>"
-                                   description="Created by" multiUsers="false" readonly="true"/>
+                                   description="created.by" multiUsers="false" readonly="true"/>
         </td>
 
         <td>
             <sw360:DisplayUserEdit emails="${release.contributors}" id="<%=Release._Fields.CONTRIBUTORS.toString()%>"
-                                   description="Contributors" multiUsers="true" readonly="false"/>
+                                   description="contributors" multiUsers="true" readonly="false"/>
         </td>
         <td>
             <sw360:DisplayUserEdit emails="${release.moderators}" id="<%=Release._Fields.MODERATORS.toString()%>"
-                                   description="Moderators" multiUsers="true" readonly="false"/>
+                                   description="moderators" multiUsers="true" readonly="false"/>
         </td>
     </tr>
 </table>

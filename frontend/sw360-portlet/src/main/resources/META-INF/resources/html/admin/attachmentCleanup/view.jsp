@@ -59,7 +59,7 @@
                         callback();
 
                         if(data.result == 'SUCCESS')
-                            $dialog.success("I deleted " + data.totalAffectedObjects + " out of " + data.totalObjects + " attachments in the database.", true);
+                            $dialog.success("<liferay-ui:message key="i.deleted.x.out.of.y.attachments.in.the.database" />", true);
                         else {
                             $dialog.alert("<liferay-ui:message key="i.could.not.cleanup.the.attachments" />");
                         }
@@ -74,9 +74,9 @@
             $dialog = dialog.confirm(
                 'danger',
                 'question-circle',
-                '<liferay-ui:message key="cleanup.attachment.database" />',
-                '<p>"<liferay-ui:message key="do.you.really.want.to.clean.up.the.attachment.database" />"</p>',
-                '"<liferay-ui:message key="clean.up" />"',
+                '<liferay-ui:message key="cleanup.attachment.database" />?',
+                '<p><liferay-ui:message key="do.you.really.want.to.clean.up.the.attachment.database" /></p>',
+                '<liferay-ui:message key="clean.up" />',
                 {},
                 function(submit, callback) {
                     cleanUpInternal(callback);

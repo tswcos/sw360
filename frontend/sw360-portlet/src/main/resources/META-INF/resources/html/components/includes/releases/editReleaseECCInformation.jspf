@@ -97,7 +97,7 @@
         <td>
             <sw360:DisplayUserEdit email="${release.eccInformation.assessorContactPerson}"
                                    id="<%=Release._Fields.ECC_INFORMATION.toString() + EccInformation._Fields.ASSESSOR_CONTACT_PERSON.toString()%>"
-                                   description="Assessor contact person" multiUsers="false" readonly="true"/>
+                                   description="assessor.contact.person" multiUsers="false" readonly="true"/>
         </td>
         <td>
             <div class="form-group">

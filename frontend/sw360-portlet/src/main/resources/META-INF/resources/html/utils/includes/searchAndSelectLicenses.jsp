@@ -8,12 +8,13 @@
   ~ which accompanies this distribution, and is available at
   ~ http://www.eclipse.org/legal/epl-v10.html
   --%>
+<%@include file="/html/init.jsp" %>
 
 <portlet:defineObjects/>
 <liferay-theme:defineObjects/>
 
 <div class="dialogs">
-	<div id="search-licenses-div" data-title="Search Licenses" class="modal fade" tabindex="-1" role="dialog">
+	<div id="search-licenses-div" data-title="<liferay-ui:message key="search.licenses" />" class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
 		    <div class="modal-content">
 			<div class="modal-body container">

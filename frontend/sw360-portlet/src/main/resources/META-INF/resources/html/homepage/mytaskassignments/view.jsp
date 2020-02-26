@@ -63,13 +63,14 @@
                 {"title": "<liferay-ui:message key="status" />", data: 'state' },
             ],
             language: {
-				paginate: {
-                  previous: "<liferay-ui:message key="previous" />",
-                  next: "<liferay-ui:message key="next" />"
+                paginate: {
+                    previous: "<liferay-ui:message key="previous" />",
+                    next: "<liferay-ui:message key="next" />"
                 },
                 emptyTable: "<liferay-ui:message key="there.are.no.tasks.assigned.to.you" />",
-				info: "<liferay-ui:message key="showing" />",
-				infoEmpty: "<liferay-ui:message key="infoempty" />"
+                info: "<liferay-ui:message key="showing" />",
+                infoEmpty: "<liferay-ui:message key="infoempty" />",
+                processing: "<liferay-ui:message key="processing" />"
             },
             initComplete: function() {
                 $('#my-task-assignments h4 svg').removeClass('spinning disabled');

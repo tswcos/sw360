@@ -289,7 +289,7 @@
                     name="<portlet:namespace/><%=Release._Fields.CLEARING_INFORMATION%><%=ClearingInformation._Fields.EXTERNAL_SUPPLIER_ID%>"
                     type="text"
                     class="form-control"
-                    placeholder="<liferay-ui:message key="enter.externalsupplierid" />"
+                    placeholder="<liferay-ui:message key="enter.external.supplier.id" />"
                     value="<sw360:out value="${release.clearingInformation.externalSupplierID}"/>"/>
             </div>
         </td>

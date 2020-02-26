@@ -40,6 +40,7 @@
 <script>
     require(['jquery', 'bridges/datatables', 'utils/link' ], function($, datatables, link, event) {
         var table;
+        
         $('#my-projects h4 svg')
             .attr('data-action', 'reload-my-projects')
             .addClass('spinning disabled');
@@ -66,13 +67,14 @@
                 {"title": "<liferay-ui:message key="approved.releases" />", data: 'releaseClearingState', render: renderReleaseClearingState},
             ],
             language: {
-				paginate: {
-                  previous: "<liferay-ui:message key="previous" />",
-                  next: "<liferay-ui:message key="next" />"
+                paginate: {
+                    previous: "<liferay-ui:message key="previous" />",
+                    next: "<liferay-ui:message key="next" />"
                 },
                 emptyTable: '<liferay-ui:message key="you.do.not.own.any.projects" />',
-				info: "<liferay-ui:message key="showing" />",
-				infoEmpty: "<liferay-ui:message key="infoempty" />"
+                info: "<liferay-ui:message key="showing" />",
+                infoEmpty: "<liferay-ui:message key="infoempty" />",
+                processing: "<liferay-ui:message key="processing" />"
             },
             initComplete: function() {
                 $('#my-projects h4 svg').removeClass('spinning disabled');

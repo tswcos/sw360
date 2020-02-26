@@ -45,7 +45,7 @@
                 </a>
                 <a class="list-group-item list-group-item-action <core_rt:if test="${selectedTab == 'tab-Attachments'}">active</core_rt:if>" href="#tab-Attachments" data-toggle="list" role="tab"><liferay-ui:message key="attachments" /></a>
 			<core_rt:if test="${cotsMode}">
-                    <a class="list-group-item list-group-item-action <core_rt:if test="${selectedTab == 'tab-CommercialDetails'}">active</core_rt:if>" href="#tab-CommercialDetails" data-toggle="list" role="tab">Commercial Details</a>
+                    <a class="list-group-item list-group-item-action <core_rt:if test="${selectedTab == 'tab-CommercialDetails'}">active</core_rt:if>" href="#tab-CommercialDetails" data-toggle="list" role="tab"><liferay-ui:message key="commercial.details" /></a>
                 </core_rt:if>
                 <core_rt:if test="${inReleaseDetailsContext}">
 				<%@include file="/html/utils/includes/vulnerabilityTab.jspf" %>
@@ -82,7 +82,7 @@
                             </div>
 
                             <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-primary" onclick="window.location.href='<%=editReleaseURL%>' + window.location.hash">Edit Release</button>
+                                <button type="button" class="btn btn-primary" onclick="window.location.href='<%=editReleaseURL%>' + window.location.hash"><liferay-ui:message key="edit.release" /></button>
                             </div>
                             <div class="btn-group" role="group">
                                 <button type="button" id="linkToProject" class="btn btn-secondary" data-release-id="${releaseId}" data-release-name="<sw360:ReleaseName release="${release}"/>"><liferay-ui:message key="link.to.project" /></button>
@@ -106,7 +106,7 @@
                             <div class="list-group-companion" data-belong-to="tab-Vulnerabilities">
                                 <div class="btn-group" role="group">
                                     <button id="btnShowVulnerabilityCount" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Show <span data-name="count"></span>
+                                        <liferay-ui:message key="show" /> <span data-name="count"></span>
                                         <clay:icon symbol="caret-bottom" />
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="btnExport">
@@ -202,18 +202,18 @@
             doAjax(url, function(data) {
                 if(data.result === "SUCCESS") {
                     if(subscribed) {
-                        $button.text('Subscribe');
+                        $button.text('<liferay-ui:message key="subscribe" />');
                         $button.removeClass('btn-outline-danger');
                         $button.addClass('btn-outline-success');
                     } else {
-                        $button.text('Unsubscribe');
+                        $button.text('<liferay-ui:message key="unsubscribe" />');
                         $button.removeClass('btn-outline-success');
                         $button.addClass('btn-outline-danger');
                     }
                     $button.toggleClass('subscribed');
                 } else {
                      Liferay.Util.openToast({
-                        title: 'Error',
+                        title: '<liferay-ui:message key="error" />',
                         message: data.result,
                         type: 'danger'
                      });
@@ -221,8 +221,8 @@
                 button.finish($button);
             }, function() {
                 Liferay.Util.openToast({
-                    title: 'Error',
-                    message: 'Could not subscribe to release.',
+                    title: '<liferay-ui:message key="error" />',
+                    message: '<liferay-ui:message key="could.not.subscribe.to.release" />',
                     type: 'danger'
                 });
                 button.finish($button);

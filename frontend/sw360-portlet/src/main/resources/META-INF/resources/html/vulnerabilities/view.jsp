@@ -110,7 +110,7 @@
             quickfilter.addTable(vulnerabilityTable);
 
             var viewSize = $('#vulnerabilitiesTable').data().viewSize;
-            $('#viewSizeBtn [data-name="count"]').text(viewSize > 0 ? 'latest ' + viewSize : 'all');
+            $('#viewSizeBtn [data-name="count"]').text(viewSize > 0 ? '<liferay-ui:message key="latest" /> ' + viewSize : '<liferay-ui:message key="all" />');
             $('#viewSizeBtn + div > a').on('click', function(event) {
                 var viewSize = $(event.currentTarget).data().type;
 
@@ -210,18 +210,24 @@
                         { title: "<liferay-ui:message key="last.update" />", data: 'lastExternalUpdate', default: '' }
                     ],
                     order: [[4, 'desc'],[3, 'desc']],
-    		  		language: {					
-    					paginate: {
-    					  previous: "<liferay-ui:message key="previous" />",
-    					  next: "<liferay-ui:message key="next" />"
-    					},
-    					emptyTable: "<liferay-ui:message key="no.data.available.in.table" />",
-    					info: "<liferay-ui:message key="showing" />",
-    					infoEmpty: "<liferay-ui:message key="infoempty" />",
-    					lengthMenu: "<liferay-ui:message key="show.x.entries" />",
-    					infoFiltered: "<liferay-ui:message key="filtered.from.max.total.entries" />",
-    					zeroRecords: "<liferay-ui:message key="no.matching.records.found" />"
-    				},
+                    language: {
+                        paginate: {
+                            previous: "<liferay-ui:message key="previous" />",
+                            next: "<liferay-ui:message key="next" />"
+                        },
+                        emptyTable: "<liferay-ui:message key="no.data.available.in.table" />",
+                        info: "<liferay-ui:message key="showing" />",
+                        infoEmpty: "<liferay-ui:message key="infoempty" />",
+                        lengthMenu: '<liferay-ui:message key="show" /> <select>'+
+                        '<option value="10">10</option>'+
+                        '<option value="25">25</option>'+
+                        '<option value="50">50</option>'+
+                        '<option value="100">100</option>'+
+                        '<option value="-1"><liferay-ui:message key="all" /></option>'+
+                        '</select> <liferay-ui:message key="entries" />',
+                        infoFiltered: "<liferay-ui:message key="filtered.from.max.total.entries" />",
+                        zeroRecords: "<liferay-ui:message key="no.matching.records.found" />"
+                    },
                     initComplete: datatables.showPageContainer
                 }, [0, 1, 2, 3, 4]);
 

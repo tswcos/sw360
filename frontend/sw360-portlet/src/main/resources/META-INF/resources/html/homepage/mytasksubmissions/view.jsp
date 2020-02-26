@@ -79,13 +79,14 @@
                     {"title": "<liferay-ui:message key="actions" />", data: 'id', className: "one action", orderable: false, render: renderDeleteAction }
                 ],
                 language: {
-					paginate: {
-					  previous: "<liferay-ui:message key="previous" />",
-					  next: "<liferay-ui:message key="next" />"
+                    paginate: {
+                        previous: "<liferay-ui:message key="previous" />",
+                        next: "<liferay-ui:message key="next" />"
                 },
                     emptyTable: "<liferay-ui:message key="you.do.not.have.any.open.moderation.requests" />",
-					info: "<liferay-ui:message key="showing" />",
-					infoEmpty: "<liferay-ui:message key="infoempty" />"
+                    info: "<liferay-ui:message key="showing" />",
+                    infoEmpty: "<liferay-ui:message key="infoempty" />",
+                    processing: "<liferay-ui:message key="processing" />"
                 },
                 initComplete: function() {
                     $('#my-task-submissions h4 svg').removeClass('spinning disabled');

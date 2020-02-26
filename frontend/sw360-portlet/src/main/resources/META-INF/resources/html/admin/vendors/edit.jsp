@@ -80,7 +80,7 @@
                                     <td>
                                         <div class="form-group">
                                             <label for="vendorFullname"><liferay-ui:message key="full.name" /></label>
-                                            <input id="vendorFullname" type="text" required class="form-control" placeholder="<liferay-ui:message key="enter.vendor.full.name" />" name="<portlet:namespace/><%=Vendor._Fields.FULLNAME%>"
+                                            <input id="vendorFullname" type="text" required class="form-control" placeholder="<liferay-ui:message key="enter.vendor.fullname" />" name="<portlet:namespace/><%=Vendor._Fields.FULLNAME%>"
                                                 value="<sw360:out value="${vendor.fullname}"/>" />
                                              <div class="invalid-feedback">
                                                 <liferay-ui:message key="please.enter.a.full.name" />

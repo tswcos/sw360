@@ -159,20 +159,26 @@
                     { data: "url" }
                 ],
                 order: [ [ 1, 'asc' ] ],
-				language: {					
-					select: {
-						style: 'single',
-						rows: "<liferay-ui:message key="x.rows.selected" />"
-					},
-					paginate: {
-					  previous: "<liferay-ui:message key="previous" />",
-					  next: "<liferay-ui:message key="next" />"
-					},
-					emptyTable: "<liferay-ui:message key="no.data.available.in.table" />",
-					info: "<liferay-ui:message key="showing" />",
-					infoEmpty: "<liferay-ui:message key="infoempty" />",
-					lengthMenu: "<liferay-ui:message key="show.x.entries" />"
-				},
+                language: {
+                    select: {
+                        style: 'single',
+                        rows: "<liferay-ui:message key="x.rows.selected" />"
+                    },
+                    paginate: {
+                        previous: "<liferay-ui:message key="previous" />",
+                        next: "<liferay-ui:message key="next" />"
+                    },
+                    emptyTable: "<liferay-ui:message key="no.data.available.in.table" />",
+                    info: "<liferay-ui:message key="showing" />",
+                    infoEmpty: "<liferay-ui:message key="infoempty" />",
+                    lengthMenu: '<liferay-ui:message key="show" /> <select>'+
+                    '<option value="10">10</option>'+
+                    '<option value="25">25</option>'+
+                    '<option value="50">50</option>'+
+                    '<option value="100">100</option>'+
+                    '<option value="-1"><liferay-ui:message key="all" /></option>'+
+                    '</select> <liferay-ui:message key="entries" />'
+                },
             });
             datatables.enableCheckboxForSelection(table, 0);
         }
@@ -199,10 +205,10 @@
 
             $stepElement.append(renderNotice(data.affectedComponents, data.affectedReleases));
             
-            $stepElement.append(wizard.createCategoryLine('Vendor'));
-            $stepElement.append(wizard.createSingleMergeLine('Full Name', data.vendorTarget.fullname, data.vendorSource.fullname));
-            $stepElement.append(wizard.createSingleMergeLine('Short Name', data.vendorTarget.shortname, data.vendorSource.shortname));
-            $stepElement.append(wizard.createSingleMergeLine('URL', data.vendorTarget.url, data.vendorSource.url));
+            $stepElement.append(wizard.createCategoryLine('<liferay-ui:message key="vendor" />'));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="full.name" />', data.vendorTarget.fullname, data.vendorSource.fullname));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="short.name" />', data.vendorTarget.shortname, data.vendorSource.shortname));
+            $stepElement.append(wizard.createSingleMergeLine('<liferay-ui:message key="url" />', data.vendorTarget.url, data.vendorSource.url));
             
             wizard.registerClickHandlers();
         }
@@ -212,9 +218,9 @@
 
             vendorSelection.id = $wizardRoot.data('vendorTargetId');
 
-            vendorSelection.fullname = wizard.getFinalSingleValue('Full Name');
-            vendorSelection.shortname = wizard.getFinalSingleValue('Short Name');
-            vendorSelection.url = wizard.getFinalSingleValue('URL');
+            vendorSelection.fullname = wizard.getFinalSingleValue('<liferay-ui:message key="full.name" />');
+            vendorSelection.shortname = wizard.getFinalSingleValue('<liferay-ui:message key="short.name" />');
+            vendorSelection.url = wizard.getFinalSingleValue('<liferay-ui:message key="url" />');
 
             $stepElement.data('vendorSelection', vendorSelection);
         }
@@ -227,10 +233,10 @@
 
             $stepElement.append(renderNotice($wizardRoot.data('affectedComponents'), $wizardRoot.data('affectedReleases')));
 
-            $stepElement.append(wizard.createCategoryLine('Vendor'));
-            $stepElement.append(wizard.createSingleDisplayLine('Full Name', data.vendorSelection.fullname));
-            $stepElement.append(wizard.createSingleDisplayLine('Short Name', data.vendorSelection.shortname));
-            $stepElement.append(wizard.createSingleDisplayLine('URL', data.vendorSelection.url));
+            $stepElement.append(wizard.createCategoryLine('<liferay-ui:message key="vendor" />'));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="full.name" />', data.vendorSelection.fullname));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="short.name" />', data.vendorSelection.shortname));
+            $stepElement.append(wizard.createSingleDisplayLine('<liferay-ui:message key="url" />', data.vendorSelection.url));
         }
 
         function submitConfirmedMergedVendor($stepElement) {
@@ -244,7 +250,7 @@
                 $stepElement.html('<div class="stepFeedback"></div>');
             }
 
-            $wizardRoot.find('.active.step .stepFeedback').html('<div class="alert alert-danger">An error happened while communicating with the server: ' + textStatus + error + '</div>');
+            $wizardRoot.find('.active.step .stepFeedback').html('<div class="alert alert-danger"><liferay-ui:message key="an.error.happened.while.communicating.with.the.server" />: ' + textStatus + error + '</div>');
             $('html, body').stop().animate({ scrollTop: 0 }, 300, 'swing');
             setTimeout(function() {
                 $wizardRoot.find('.active.step .stepFeedback').html('');
@@ -254,7 +260,7 @@
         function renderNotice(affectedComponents, affectedReleases) {
             var $note = $(
                 '<div class="alert mt-4">' +
-                    'The following documents will be affected by this merge and are changed accordingly:' +
+                    '<liferay-ui:message key="the.following.documents.will.be.affected.by.this.merge.and.are.changed.accordingly" />' +
                     '<ul>' +
                     '</ul>' +
                 '</div>'
@@ -265,21 +271,21 @@
             }
 
             if(affectedComponents > 0) {
-                var $li = $('<li><b class="number"></b> component(s)</li>');
+                var $li = $('<li><b class="number"></b> <liferay-ui:message key="components2" /></li>');
                 $li.find('.number').text(affectedComponents)
                 
                 $note.find('ul').append($li);
             }
             if(affectedReleases > 0) {
-                var $li = $('<li><b class="number"></b> release(s)</li>');
+                var $li = $('<li><b class="number"></b> <liferay-ui:message key="releases2" /></li>');
                 $li.find('.number').text(affectedReleases)
                 
                 $note.find('ul').append($li);
             }
             if(affectedComponents + affectedReleases > 1000) {
-                $note.append('<b>More than 1000 documents affected. The merge operation might time out. In consequence only some of ' +
-                    'the documents might be changed accordingly. In this case just restart the operation as long as the source vendor ' + 
-                    'continues to exist.');
+                $note.append('<b><liferay-ui:message key="more.than.1000.documents.affected.the.merge.operation.might.time.out.in.consequence.only.some.of" /> ' +
+                    '<liferay-ui:message key="the.documents.might.be.changed.accordingly.in.this.case.just.restart.the.operation.as.long.as.the.source.vendor" /> ' + 
+                    '<liferay-ui:message key="continues.to.exist" />');
                 $note.addClass('alert-warning');
             } else {
                 $note.addClass('alert-info');

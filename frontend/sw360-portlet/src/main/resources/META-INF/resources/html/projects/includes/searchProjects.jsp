@@ -23,7 +23,7 @@
 </portlet:resourceURL>
 
 <div class="dialogs">
-	<div id="searchProjectsDialog" data-title="Link Projects" class="modal fade" tabindex="-1" role="dialog">
+	<div id="searchProjectsDialog" data-title="<liferay-ui:message key="link.projects" />" class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
 		    <div class="modal-content">
 			<div class="modal-body container">

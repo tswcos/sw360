@@ -46,7 +46,7 @@
 </portlet:resourceURL>
 
 <div class="dialogs">
-	<div id="fileUploadDialog" data-title="Upload Attachment" class="modal fade" tabindex="-1" role="dialog"
+	<div id="fileUploadDialog" data-title="<liferay-ui:message key="upload.attachment" />" class="modal fade" tabindex="-1" role="dialog"
       data-portlet-namespace="<portlet:namespace/>"
       data-link-attachment-url="<%=attachmentLinkToAjaxURL%>"
       data-cancel-attachment-url="<%=cancelAttachmentAjaxURL%>"

@@ -33,7 +33,7 @@
         <td>
             <div class="form-group">
                 <sw360:DisplayUserEdit email="${component.createdBy}" id="<%=Component._Fields.CREATED_BY.toString()%>"
-                                    description="Created by" multiUsers="false" readonly="true"/>
+                                    description="created.by" multiUsers="false" readonly="true"/>
             </div>
         </td>
         <td>
@@ -65,7 +65,7 @@
             </div>
         </td>
         <td>
-            <sw360:DisplayVendorEdit id="<%=Component._Fields.DEFAULT_VENDOR_ID.toString()%>" vendorId="${component.defaultVendorId}" vendor="${component.defaultVendor}" label="Default vendor"/>
+            <sw360:DisplayVendorEdit id="<%=Component._Fields.DEFAULT_VENDOR_ID.toString()%>" vendorId="${component.defaultVendorId}" vendor="${component.defaultVendor}" label="default.vendor"/>
         </td>
         <td>
             <div class="form-group">
@@ -119,7 +119,7 @@
         <td>
             <sw360:DisplayUserEdit email="${component.componentOwner}"
                                    id="<%=Component._Fields.COMPONENT_OWNER.toString()%>"
-                                   description="Component owner" multiUsers="false"/>
+                                   description="component.owner" multiUsers="false"/>
         </td>
         <td>
             <div class="form-group">
@@ -148,7 +148,7 @@
         </td>
         <td>
             <sw360:DisplayUserEdit emails="${component.moderators}" id="<%=Component._Fields.MODERATORS.toString()%>"
-                                   description="Moderators" multiUsers="true" readonly="false"/>
+                                   description="moderators" multiUsers="true" readonly="false"/>
         </td>
         <td>
         </td>

@@ -83,7 +83,7 @@
                 '<input class="form-control" id="<%=PortalConstants.ADDITIONAL_DATA_VALUE%>' + rowId + '" name="<portlet:namespace/><%=PortalConstants.ADDITIONAL_DATA_VALUE%>' + rowId + '" required="" minlength="1" placeholder="<liferay-ui:message key="enter.additional.data.value" />" title="<liferay-ui:message key="additional.data.value" />" value="' + value + '"/>' +
                 '</td>' +
                 '<td class="content-middle">' +
-                '<svg title="Delete" class="action lexicon-icon" data-row-id="' + rowId + '">' +
+                '<svg title="<liferay-ui:message key="delete" />" class="action lexicon-icon" data-row-id="' + rowId + '">' +
                 '<use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#trash"/>' +
                 '</svg>' +
                 '</td>' +

@@ -40,7 +40,7 @@ define('modules/dialog', [
 				type: 'button',
 				'data-dismiss': 'modal',
 				'data-cause': 'done'
-			}).text('Close'));
+			}).text(Liferay.Language.get('close')));
 		}
 	}
 
@@ -223,7 +223,7 @@ define('modules/dialog', [
 							'<div class="modal-body">' +
 							'</div>' +
 							'<div class="modal-footer">' +
-								'<button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>' +
+								'<button type="button" class="btn btn-light" data-dismiss="modal">'+Liferay.Language.get('cancel')+'</button>' +
 								'<button type="button" class="btn"></button>' +
 							'</div>' +
 						'</div>' +
@@ -314,7 +314,7 @@ define('modules/dialog', [
 									'<svg class="lexicon-icon">' +
 										'<use href="/o/org.eclipse.sw360.liferay-theme/images/clay/icons.svg#warning"/>' +
 									'</svg>' +
-									' Warning' +
+									Liferay.Language.get('warning') +
 								'</h5>' +
 								'<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
 									'<span aria-hidden="true">&times;</span>' +

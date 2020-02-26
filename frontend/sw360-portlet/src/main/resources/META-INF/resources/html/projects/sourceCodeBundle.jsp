@@ -51,7 +51,7 @@
                 <form id="downloadSourceBundleForm" class="form-inline" name="downloadSourceBundleForm" action="<%=downloadSourceBundleURL%>" method="post">
                     <%@include file="/html/projects/includes/attachmentSelectTable.jspf" %>
                     <div class="form-group">
-                        <input type="submit" class="btn btn-primary" value="Download File"/>
+                        <input type="submit" class="btn btn-primary" value="<liferay-ui:message key="download.file" />"/>
                     </div>
                 </form>
             </div>
