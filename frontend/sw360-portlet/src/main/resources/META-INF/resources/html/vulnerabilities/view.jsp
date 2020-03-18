@@ -226,7 +226,9 @@
                         '<option value="-1"><liferay-ui:message key="all" /></option>'+
                         '</select> <liferay-ui:message key="entries" />',
                         infoFiltered: "<liferay-ui:message key="filtered.from.max.total.entries" />",
-                        zeroRecords: "<liferay-ui:message key="no.matching.records.found" />"
+                        zeroRecords: "<liferay-ui:message key="no.matching.records.found" />",
+                        processing: "<liferay-ui:message key="processing" />",
+                        loadingRecords: "<liferay-ui:message key="loading" />"
                     },
                     initComplete: datatables.showPageContainer
                 }, [0, 1, 2, 3, 4]);

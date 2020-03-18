@@ -139,7 +139,8 @@
                 info: false,
                 language: {
                     emptyTable: "<liferay-ui:message key="no.releases.found" />",
-                    processing: "<liferay-ui:message key="processing" />"
+                    processing: "<liferay-ui:message key="processing" />",
+                    loadingRecords: "<liferay-ui:message key="loading" />"
                 },
                 order: [
                     [2, 'asc']

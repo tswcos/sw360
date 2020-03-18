@@ -111,7 +111,9 @@ require(['jquery', 'bridges/datatables', 'components/includes/releases/linkProje
                 '</select> <liferay-ui:message key="entries" />',
                  infoFiltered: "<liferay-ui:message key="filtered.from.max.total.entries" />",
                  zeroRecords: "<liferay-ui:message key="no.matching.records.found" />",
-                 search: "<liferay-ui:message key="search" />"
+                 search: "<liferay-ui:message key="search" />",
+                 processing: "<liferay-ui:message key="processing" />",
+                 loadingRecords: "<liferay-ui:message key="loading" />"
             },
             columnDefs: [
                 {

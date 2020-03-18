@@ -180,7 +180,9 @@
                     '<option value="50">50</option>'+
                     '<option value="100">100</option>'+
                     '<option value="-1"><liferay-ui:message key="all" /></option>'+
-                    '</select> <liferay-ui:message key="entries" />'
+                    '</select> <liferay-ui:message key="entries" />',
+                    processing: "<liferay-ui:message key="processing" />",
+                    loadingRecords: "<liferay-ui:message key="loading" />"
                 },
                 order: [ [ 1, 'asc' ] ],
                 select: 'single'

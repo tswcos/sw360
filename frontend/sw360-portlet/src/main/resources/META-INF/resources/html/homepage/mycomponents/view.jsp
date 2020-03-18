@@ -71,7 +71,8 @@
                 emptyTable: "<liferay-ui:message key="you.do.not.own.any.components" />",
                 info: "<liferay-ui:message key="showing" />",
                 infoEmpty: "<liferay-ui:message key="infoempty" />",
-                processing: "<liferay-ui:message key="processing" />"
+                processing: "<liferay-ui:message key="processing" />",
+                loadingRecords: "<liferay-ui:message key="loading" />"
             },
             initComplete: function() {
                 $('#my-components h4 svg').removeClass('spinning disabled');

@@ -86,7 +86,8 @@
                     emptyTable: "<liferay-ui:message key="you.do.not.have.any.open.moderation.requests" />",
                     info: "<liferay-ui:message key="showing" />",
                     infoEmpty: "<liferay-ui:message key="infoempty" />",
-                    processing: "<liferay-ui:message key="processing" />"
+                    processing: "<liferay-ui:message key="processing" />",
+                    loadingRecords: "<liferay-ui:message key="loading" />"
                 },
                 initComplete: function() {
                     $('#my-task-submissions h4 svg').removeClass('spinning disabled');

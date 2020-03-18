@@ -197,7 +197,9 @@
                     '<option value="100">100</option>'+
                     '<option value="-1"><liferay-ui:message key="all" /></option>'+
                     '</select> <liferay-ui:message key="entries" />',
-                    emptyTable: "<liferay-ui:message key="no.results.found.please.refine.your.search" />"
+                    emptyTable: "<liferay-ui:message key="no.results.found.please.refine.your.search" />",
+                    processing: "<liferay-ui:message key="processing" />",
+                    loadingRecords: "<liferay-ui:message key="loading" />"
                 },
                 initComplete: function() {
                     $('#searchTable').parents('.container').find('.container-spinner').hide();

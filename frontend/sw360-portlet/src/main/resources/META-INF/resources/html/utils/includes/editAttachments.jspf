@@ -166,7 +166,9 @@
                     next: "<liferay-ui:message key="next" />"
                 },
                 info: "<liferay-ui:message key="showing" />",
-                infoEmpty: "<liferay-ui:message key="infoempty" />"
+                infoEmpty: "<liferay-ui:message key="infoempty" />",
+                processing: "<liferay-ui:message key="processing" />",
+                loadingRecords: "<liferay-ui:message key="loading" />"
             }
         });
 

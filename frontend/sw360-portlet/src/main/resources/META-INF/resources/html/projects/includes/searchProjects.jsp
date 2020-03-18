@@ -126,7 +126,8 @@
                 info: false,
                 language: {
                     emptyTable: "<liferay-ui:message key="no.projects.found" />",
-                    processing: "<liferay-ui:message key="processing" />"
+                    processing: "<liferay-ui:message key="processing" />",
+                    loadingRecords: "<liferay-ui:message key="loading" />"
                 },
                 select: 'multi+shift'
             }, undefined, [0]);
