@@ -108,7 +108,10 @@ require(['jquery', 'bridges/datatables', 'components/includes/releases/linkProje
                 '<option value="50">50</option>'+
                 '<option value="100">100</option>'+
                 '<option value="-1"><liferay-ui:message key="all" /></option>'+
-                '</select> <liferay-ui:message key="entries" />'
+                '</select> <liferay-ui:message key="entries" />',
+                 infoFiltered: "<liferay-ui:message key="filtered.from.max.total.entries" />",
+                 zeroRecords: "<liferay-ui:message key="no.matching.records.found" />",
+                 search: "<liferay-ui:message key="search" />"
             },
             columnDefs: [
                 {

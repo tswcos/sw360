@@ -71,7 +71,7 @@
     <input  type="button"
             class="btn btn-primary"
             onclick="getAllProducts()"
-            value="Get Products"/>
+            value="<liferay-ui:message key="get.products" />"/>
 </div>
 
 <div id="wsimport-data" class="content2">
@@ -99,7 +99,7 @@
             </table>
         </form>
         <input  type="button"
-                value="Import"
+                value="<liferay-ui:message key="import" />"
                 class="btn btn-primary"
                 style="text-align: center;"
                 onclick="showImportPopup()"/>
@@ -138,8 +138,8 @@
 
         if (!token || !userKey) {
             $.alert({
-                title: "Can not get products!",
-                content: 'Please enter organization API key and user key.',
+                title: "<liferay-ui:message key="can.not.get.products" />",
+                content: '<liferay-ui:message key="please.enter.organization.api.key.and.user.key" />',
                 type: 'orange'
             });
             return false;
@@ -155,7 +155,7 @@
             success: function( json ) {
                 if ((json.errorCode == 1002 && !!token) || !!json.errorCode) {
                     $.alert({
-                        title: "Access Denied",
+                        title: "<liferay-ui:message key="access.denied" />",
                         content: json.errorMessage,
                         type: 'red'
                     });
@@ -193,7 +193,7 @@
         productTable = $( '#productTable' ).DataTable({
             "autoWidth": false,
             "columns": [
-                {"sTitle": "Product Name"}
+                {"sTitle": "<liferay-ui:message key="product.name" />"}
             ],
             "data": inputData,
             "destroy": true,
@@ -228,8 +228,8 @@
 
         if (!userKey) {
             $.alert({
-                title: "Can not get projects!",
-                content: 'Please enter user key',
+                title: "<liferay-ui:message key="can.not.get.projects" />",
+                content: '<liferay-ui:message key="please.enter.user.key" />',
                 type: 'orange'
             });
             return false;
@@ -245,7 +245,7 @@
             success: function( json ) {
                 if (json.errorCode == 1003 || !!json.errorCode) {
                     $.alert({
-                        title: "Access Denied",
+                        title: "<liferay-ui:message key="access.denied" />",
                         content: json.errorMessage,
                         type: 'red'
                     });
@@ -268,7 +268,7 @@
         projectTable = $( '#projectTable' ).DataTable({
             "autoWidth": false,
             "columns":  [
-                { "sTitle": "Project name"}
+                { "sTitle": "<liferay-ui:message key="project.name" />"}
             ],
             "data": inputData,
             "destroy": true,
@@ -296,7 +296,7 @@
         bodyContent += "</ul>";
 
         $.confirm({
-            title: 'The following projects will be imported:',
+            title: '<liferay-ui:message key="the.following.projects.will.be.imported" />',
             content: bodyContent,
             type: 'blue',
             buttons: {
@@ -318,7 +318,7 @@
 
     function importProjectsData(selectedProjects) {
         $.confirm({
-            title: "Import",
+            title: "<liferay-ui:message key="import" />",
             content: function () {
                 let self = this;
                 return $.ajax({
@@ -355,12 +355,12 @@
                             break;
                         case '<%=ProjectImportConstants.RESPONSE__GENERAL_FAILURE%>':
                             flashErrorMessage('Could not import the projects.');
-                            self.setContent('Import failed.');
+                            self.setContent('<liferay-ui:message key="import.failed" />');
                             break;
                         default:
                     }
                 }).fail(function(){
-                    flashErrorMessage('Could not import the projects.');
+                    flashErrorMessage('<liferay-ui:message key="could.not.import.the.projects" />');
                     self.close();
                 });
             }

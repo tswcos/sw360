@@ -72,7 +72,7 @@
                     value="<sw360:out value="${release.cpeid}"/>"
                     placeholder="<liferay-ui:message key="enter.cpe.id" />"/>
                 <small class="form-text">
-                    <span title="The formula for CPE ID creation is &#13;'cpe:2.3:a:VENDORNAME:COMPONENTNAME:VERSION'">
+                    <span title="<liferay-ui:message key="the.formula.for.cpe.id.creation.is" /> &#13;'cpe:2.3:a:VENDORNAME:COMPONENTNAME:VERSION'">
                         <clay:icon symbol="info-circle-open" />
                         <liferay-ui:message key="learn.more.about.the.cpe.id.format" />
                     </span>

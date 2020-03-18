@@ -11,7 +11,7 @@
 <table class="table edit-table two-columns-with-actions" id="mapEditTable">
     <thead>
     <tr>
-        <th colspan="3" class="headlabel">${mapTitle}</th>
+        <th colspan="3" class="headlabel"><liferay-ui:message key="additional.roles" /></th>
     </tr>
     </thead>
     <tbody>
@@ -46,7 +46,7 @@
     </tbody>
 </table>
 
-<button class="btn btn-secondary" data-action="add-row" type="button">Click to add row to ${mapTitle}</button>
+<button class="btn btn-secondary" data-action="add-row" type="button"><liferay-ui:message key="click.to.add.row.to" /> <liferay-ui:message key="additional.roles" /></button>
 
 <div class="dialogs">
     <div id="deleteMapEditDialog" class="modal fade" tabindex="-1" role="dialog">
@@ -89,7 +89,7 @@
                 '</select>'+
                 '</td>'+
                 '<td width="46%">'+
-                '<input id="<%=PortalConstants.CUSTOM_MAP_VALUE%>'+randomRowId+'" name="<portlet:namespace/><%=PortalConstants.CUSTOM_MAP_VALUE%>'+randomRowId+'" type="email" class="form-control" placeholder="${inputSubtitle}" title="${inputSubtitle}" />'+
+                '<input id="<%=PortalConstants.CUSTOM_MAP_VALUE%>'+randomRowId+'" name="<portlet:namespace/><%=PortalConstants.CUSTOM_MAP_VALUE%>'+randomRowId+'" type="email" class="form-control" placeholder="<liferay-ui:message key="enter.mail.address" />" title="<liferay-ui:message key="enter.mail.address" />" />'+
                 '</td>'+
                 '<td class="content-middle">'+
                 '<svg title="<liferay-ui:message key="delete" />" class="action lexicon-icon" data-row-id="' + randomRowId + '">' +

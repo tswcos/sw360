@@ -64,7 +64,7 @@
                                     <core_rt:if test="${release.clearingState.value == 1}"><span class="badge badge-circle badge-danger"></span></core_rt:if>
                                     <core_rt:if test="${release.clearingState.value == 2}"><span class="badge badge-circle badge-warning"></span></core_rt:if>
                                     <core_rt:if test="${release.clearingState.value == 3}"><span class="badge badge-circle badge-warning"></span></core_rt:if>
-                                    Version ${release.version}
+                                    <liferay-ui:message key="version" /> ${release.version}
                                     <clay:icon symbol="caret-bottom" />
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="changeReleaseButton">
@@ -75,7 +75,7 @@
                                             <core_rt:if test="${releaseItr.clearingState.value == 1}"><span class="badge badge-circle badge-danger"></span></core_rt:if>
                                             <core_rt:if test="${releaseItr.clearingState.value == 2}"><span class="badge badge-circle badge-warning"></span></core_rt:if>
                                             <core_rt:if test="${releaseItr.clearingState.value == 3}"><span class="badge badge-circle badge-warning"></span></core_rt:if>
-                                            Version ${releaseItr.version}
+                                            <liferay-ui:message key="version" /> ${releaseItr.version}
                                         </a>
                                     </core_rt:forEach>
                                 </div>

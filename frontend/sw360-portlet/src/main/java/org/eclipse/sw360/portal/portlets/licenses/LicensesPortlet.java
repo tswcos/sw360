@@ -15,6 +15,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.liferay.portal.kernel.portlet.PortletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 
 import org.eclipse.sw360.datahandler.common.CommonUtils;
 import org.eclipse.sw360.datahandler.permissions.PermissionUtils;
@@ -130,6 +132,8 @@ public class LicensesPortlet extends Sw360Portlet {
 
     private void prepareEditView(RenderRequest request, RenderResponse response) {
 
+        ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language", request.getLocale(), getClass());
+
         String id = request.getParameter(LICENSE_ID);
         User user = UserCacheHolder.getUserFromRequest(request);
         LicenseService.Iface client = thriftClients.makeLicenseClient();
@@ -155,9 +159,9 @@ public class LicensesPortlet extends Sw360Portlet {
             }
         } else {
             if(isAtLeastClearingAdmin) {
-                SessionMessages.add(request, "request_processed", "New License");
+                SessionMessages.add(request, "request_processed", LanguageUtil.get(resourceBundle,"new.license"));
             } else {
-                SessionMessages.add(request, "request_processed", "You will create a new and UNCHECKED license");
+                SessionMessages.add(request, "request_processed", LanguageUtil.get(resourceBundle,"you.will.create.a.new.and.unchecked.license"));
             }
             License license = new License();
             request.setAttribute(KEY_LICENSE_DETAIL, license);

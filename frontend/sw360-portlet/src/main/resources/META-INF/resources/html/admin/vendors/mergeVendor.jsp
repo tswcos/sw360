@@ -129,7 +129,7 @@
             $stepElement.html('' +
                     '<div class="stepFeedback"></div>' +
                     '<form>' +
-                    '    <table id="vendorSourcesTable" class="table table-bordered" title="<liferay-ui:message key="ource.vendor" />">' +
+                    '    <table id="vendorSourcesTable" class="table table-bordered" title="<liferay-ui:message key="source.vendor" />">' +
                     '        <colgroup>' +
                     '            <col style="width: 1.7rem;" />' +
                     '            <col style="width: 50%;" />' +

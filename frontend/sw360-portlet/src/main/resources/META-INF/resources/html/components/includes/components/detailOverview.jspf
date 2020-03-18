@@ -62,7 +62,7 @@
                             <div class="list-group-companion" data-belong-to="tab-Vulnerabilities">
                                 <div class="btn-group" role="group">
                                     <button id="btnShowVulnerabilityCount" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Show <span data-name="count"></span>
+                                        <liferay-ui:message key="show" /> <span data-name="count"></span>
                                         <clay:icon symbol="caret-bottom" />
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="btnExport">
