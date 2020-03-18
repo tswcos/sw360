@@ -76,7 +76,7 @@
                             <tr>
                                 <td>
                                     <liferay-ui:message key="connection.to.fossology.is.currently.in.state" />:
-                                    <span id="checkResult" class="badge ${currentConnStatusBadge} mx-3">${currentConnStatus}</span>
+                                    <span id="checkResult" class="badge ${currentConnStatusBadge} mx-3"><liferay-ui:message key="${currentConnStatus}" /></span>
                                     <span class="font-italic"><liferay-ui:message key="checked.on.saved.configuration.which.might.be.different.from.displayed.one.if.you.already.edited.it" /></span>
                                 </td>
                             </tr>
@@ -174,11 +174,13 @@
                     $resultElement.removeClass('badge-light');
                     if(data.result === 'FAILURE') {
                         $resultElement.addClass('badge-danger');
+                        var msg = "<liferay-ui:message key="FAILURE" />"; 
                     } else {
                         $resultElement.addClass('badge-success');
+                        var msg = "<liferay-ui:message key="SUCCESS" />";
                     }
 
-                    $resultElement.text(data.result);
+                    $resultElement.text(msg);
                 },
                 error: function () {
                     $resultElement.removeClass('badge-light');
