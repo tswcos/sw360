@@ -51,7 +51,7 @@
                     {title: "<liferay-ui:message key="creator.group" />"},
                     {title: "<liferay-ui:message key="ecc.assessor" />"},
                     {title: "<liferay-ui:message key="ecc.assessor.group" />"},
-                    {title: "<liferay-ui:message key="ecc.dssessment.date" />"}
+                    {title: "<liferay-ui:message key="ecc.assessment.date" />"}
                 ],
                 language: {
                     paginate: {
@@ -67,7 +67,11 @@
                     '<option value="-1"><liferay-ui:message key="all" /></option>'+
                     '</select> <liferay-ui:message key="entries" />',
                     processing: "<liferay-ui:message key="processing" />",
-                    loadingRecords: "<liferay-ui:message key="loading" />"
+                    loadingRecords: "<liferay-ui:message key="loading" />",
+                    search: "<liferay-ui:message key="search" />",
+                    infoEmpty: "<liferay-ui:message key="infoempty" />",
+                    infoFiltered: "<liferay-ui:message key="filtered.from.max.total.entries" />",
+                    zeroRecords: "<liferay-ui:message key="no.matching.records.found" />"
                 }
             }, [0, 1, 2, 3, 4, 5, 6], undefined, true);
         }
