@@ -43,14 +43,15 @@
                             <option value="<%=CLEARING_TEAM_UNKNOWN%>"
                                 <core_rt:if test='${empty project.clearingTeam}'>
                                     selected="selected"
-                                </core_rt:if>><%=CLEARING_TEAM_UNKNOWN%></option>
+                                </core_rt:if>><liferay-ui:message key="unknown" /></option>
                         </core_rt:if>
                     <core_rt:forEach items="${clearingTeamsStringSet}" var="entry">
                         <option value="${entry}" class="textlabel stackedLabel"
                             <core_rt:if test='${project.clearingTeam == entry}'>
                                 selected="selected"
                             </core_rt:if>>
-                            ${entry}
+                            <c:set var="key" value="${fn:toLowerCase(entry)}"/> 
+                            <liferay-ui:message key="${key}" />
                         </option>
                     </core_rt:forEach>
                 </select>
