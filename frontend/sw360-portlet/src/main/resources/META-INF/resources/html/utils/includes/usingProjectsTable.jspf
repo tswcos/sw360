@@ -55,7 +55,11 @@
                     },
                     info: "<liferay-ui:message key="showing" />",
                     processing: "<liferay-ui:message key="processing" />",
-                    loadingRecords: "<liferay-ui:message key="loading" />"
+                    loadingRecords: "<liferay-ui:message key="loading" />",
+                    infoEmpty: "<liferay-ui:message key="infoempty" />",
+                    infoFiltered: "<liferay-ui:message key="filtered.from.max.total.entries" />",
+                    zeroRecords: "<liferay-ui:message key="no.matching.records.found" />",
+                    search: "<liferay-ui:message key="search" />"
                 }
             }, undefined, undefined, true);
         });
