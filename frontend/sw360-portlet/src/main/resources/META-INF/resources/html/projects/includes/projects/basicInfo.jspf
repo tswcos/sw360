@@ -15,6 +15,7 @@
 <%@ page import="org.eclipse.sw360.datahandler.thrift.Visibility" %>
 <%@ page import="org.eclipse.sw360.datahandler.thrift.projects.ProjectClearingState" %>
 <%@ page import="static org.eclipse.sw360.datahandler.thrift.projects.projectsConstants.CLEARING_TEAM_UNKNOWN" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
 
 <core_rt:set var="clearingTeamsStringSet" value='<%=PortalConstants.SET_CLEARING_TEAMS_STRING%>'/>
 <core_rt:set var="preferredCountryCodes" value='<%=PortalConstants.PREFERRED_COUNTRY_CODES%>'/>
@@ -131,12 +132,14 @@
                 <select class="form-control" id="domain" name="<portlet:namespace/><%=Project._Fields.DOMAIN%>" data-selected="${project.domain}">
                     <option value><liferay-ui:message key="select.domain" /></option>
                     <core_rt:forEach items="${domain}" var="entry">
+						<c:set var="key_lower" value="${fn:toLowerCase(entry)}"/>
+						<c:set var="key" value="${fn:replace(key_lower, ' ', '.')}"/>
                         <c:choose>
                             <c:when test="${entry eq project.domain}">
-                                <option selected="selected" value="<sw360:out value="${entry}"/>" class="textlabel stackedLabel"> ${entry} </option>
+                                <option selected="selected" value="<sw360:out value="${entry}"/>" class="textlabel stackedLabel"> <liferay-ui:message key="${key}" /> </option>
                             </c:when>
                             <c:otherwise>
-                                <option value="<sw360:out value="${entry}"/>" class="textlabel stackedLabel"> ${entry} </option>
+                                <option value="<sw360:out value="${entry}"/>" class="textlabel stackedLabel"> <liferay-ui:message key="${key}" /> </option>
                             </c:otherwise>
                         </c:choose>
                     </core_rt:forEach>
