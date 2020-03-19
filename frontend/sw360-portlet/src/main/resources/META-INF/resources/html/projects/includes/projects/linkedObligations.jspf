@@ -25,7 +25,7 @@
     <div class="alert alert-info" role="alert">
         <liferay-ui:message key="no.linked.obligations" />
         <br>
-        Only <b>Approved</b> CLI files Obligations will be shown here.
+        <liferay-ui:message key="only.approved.cli.files.obligations.will.be.shown.here" />
     </div>
 </core_rt:if>
 
