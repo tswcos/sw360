@@ -84,7 +84,9 @@
                 '<td width="46%">'+
                 '<select class="form-control" id="<%=PortalConstants.CUSTOM_MAP_KEY%>'+randomRowId+'" name="<portlet:namespace/><%=PortalConstants.CUSTOM_MAP_KEY%>'+randomRowId+'">' +
                 <core_rt:forEach items="${keys}" var="key">
-                '<option value="${key}"> ${key} </option>'+
+                <c:set var="key_lower" value="${fn:toLowerCase(key)}"/>
+                <c:set var="key_mgs" value="${fn:replace(key_lower, ' ', '.')}"/>
+                '<option value="${key}"> <liferay-ui:message key="${key_mgs}" /> </option>'+
                 </core_rt:forEach>
                 '</select>'+
                 '</td>'+
