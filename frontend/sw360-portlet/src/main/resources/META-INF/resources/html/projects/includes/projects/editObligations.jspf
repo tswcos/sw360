@@ -117,21 +117,21 @@ require(['jquery', 'bridges/datatables', 'utils/render', 'modules/button'], func
             {
                 "targets": 0,
                 "createdCell": function (td, cellData, rowData, row, col) {
-                    $(td).attr('title', 'Expand the icon to see obligation text');
+                    $(td).attr('title', '<liferay-ui:message key="expand.the.icon.to.see.obligation.text" />');
                 }
             },
             {
                 "targets": 6,
                 "createdCell": function (td, cellData, rowData, row, col) {
                     $.fn.dataTable.render.inputText.updateTitle(td);
-                    $.fn.dataTable.render.inputText.useInputDialog(td, "Enter obligation comment");
+                    $.fn.dataTable.render.inputText.useInputDialog(td, "<liferay-ui:message key="enter.obligation.comment" />");
                 }
             }
         ],
         "createdRow": function (row, data, dataIndex, cell) {
             $(row).attr('data-topic', data.obligation);
             if (data.modifiedBy && data.modifiedOn) {
-                $(row).attr('title', 'Modified by: ' + data.modifiedBy + ' | Modified on: ' + data.modifiedOn);
+                $(row).attr('title', '<liferay-ui:message key="modified.by" />: ' + data.modifiedBy + ' | <liferay-ui:message key="modified.on" />: ' + data.modifiedOn);
             }
         },
         "order": [[1, 'asc']],
