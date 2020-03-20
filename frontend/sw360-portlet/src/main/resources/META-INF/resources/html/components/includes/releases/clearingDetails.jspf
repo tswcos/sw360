@@ -281,7 +281,7 @@
         }
 
         function addTakeOverBtn($parent, releaseId, attachmentId, data) {
-            var $newBtn = $('<button>', { 'class': 'btn btn-primary spdxTakeOverBtn', 'data-release-id': releaseId, 'data-attachment-id': attachmentId, text: 'Add data to this release' });
+            var $newBtn = $('<button>', { 'class': 'btn btn-primary spdxTakeOverBtn', 'data-release-id': releaseId, 'data-attachment-id': attachmentId, text: '<liferay-ui:message key="add.data.to.this.release" />' });
 
             $newBtn.data('result', data);
             $parent.html('');
