@@ -46,7 +46,7 @@
 			</div>
 				<div class="modal-body">
 			        <p>
-                        Do you really want to remove the link to release <b data-name="release"></b>?
+                        <liferay-ui:message key="do.you.really.want.to.remove.the.link.to.release.x" />
                     </p>
 				</div>
 			    <div class="modal-footer">
