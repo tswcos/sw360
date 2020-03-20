@@ -8,6 +8,7 @@
   ~ which accompanies this distribution, and is available at
   ~ http://www.eclipse.org/legal/epl-v10.html
   --%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <table class="table edit-table two-columns-with-actions" id="mapEditTable">
     <thead>
     <tr>
