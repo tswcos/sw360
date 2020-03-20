@@ -12,10 +12,12 @@ package org.eclipse.sw360.portal.portlets.homepage.signup;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
 import org.eclipse.sw360.datahandler.thrift.moderation.ModerationService;
 import org.eclipse.sw360.datahandler.thrift.users.User;
@@ -33,6 +35,7 @@ import org.osgi.service.component.annotations.ConfigurationPolicy;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.portlet.*;
 
@@ -105,10 +108,11 @@ public class SignupPortlet extends Sw360Portlet {
 
     private boolean createUserModerationRequest(User user, ActionRequest request) {
         ModerationService.Iface client = thriftClients.makeModerationClient();
+        ResourceBundle resourceBundle = ResourceBundleUtil.getBundle("content.Language", request.getLocale(), getClass());
         try {
             client.createUserRequest(user);
             log.info("Created moderation request for a new user account");
-            SessionMessages.add(request, "request_processed", "Moderation request has been sent.");
+            SessionMessages.add(request, "request_processed", LanguageUtil.get(resourceBundle,"moderation.request.has.been.sent"));
 
         } catch (TException e) {
             log.error("Could not create user moderation request.", e);
