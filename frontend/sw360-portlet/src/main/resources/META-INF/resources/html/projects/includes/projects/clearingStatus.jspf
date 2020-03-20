@@ -43,9 +43,7 @@ require(['jquery', 'bridges/datatables', 'utils/render'], function ($, datatable
                 "1": "<sw360:out value="${releasesClearingStatusData.projectNames}"/>",
                 "2": "<span id='releaseClearingState${releasesClearingStatusData.release.id}'><sw360:DisplayEnum value="${releasesClearingStatusData.release.clearingState}"/></span>",
                 "3": "<sw360:DisplayEnum value="${releasesClearingStatusData.release.mainlineState}"/>",
-                <c:set var="key_lower" value="${fn:toLowerCase(releasesClearingStatusData.mainlineStates)}"/>
-                <c:set var="key" value="${fn:replace(key_lower, ' ', '.')}"/>
-                "4": "<liferay-ui:message key='${key}' />",
+                "4": "<sw360:out value="${releasesClearingStatusData.mainlineStates}"/>",
                 "5": "<sw360:DisplayEnum value="${releasesClearingStatusData.componentType}"/>",
                 "6": "${releasesClearingStatusData.release.id}"
             });
