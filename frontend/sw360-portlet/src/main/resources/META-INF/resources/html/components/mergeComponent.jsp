@@ -182,7 +182,10 @@
                     '<option value="-1"><liferay-ui:message key="all" /></option>'+
                     '</select> <liferay-ui:message key="entries" />',
                     processing: "<liferay-ui:message key="processing" />",
-                    loadingRecords: "<liferay-ui:message key="loading" />"
+                    loadingRecords: "<liferay-ui:message key="loading" />",
+                    search: "<liferay-ui:message key="search" />",
+                    infoFiltered: "<liferay-ui:message key="filtered.from.max.total.entries" />",
+                    zeroRecords: "<liferay-ui:message key="no.matching.records.found" />"
                 },
                 order: [ [ 1, 'asc' ] ],
                 select: 'single'
