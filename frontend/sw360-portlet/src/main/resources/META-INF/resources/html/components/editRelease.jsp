@@ -192,7 +192,7 @@
                         <p><liferay-ui:message key="do.you.really.want.to.delete.the.release.x" />?</p>
                         <div data-hide="hasNoDependencies">
                             <p>
-                                <liferay-ui:message key="this.release.x.contains" />
+                                <liferay-ui:message key="this.release.x.contains.1" />
                             </p>
                             <ul>
                                 <li data-hide="hasNoLinkedReleases"><span data-name="linkedReleases"></span><liferay-ui:message key="linked.releases" /> </li>

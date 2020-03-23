@@ -96,7 +96,7 @@
                                   value="${clearingInfo.binariesOriginalFromCommunity}"/></td>
     </tr>
     <tr>
-        <td><liferay-ui:message key="binaries.self-made" />:</td>
+        <td><liferay-ui:message key="binaries.self.made" />:</td>
         <td><sw360:DisplayBoolean defined="${clearingInfo.setBinariesSelfMade}"
                                   value="${clearingInfo.binariesSelfMade}"/></td>
     </tr>

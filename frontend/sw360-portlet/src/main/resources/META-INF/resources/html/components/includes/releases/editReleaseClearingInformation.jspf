@@ -38,7 +38,7 @@
                     value="<sw360:out value="${release.clearingInformation.binariesSelfMade}"/>"
                         <core_rt:if test="${release.clearingInformation.binariesSelfMade == 'true'}"> checked="checked" </core_rt:if>
                 />
-                <label class="form-check-label" for="binaries_self_made"><liferay-ui:message key="binaries.self-made" /></label>
+                <label class="form-check-label" for="binaries_self_made"><liferay-ui:message key="binaries.self.made" /></label>
         </td>
         <td>
             <div class="form-check">

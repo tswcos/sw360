@@ -49,7 +49,7 @@
 				<div class="col-auto">
 					<div class="btn-toolbar" role="toolbar">
 						<div class="btn-group" role="group">
-							<button type="button" class="btn btn-primary" data-action="check"><liferay-ui:message key="re-check.connection" /></button>
+							<button type="button" class="btn btn-primary" data-action="check"><liferay-ui:message key="re.check.connection" /></button>
 						</div>
 						<div class="btn-group" role="group">
 							<button type="button" class="btn btn-primary" data-action="save"><liferay-ui:message key="save.configuration" /></button>
