@@ -30,7 +30,8 @@ enum RequestStatus {
     CLOSED_UPDATE_NOT_ALLOWED = 8,
     INVALID_INPUT = 9,
     PROCESSING = 10,
-    NAMINGERROR = 11
+    NAMINGERROR = 11,
+    NAMINGNOTMATCH = 12
 }
 
 enum RemoveModeratorRequestStatus {
@@ -44,7 +45,8 @@ enum AddDocumentRequestStatus {
     DUPLICATE = 1,
     FAILURE = 2,
     NAMINGERROR = 3,
-    INVALID_INPUT = 4
+    INVALID_INPUT = 4,
+    NAMINGNOTMATCH = 5
 }
 
 exception SW360Exception {

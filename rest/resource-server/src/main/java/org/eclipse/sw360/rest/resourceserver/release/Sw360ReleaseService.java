@@ -127,11 +127,13 @@ public class Sw360ReleaseService implements AwareOfRestServices<Release> {
             release.setId(documentRequestSummary.getId());
             return release;
         } else if (documentRequestSummary.getRequestStatus() == AddDocumentRequestStatus.DUPLICATE) {
-            throw new DataIntegrityViolationException("sw360 release with name '" + release.getName() + "' already exists.");
+            throw new DataIntegrityViolationException(
+		    "sw360 release '" + release.getName() + "' with version '" + release.getVersion() + "' already exists.");
         } else if (documentRequestSummary.getRequestStatus() == AddDocumentRequestStatus.INVALID_INPUT) {
             throw new HttpMessageNotReadableException("Dependent document Id/ids not valid.");
-        }
-        else if (documentRequestSummary.getRequestStatus() == AddDocumentRequestStatus.NAMINGERROR) {
+        } else if (documentRequestSummary.getRequestStatus() == AddDocumentRequestStatus.NAMINGNOTMATCH) {
+            throw new HttpMessageNotReadableException("Release name cannot be different with Component name.");
+	} else if (documentRequestSummary.getRequestStatus() == AddDocumentRequestStatus.NAMINGERROR) {
             throw new HttpMessageNotReadableException(
                     "Release name and version field cannot be empty or contain only whitespace character");
         }
@@ -144,6 +146,8 @@ public class Sw360ReleaseService implements AwareOfRestServices<Release> {
         RequestStatus requestStatus = sw360ComponentClient.updateRelease(release, sw360User);
         if (requestStatus == RequestStatus.INVALID_INPUT) {
             throw new HttpMessageNotReadableException("Dependent document Id/ids not valid.");
+	} else if (requestStatus == RequestStatus.NAMINGNOTMATCH) {
+		throw new HttpMessageNotReadableException("Release name cannot be different with Component name.");
         } else if (requestStatus == RequestStatus.NAMINGERROR) {
             throw new HttpMessageNotReadableException(
                     "Release name and version field cannot be empty or contain only whitespace character");

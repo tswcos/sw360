@@ -358,6 +358,12 @@ public class ComponentDatabaseHandler extends AttachmentAwareDatabaseHandler {
         if (name == null || name.isEmpty() || version == null || version.isEmpty()) {
             return new AddDocumentRequestSummary().setRequestStatus(AddDocumentRequestStatus.NAMINGERROR);
         }
+	String componentId = release.getComponentId();
+	Component component = componentRepository.get(componentId);
+	String componentName = component.getName();
+	if (! name.equals(componentName)) {
+	    return new AddDocumentRequestSummary().setRequestStatus(AddDocumentRequestStatus.NAMINGNOTMATCH);
+	}
 
         // Prepare the release and get underlying component ID
         prepareRelease(release);
@@ -378,9 +384,7 @@ public class ComponentDatabaseHandler extends AttachmentAwareDatabaseHandler {
                     .setRequestStatus(AddDocumentRequestStatus.INVALID_INPUT);
         }
 
-        String componentId = release.getComponentId();
         // Ensure that component exists
-        Component component = componentRepository.get(componentId);
         assertNotNull(component);
 
         // Save creating user
@@ -804,7 +808,12 @@ public class ComponentDatabaseHandler extends AttachmentAwareDatabaseHandler {
         if (name == null || name.isEmpty() || version == null || version.isEmpty()) {
             return RequestStatus.NAMINGERROR;
         }
-
+	String componentId = release.getComponentId();
+	Component component = componentRepository.get(componentId);
+	String componentName = component.getName();
+	if (! name.equals(componentName)) {
+	    return RequestStatus.NAMINGNOTMATCH;
+	}
         // Prepare release for database
         prepareRelease(release);
 
